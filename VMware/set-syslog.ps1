@@ -1,1 +1,1 @@
-﻿Write-Host $esxdns
+﻿

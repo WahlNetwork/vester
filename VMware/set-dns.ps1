@@ -5,6 +5,9 @@ Invoke-Expression ($vars)
 ### Import modules
 Add-PSSnapin -Name VMware.VimAutomation.Core
 
+    # Ignore self-signed SSL certificates for vCenter Server (optional)
+    Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -DisplayDeprecationWarnings:$false -Scope User -Confirm:$false
+
 ### Connect to vCenter
 Connect-VIServer $global:vc
 	
