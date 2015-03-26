@@ -8,10 +8,16 @@ Pretty straight forward. The engine's job is to start up a job for each script. 
 - Pick apart the scripts to use with other orchestration engines, or just as ideas for your code.
 
 ## Installation
-Copy or fork the repo into your environment. Make sure you have PowerShell 4+ installed, along with PowerCLI 5.8+. The scripts are not signed, so you'll need to adjust your PowerShell ExecutionPolicy based on where you're running the engine file.
+Copy or fork the repo into your environment. Make sure you have PowerShell 4.0+ installed, along with PowerCLI 5.8+. The scripts are not signed, so you'll need to adjust your PowerShell ExecutionPolicy based on where you're running the engine file.
 
 ## Usage Instructions
-Update the vars.ps1 file with your domain specific information. Run the engine.ps1 file, which will call all of the scripts in the various folders. If you don't want to run all of the scripts, open up the engine.ps1 file and edit the $jobMap variable and remove references to the scripts you wish to remove.
+Here's the scoop.
+
+1. Update the vars.ps1 file with your domain specific information.
+2. Decide how you wish to run the scripts:
+  2. Option 1: Run the engine.ps1 file, which will call all of the scripts in the various folders.
+  3. Option 2: If you don't want to run all of the scripts, open up the engine.ps1 file and edit the $jobMap variable and remove references to the scripts you wish to remove.
+  4. Option 3: Just ignore the engine.ps1 file and run the scripts individually. They will still use the vars.ps1 file and have some limited output to the console.
 
 Here's an example of what the $jobMap var looks like:
 ```
@@ -30,6 +36,7 @@ This is mainly a lab helper for Wahl Network, but I figured the code examples mi
   - WinRM control
 - More 3rd party stuff
   - PernixData is on my radar
+  - NSX perhaps?
 
 ## Contribution
 Create a fork of the project into your own reposity. Make all your necessary changes and create a pull request with a description on what was added or removed and details explaining the changes in lines of code. If approved, project owners will merge it.
