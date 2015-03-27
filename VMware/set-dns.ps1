@@ -1,4 +1,9 @@
-﻿# Pull in vars
+﻿########################################################################################################
+# Sets the DNS entries for your ESXi servers
+# Can pass along multiple entries as an array of string values
+########################################################################################################
+
+# Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
 Invoke-Expression ($vars)
 

@@ -1,4 +1,9 @@
-﻿# Pull in vars
+﻿########################################################################################################
+# Control the state of your ESXi SSH Server status, and also optionally disable the warning
+# Note: I only recommend using this in lab environments, it's not a valid security practice in prod
+########################################################################################################
+
+# Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
 Invoke-Expression ($vars)
 

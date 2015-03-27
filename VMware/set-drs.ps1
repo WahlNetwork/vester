@@ -1,4 +1,8 @@
-﻿# Pull in vars
+﻿########################################################################################################
+# Sets DRS configuration values for Mode and Aggressiveness# 
+########################################################################################################
+
+# Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
 Invoke-Expression ($vars)
 
@@ -25,7 +29,7 @@ foreach ($Cluster in $Clusters)
     Set-Cluster $Cluster -DrsAutomationLevel:$global:drsmode -Confirm:$false
     Write-Host -BackgroundColor:Black -ForegroundColor:Green "Success: $Cluster is now set to" (Get-Cluster $Cluster).DrsAutomationLevel
 
-    # DRS Threshold (modified script from by LucD)
+    # DRS Threshold (modified script from the amazing LucD)
 	if ($Cluster.DrsAutomationLevel -eq "FullyAutomated")
         {
         $ClusterView = Get-Cluster -Name $Cluster | Get-View

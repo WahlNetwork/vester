@@ -1,3 +1,8 @@
+########################################################################################################
+# Sets the syslog server value for your ESXi hosts
+# You can pass along an array of strings for multiple remote syslog servers
+########################################################################################################
+
 # Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
 Invoke-Expression ($vars)

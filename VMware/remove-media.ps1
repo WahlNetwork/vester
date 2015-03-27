@@ -1,3 +1,8 @@
+########################################################################################################
+# Removes CDDrive media from the VMs
+# No toggle at this point; either run it or don't :)
+########################################################################################################
+
 # Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
 Invoke-Expression ($vars)
