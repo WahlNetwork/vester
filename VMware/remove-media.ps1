@@ -26,7 +26,7 @@ foreach ($VM in $VMs)
 	# Everyone loves progress bars, so here is a progress bar
 	Write-Progress -Activity "Removing Media" -Status $VM -PercentComplete (($i / $VMs.Count) * 100)
 
-    Get-CDDrive $VM | Where {$_.ConnectionState -eq "true"} | Set-CDDrive -NoMedia -Confirm:$false | Out-Null
+    Get-CDDrive $VM | Where {$_.ConnectionState -eq "true" -or $_.IsoPath -ne $null} | Set-CDDrive -NoMedia -Confirm:$false | Out-Null
 	
 	$i++
 	}
