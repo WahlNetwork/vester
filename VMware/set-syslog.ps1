@@ -27,7 +27,17 @@ foreach ($Server in $VMHosts)
 	Write-Progress -Activity "Configuring Syslog Settings" -Status $Server -PercentComplete (($i / $VMHosts.Count) * 100)
 	
     # Set the syslog server properties
-    Set-VMHostSysLogServer -VMHost $Server -SysLogServer $global:esxsyslog
+    try
+        {
+        Set-VMHostSysLogServer -VMHost $Server -SysLogServer $global:esxsyslog -ErrorAction Stop | Out-Null
+        (Get-EsxCli -VMHost $Server).system.syslog.reload() | Out-Null
+        Write-Host -BackgroundColor:Black -ForegroundColor:Green "Success: $Server is now using $global:esxsyslog"
+        }
+    catch
+        {
+        Write-Host -BackgroundColor:Black -ForegroundColor:Green "Failure: $Server could not be configured"
+        }
+
 
 	$i++
 	}
