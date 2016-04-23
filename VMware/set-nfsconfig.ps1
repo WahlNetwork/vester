@@ -5,7 +5,7 @@
 
 # Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + '\vars.ps1'
-Invoke-Expression ($vars)
+Invoke-Expression ($vars -replace ' ', '` ')
 
 ### Import modules or snapins
 $powercli = Get-PSSnapin -Name VMware.VimAutomation.Core -Registered

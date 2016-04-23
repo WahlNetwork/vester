@@ -4,7 +4,7 @@
 
 # Pull in vars
 $vars = (Get-Item $PSScriptRoot).Parent.FullName + "\vars.ps1"
-Invoke-Expression ($vars)
+Invoke-Expression ($vars -replace ' ', '` ')
 
 # Add the required modules
 Import-Module PSWindowsUpdate
