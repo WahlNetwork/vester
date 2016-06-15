@@ -20,8 +20,8 @@ $global:config.host = @{
     sshenable     = $true
     sshwarn       = 1
     esxntp        = @('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org')
-    esxdns        = @('172.16.20.11', '172.16.20.12')
-    searchdomains = @('glacier.local')
+    esxdns        = @('172.17.48.11', '172.17.48.12')
+    searchdomains = @('rubrik.demo')
     esxsyslog     = @('tcp://172.16.20.243:514')
 }
 
