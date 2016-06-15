@@ -23,6 +23,8 @@ Download the files contained within this project anywhere you want. You can even
 2. Navigate to the project folder that you downloaded.
 3. Run `Invoke-Pester` to launch the tests.
 
+![Example](/Media/lab-config-example.jpg?raw=true "Example")
+
 # Future
 
 The community module is not officially supported and should be **used at your own risk**.
