@@ -1,11 +1,16 @@
 ﻿$global:config = @{}
 
+### Pester Settings
+
+$global:config.pester = @{
+    remediate = $true
+}
+
 ### vCenter Settings
 
 $global:config.vcenter = @{
     vc = 172.17.48.17
 }
-
 
 ### Cluster Settings
 
