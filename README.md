@@ -1,52 +1,49 @@
 Lab Config
 ======================
-A collection of simple scripts that run against a vSphere environment to enforce consistency and enables self-healing on a regular basis. The premise is that you'd want to fill out a vars file with your standards, and then let the script engine run hourly / nightly / weekly to control drift and absorb new assets that are brought online.
 
-## Description
-Pretty straight forward. The engine's job is to start up a job for each script. Each script parses the vars file to determine what variables and options you want enforced.
-- Set standards for a lab environment (which is what I do) and use a pull or utility server to run the engine on a schedule.
-- Pick apart the scripts to use with other orchestration engines, or just as ideas for your code.
+This is a community project that aims to provide an extremely light-weight approach to vSphere configuration management using Pester and PowerCLI. Each component monitored is both tested and remediated against drift. The end-state configuration is abstracted into a simple config file. The entire project is written in PowerShell.
 
-## Installation
-Copy or fork the repo into your environment. Make sure you have PowerShell 4.0+ installed, along with PowerCLI 5.8+. The scripts are not signed, so you'll need to adjust your PowerShell ExecutionPolicy based on where you're running the engine file.
+# Requirements
 
-## Usage Instructions
-Here's the scoop.
+You'll just need a few free pieces of software.
 
-1. Update the vars.ps1 file with your domain specific information.
-2. Decide how you wish to run the scripts:
-  2. Option 1: Run the engine.ps1 file, which will call all of the scripts in the various folders.
-  3. Option 2: If you don't want to run all of the scripts, open up the engine.ps1 file and edit the $jobMap variable and remove references to the scripts you wish to remove.
-  4. Option 3: Just ignore the engine.ps1 file and run the scripts individually. They will still use the vars.ps1 file and have some limited output to the console.
+1. PowerShell version 4+
+2. [PowerCLI version 5.8+](http://www.vmware.com/go/powercli)
+5. [Pester](https://github.com/pester/Pester)
+4. (optional) [Windows Management Framework 5.0](https://www.microsoft.com/en-us/download/details.aspx?id=50395)
 
-Here's an example of what the $jobMap var looks like:
-```
-$jobMap = [Ordered]@{
-  "DNS"    = "\VMware\set-dns.ps1";
-  "NTP"    = "\VMware\set-ntp.ps1";
-  "SSH"    = "\VMware\set-ssh.ps1"
-}
-```
+# Installation
 
-## Future
-This is mainly a lab helper for Wahl Network, but I figured the code examples might be interesting to folks, or others with home labs might want to take advantage of the scripts.
-- Microsoft scripts
-  - DNS for clients
-  - Network RSS settings
-  - WinRM control
-- More 3rd party stuff
-  - PernixData is on my radar
-  - NSX perhaps?
+Download the files contained within this project anywhere you want. You can even make different copies for different environments.
 
-## Contribution
-Create a fork of the project into your own reposity. Make all your necessary changes and create a pull request with a description on what was added or removed and details explaining the changes in lines of code. If approved, project owners will merge it.
+# Usage Instructions
 
-Licensing
----------
-Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>
+1. Edit the `Config.ps1` file with your specific environmental variables for DRS, NTP, SSH, etc.
+1. Open a PowerShell console.
+2. Navigate to the project folder that you downloaded.
+3. Run `Invoke-Pester` to launch the tests.
+
+![Example](/Media/lab-config-example.jpg?raw=true "Example")
+
+# Future
+
+The community module is not officially supported and should be **used at your own risk**.
+
+I'd like to see more tests added for things people find important. This will be done as time permits. :)
+
+# Contribution
+
+Everyone is welcome to contribute to this project. Here are the steps involved:
+
+1. Create a fork of the project into your own repository.
+2. From your fork, create a new feature branch (other than master) that expresses your feature or enhancement.
+3. Make all your necessary changes in your feature branch.
+4. Create a pull request with a description on what was added or removed and details explaining the changes in lines of code.
+
+If approved, project owners will merge it.
+
+# Licensing
+
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-Support
--------
-Please file bugs and issues at the Github issues page. The code and documentation are released with no warranties or SLAs and are intended to be supported through a community driven process.
