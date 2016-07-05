@@ -31,6 +31,12 @@ $global:config.host = @{
     esxsyslog     = @('tcp://172.16.20.243:514')
 }
 
+### VM Settings
+
+$global:config.vm = @{
+    snapretention = 7
+}
+
 # Tegile Zebi array settings
 
 $global:config.nfsadvconfig = @{
