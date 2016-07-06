@@ -24,10 +24,17 @@ $global:config.cluster = @{
 $global:config.host = @{
     sshenable     = $true
     sshwarn       = 1
+    snapretention = 7
     esxntp        = @('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org')
     esxdns        = @('172.17.48.11', '172.17.48.12')
     searchdomains = @('rubrik.demo')
     esxsyslog     = @('tcp://172.16.20.243:514')
+}
+
+### VM Settings
+
+$global:config.vm = @{
+    snapretention = 7
 }
 
 # Tegile Zebi array settings
