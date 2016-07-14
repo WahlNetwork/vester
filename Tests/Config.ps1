@@ -3,7 +3,7 @@
 ### Pester Settings
 
 $global:config.pester = @{
-    remediate = $true
+    remediate = $false
 }
 
 ### vCenter Settings
@@ -34,7 +34,7 @@ $global:config.host = @{
 ### VM Settings
 
 $global:config.vm = @{
-    snapretention = 7
+    snapretention = 9999
 }
 
 # Tegile Zebi array settings
