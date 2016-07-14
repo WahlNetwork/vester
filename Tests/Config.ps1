@@ -1,9 +1,11 @@
 ﻿$global:config = @{}
 
-### Pester Settings
+### Scope Settings
 
-$global:config.pester = @{
-    remediate = $false
+$global:config.scope = @{
+    cluster = '*'
+    host = '*'
+    vm = 'SE-*'
 }
 
 ### vCenter Settings
