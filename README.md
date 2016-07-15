@@ -1,7 +1,9 @@
-Lab Config
+Vester
 ======================
 
-This is a community project that aims to provide an extremely light-weight approach to vSphere configuration management using Pester and PowerCLI. Each component monitored is both tested and remediated against drift. The end-state configuration is abstracted into a simple config file. The entire project is written in PowerShell.
+Vester is a community project that aims to provide an extremely light-weight approach to vSphere configuration management using Pester and PowerCLI. The end-state configuration for each vSphere component, such as clusters and hosts, are abstracted into a simple config file. The configuration is tested and optionally remediated when drift is identified. The entire project is written in PowerShell.
+
+![Example](/Media/lab-config-example.jpg?raw=true "Example")
 
 # Requirements
 
@@ -14,16 +16,42 @@ You'll just need a few free pieces of software.
 
 # Installation
 
-Download the files contained within this project anywhere you want. You can even make different copies for different environments.
+Because this repository is simply a collection of Pester tests, there is no installation. Download the files contained within this project anywhere you want.
 
 # Usage Instructions
 
-1. Edit the `Config.ps1` file with your specific environmental variables for DRS, NTP, SSH, etc.
-1. Open a PowerShell console.
-2. Navigate to the project folder that you downloaded.
-3. Run `Invoke-Pester` to launch the tests.
+The end-state configuration for each vSphere component is stored inside of the `Config.ps1` file. Make sure to read through the configuration items and set them with your specific environmental variables for DRS, NTP, SSH, etc. If you have multiple environments that have unique settings, create a copy of the `Config.ps1` file for each environment and call it whatever you wish (such as `Config-Prod.ps1` for Production and `Config-Dev.ps1` for your Dev).
 
-![Example](/Media/lab-config-example.jpg?raw=true "Example")
+Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
+
+### Example 1 - Validation
+`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }`
+
+* Runs all tests found in the path `.\Vester\Tests`
+* Remediation is `$false` (disabled) - drift will be shown but not corrected
+* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
+
+### Example 2 - Remediation
+`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $true ; Config = '.\Vester\Tests\Config-Prod.ps1' }`
+
+* Runs all tests found in the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Tests\Config-Prod.ps1` will be used.
+
+### Example 3 - Single Test Validation
+`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' } -TestName '*DNS*'`
+
+* Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
+
+### Example 4 - Single Test Validation with NUnit Output (for Jenkins, AppVeyor, etc.)
+`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' } -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile '.\Vester\Results'`
+
+* Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
+* The results of the tests will be stored in NUnit XML format in the path `.\Vester\Results\Sample.xml`
 
 # Future
 
