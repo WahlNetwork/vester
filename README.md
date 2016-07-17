@@ -25,28 +25,28 @@ The end-state configuration for each vSphere component is stored inside of the `
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
 
 ### Example 1 - Validation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }`
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }}`
 
 * Runs all tests found in the path `.\Vester\Tests`
 * Remediation is `$false` (disabled) - drift will be shown but not corrected
 * Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
 
 ### Example 2 - Remediation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $true ; Config = '.\Vester\Tests\Config-Prod.ps1' }`
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $true ; Config = '.\Vester\Tests\Config-Prod.ps1' }}`
 
 * Runs all tests found in the path `.\Vester\Tests`
 * Remediation is `$true` (enabled) - drift will be shown and also corrected
 * Configuration settings found in `.\Vester\Tests\Config-Prod.ps1` will be used.
 
 ### Example 3 - Single Test Validation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' } -TestName '*DNS*'`
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }} -TestName '*DNS*'`
 
 * Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
 * Remediation is `$true` (enabled) - drift will be shown and also corrected
 * Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
 
 ### Example 4 - Single Test Validation with NUnit Output (for Jenkins, AppVeyor, etc.)
-`Invoke-Pester -Script @{Path = '.\Vester\Tests' Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' } -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile '.\Vester\Results'`
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }} -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile '.\Vester\Results'`
 
 * Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
 * Remediation is `$true` (enabled) - drift will be shown and also corrected
