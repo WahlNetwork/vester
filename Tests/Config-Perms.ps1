@@ -86,9 +86,12 @@ $global:config.nfsadvconfig = @{
         Leveraging vCenter-Roles from https://github.com/rnelson0/vCenter-roles.
 #>
 $global:config.roles= @{
-    $vcenterrolespath = "H:\Src\github\vcenter-roles"
-    $defaultRoleFilePath = "H:\src\github\vcenter-roles\roles"
-    
+    vcenterrolespath = "H:\Src\github\vcenter-roles"
+    defaultRoleFilePath = "H:\src\github\vcenter-roles\roles"
+    rolesPresent = @{"loginsight"    = "loginsight3.json";
+                     "vestertest"    = "H:\Vestertest.json"
+                     "rubrik"        = "rubrik.json"
+    }
     Present = @("Administrator","logInsight","VesterTest","rubrik")
 }
 
