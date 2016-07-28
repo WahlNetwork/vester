@@ -13,6 +13,7 @@ $global:config.scope = @{
     cluster = '*'
     host    = '*'
     vm      = '*'
+
 }
 
 <########################################################################################
@@ -59,11 +60,15 @@ $global:config.host = @{
         VM Settings
         snapretention = [int] Allowed number of days for a VM snapshot to exist
         allowconnectedcdrom = [bool] $true or $false
+        allowcpulimit = [bool] $true or $false
+        allowmemorylimit = [bool] $true or $false
 #>
 
 $global:config.vm = @{
     snapretention       = 9999
     allowconnectedcdrom = $false
+    allowcpulimit       = $false
+    allowmemorylimit    = $false
 }
 
 <########################################################################################
