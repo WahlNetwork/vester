@@ -21,7 +21,7 @@ $global:config.scope = @{
 #>
 
 $global:config.vcenter = @{
-    vc = 10.130.20.25
+    vc = "ushnhcp1vccvum1"
 }
 
 <########################################################################################
@@ -80,8 +80,15 @@ $global:config.nfsadvconfig = @{
     'Net.TcpipHeapMax'     = 1536
 }
 #>
+
+<########################################################################################
+        Roles and Privileges Settings
+        Leveraging vCenter-Roles from https://github.com/rnelson0/vCenter-roles.
+#>
 $global:config.roles= @{
-    descriptionpath    = "H:\src\github\vcenter-roles\roles"
-    Present = @("Administrator","logInsight3","VesterTest","admin")
+    $vcenterrolespath = "H:\Src\github\vcenter-roles"
+    $defaultRoleFilePath = "H:\src\github\vcenter-roles\roles"
+    
+    Present = @("Administrator","logInsight","VesterTest","rubrik")
 }
 
