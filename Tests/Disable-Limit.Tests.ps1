@@ -1,4 +1,4 @@
-#requires -Modules Pester
+﻿#requires -Modules Pester
 #requires -Modules VMware.VimAutomation.Core
 
 
@@ -14,15 +14,17 @@ Param(
 
 Process {
     # Variables
-    Invoke-Expression -Command (Get-Item -Path $Config)
-    [bool]$allowcpulimit = $global:config.vm.allowcpulimit
-    [bool]$allowmemorylimit = $global:config.vm.allowmemorylimit
+    . $Config
+    [bool]$allowcpulimit    = $config.vm.allowcpulimit
+    [bool]$allowmemorylimit = $config.vm.allowmemorylimit
 
     # Tests
     # CPU Limits 
     If (-not $allowcpulimit) {
         Describe -Name 'VM Configuration: CPU Limit' -Fixture {
-            foreach ($VM in (Get-VM -Name $global:config.scope.vm)) 
+            . $Config
+
+            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
                 It -name "$($VM.name) has no CPU limits configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration
@@ -52,7 +54,9 @@ Process {
     # Memory Limits 
     If (-not $allowmemorylimit) {
         Describe -Name 'VM Configuration: Memory Limit' -Fixture {
-            foreach ($VM in (Get-VM -Name $global:config.scope.vm)) 
+            . $Config
+
+            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
                 It -name "$($VM.name) has no memory limits configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration
