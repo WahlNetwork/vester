@@ -13,17 +13,14 @@ Param(
 )
 
 Process {
-    # Variables
-    . $Config
-    [bool]$allowcpulimit    = $config.vm.allowcpulimit
-    [bool]$allowmemorylimit = $config.vm.allowmemorylimit
-
     # Tests
     # CPU Limits 
-    If (-not $allowcpulimit) {
-        Describe -Name 'VM Configuration: CPU Limit' -Fixture {
-            . $Config
+    Describe -Name 'VM Configuration: CPU Limit' -Fixture {
+        # Variables
+        . $Config
+        [bool]$allowcpulimit    = $config.vm.allowcpulimit
 
+        If (-not $allowcpulimit) {
             foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
                 It -name "$($VM.name) has no CPU limits configured" -test {
@@ -52,10 +49,12 @@ Process {
     }
 
     # Memory Limits 
-    If (-not $allowmemorylimit) {
-        Describe -Name 'VM Configuration: Memory Limit' -Fixture {
-            . $Config
+    Describe -Name 'VM Configuration: Memory Limit' -Fixture {
+        # Variables
+        . $Config
+        [bool]$allowmemorylimit = $config.vm.allowmemorylimit
 
+        If (-not $allowmemorylimit) {
             foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
                 It -name "$($VM.name) has no memory limits configured" -test {

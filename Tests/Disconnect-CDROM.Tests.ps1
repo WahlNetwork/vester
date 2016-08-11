@@ -13,15 +13,13 @@ Param(
 )
 
 Process {
-    # Variables
-    . $Config
-    [bool]$allowconnectedcdrom = $config.vm.allowconnectedcdrom
-
     # Tests
-    If (-not $allowconnectedcdrom) {
-        Describe -Name 'VM Configuration: CDROM status' -Fixture {
-            . $Config
+    Describe -Name 'VM Configuration: CDROM status' -Fixture {
+        # Variables
+        . $Config
+        [bool]$allowconnectedcdrom = $config.vm.allowconnectedcdrom
 
+        If (-not $allowconnectedcdrom) {
             foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
                 [array]$value = $VM | get-cddrive
