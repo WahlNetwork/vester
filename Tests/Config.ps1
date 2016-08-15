@@ -1,4 +1,4 @@
-﻿$global:config = @{}
+﻿$config = @{}
 
 <########################################################################################
         Scope Settings
@@ -9,7 +9,7 @@
         vm = [string] Virtual machine names
 #>
 
-$global:config.scope = @{
+$config.scope = @{
     cluster = '*'
     host    = '*'
     vm      = '*'
@@ -21,7 +21,7 @@ $global:config.scope = @{
         vc = [string] vCenter IP Address
 #>
 
-$global:config.vcenter = @{
+$config.vcenter = @{
     vc = 172.17.48.17
 }
 
@@ -31,7 +31,7 @@ $global:config.vcenter = @{
         drslevel = [int] 1 (Aggressive), 2, 3, 4, 5 (Conservative)
 #>
 
-$global:config.cluster = @{
+$config.cluster = @{
     drsmode  = 'FullyAutomated'
     drslevel = 2
 }
@@ -47,7 +47,7 @@ $global:config.cluster = @{
 #>
 
 
-$global:config.host = @{
+$config.host = @{
     sshenable     = $true
     sshwarn       = 1
     esxntp        = @('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org')
@@ -64,7 +64,7 @@ $global:config.host = @{
         allowmemorylimit = [bool] $true or $false
 #>
 
-$global:config.vm = @{
+$config.vm = @{
     snapretention       = 9999
     allowconnectedcdrom = $false
     allowcpulimit       = $false
@@ -76,7 +76,7 @@ $global:config.vm = @{
         Plug in your vendor's recommended NFS configuration values. Example: Tegile's Zebi array.
 #>
 
-$global:config.nfsadvconfig = @{
+$config.nfsadvconfig = @{
     'NFS.MaxQueueDepth'    = 32
     'NFS.DeleteRPCTimeout' = 30
     'NFS.HeartbeatFrequency' = 20
