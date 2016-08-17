@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Host Configuration: DNS Server(s)' -Fixture {
+    Describe -Name 'Host Configuration: DNS Server(s)' -Tag @("host")-Fixture {
         # Variables
         . $Config
         [array]$esxdns = $config.host.esxdns

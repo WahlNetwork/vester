@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Host Configuration: SSH Server' -Fixture {
+    Describe -Name 'Host Configuration: SSH Server' -Tags @("host")-Fixture {
         # Variables
         . $Config
         [bool]$sshenable = $config.host.sshenable

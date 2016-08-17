@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'VM Configuration: Snaphot(s)' -Fixture {
+    Describe -Name 'VM Configuration: Snaphot(s)' -Tag @("vm") -Fixture {
         # Variables
         . $Config
         [int]$snapretention = $config.vm.snapretention
