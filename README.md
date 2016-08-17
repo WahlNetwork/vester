@@ -26,15 +26,17 @@ The relative path to where you have downloaded the Vester tests. Some folks like
 
 ### `Remediate` (bool)
 
-Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation. Default value is `$false`.
+Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation.
 
 ### `Config` (string)
 
-The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files. Default value is `Config.ps1`.
+The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
 
 # Usage Instructions
 
-The end-state configuration for each vSphere component is stored inside of the `Config.ps1` file. Make sure to read through the configuration items and set them with your specific environmental variables for DRS, NTP, SSH, etc. If you have multiple environments that have unique settings, create a copy of the `Config.ps1` file for each environment and call it whatever you wish (such as `Config-Prod.ps1` for Production and `Config-Dev.ps1` for your Dev).
+The end-state configuration for each vSphere component is stored inside of the `Config.ps1` file. Make sure to read through the configuration items and set them with your specific environmental variables for DRS, NTP, SSH, etc.
+
+If you have multiple environments that have unique settings, create a copy of the `Config.ps1` file for each environment and call it whatever you wish (such as `Config-Prod.ps1` for Production and `Config-Dev.ps1` for your Dev).
 
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
 
