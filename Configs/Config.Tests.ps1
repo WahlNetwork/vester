@@ -1,15 +1,21 @@
 ﻿#requires -Version 3 -Modules Pester, VMware.VimAutomation.Core
 
-Get-Module VMware.VimAutomation.Core | Remove-Module -Force
-Import-Module VMware.VimAutomation.Core -Force
+[CmdletBinding()]
+Param(
+    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
+    [string]$Config = "$PSScriptRoot\Config.ps1"
+)
 
-InModuleScope VMware.VimAutomation.Core {
-    # Ensure $config is loaded into the session
-    . "$PSScriptRoot\Config.ps1"
-
+Process {
     Describe 'Config file validation' {
-        It 'Exists and properly supplies variable $config' {
-            "$PSScriptRoot\Config.ps1" | Should Exist
+        It 'Is reading a valid config file' {
+            $Config | Should Exist
+        }
+        
+        # Ensure $config is loaded into the session
+        . $Config
+
+        It 'Properly supplies variable $config' {
             $config | Should Not BeNullOrEmpty
         }
 
@@ -86,4 +92,4 @@ InModuleScope VMware.VimAutomation.Core {
             }
         }
     } #Describe
-} #InModuleScope
+} #Process
