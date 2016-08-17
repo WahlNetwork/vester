@@ -5,7 +5,7 @@ Import-Module VMware.VimAutomation.Core -Force
 
 InModuleScope VMware.VimAutomation.Core {
     # Ensure $config is loaded into the session
-    Invoke-Expression -Command (Get-Item -Path "$PSScriptRoot\Config.ps1")
+    . "$PSScriptRoot\Config.ps1"
 
     Describe 'Config file validation' {
         It 'Exists and properly supplies variable $config' {
