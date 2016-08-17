@@ -18,25 +18,25 @@ You'll just need a few free pieces of software.
 
 Because this repository is simply a collection of Pester tests, there is no installation. Download the files contained within this project anywhere you want.
 
+# Variables
+
+### `Path` (string)
+
+The relative path to where you have downloaded the Vester tests. Some folks like to use different versions of tests, or subdivide tests into smaller groups. The `path` input is required by Pester when sending parameters as shown in the examples below.
+
+### `Remediate` (bool)
+
+Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation. Default value is `$false`.
+
+### `Config` (string)
+
+The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files. Default value is `Config.ps1`.
+
 # Usage Instructions
 
 The end-state configuration for each vSphere component is stored inside of the `Config.ps1` file. Make sure to read through the configuration items and set them with your specific environmental variables for DRS, NTP, SSH, etc. If you have multiple environments that have unique settings, create a copy of the `Config.ps1` file for each environment and call it whatever you wish (such as `Config-Prod.ps1` for Production and `Config-Dev.ps1` for your Dev).
 
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
-
-### Variables
-
-`Path` (string)
-
-The relative path to where you have downloaded the Vester tests. Some folks like to use different versions of tests, or subdivide tests into smaller groups. The `path` input is required by Pester when sending parameters as shown in the examples below.
-
-`Remediate` (bool)
-
-Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation. Default value is `$false`.
-
-`Config` (string)
-
-The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files. Default value is `Config.ps1`.
 
 ### Example 1 - Validation
 `Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }}`
