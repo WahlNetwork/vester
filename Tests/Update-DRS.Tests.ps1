@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Cluster Configuration: DRS Settings' -Fixture {
+    Describe -Name 'Cluster Configuration: DRS Settings' -Tags @("vcenter","cluster") -Fixture {
         # Variables
         . $Config
         [string]$drsmode = $config.cluster.drsmode

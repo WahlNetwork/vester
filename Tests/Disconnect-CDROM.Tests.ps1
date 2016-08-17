@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'VM Configuration: CDROM status' -Fixture {
+    Describe -Name 'VM Configuration: CDROM status' -Tag @("vm") -Fixture {
         # Variables
         . $Config
         [bool]$allowconnectedcdrom = $config.vm.allowconnectedcdrom

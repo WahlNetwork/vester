@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Host Configuration: Syslog Server' -Fixture {
+    Describe -Name 'Host Configuration: Syslog Server' -Tags @("host") -Fixture {
         # Variables
         . $Config
         [array]$esxsyslog = $config.host.esxsyslog

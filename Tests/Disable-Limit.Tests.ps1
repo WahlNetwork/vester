@@ -15,7 +15,7 @@ Param(
 Process {
     # Tests
     # CPU Limits 
-    Describe -Name 'VM Configuration: CPU Limit' -Fixture {
+    Describe -Name 'VM Configuration: CPU Limit' -Tags @("vm") -Fixture {
         # Variables
         . $Config
         [bool]$allowcpulimit    = $config.vm.allowcpulimit
@@ -49,7 +49,7 @@ Process {
     }
 
     # Memory Limits 
-    Describe -Name 'VM Configuration: Memory Limit' -Fixture {
+    Describe -Name 'VM Configuration: Memory Limit'-Tag @("vm") -Fixture {
         # Variables
         . $Config
         [bool]$allowmemorylimit = $config.vm.allowmemorylimit

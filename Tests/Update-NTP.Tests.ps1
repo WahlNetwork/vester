@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Host Configuration: NTP Server(s)' -Fixture {
+    Describe -Name 'Host Configuration: NTP Server(s)' -Tags @("host") -Fixture {
         # Variables
         . $Config
         [array]$esxntp = $config.host.esxntp
