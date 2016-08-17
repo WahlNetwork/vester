@@ -24,6 +24,20 @@ The end-state configuration for each vSphere component is stored inside of the `
 
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
 
+### Variables
+
+`Path` (string)
+
+The relative path to where you have downloaded the Vester tests. Some folks like to use different versions of tests, or subdivide tests into smaller groups. The `path` input is required by Pester when sending parameters as shown in the examples below.
+
+`Remediate` (bool)
+
+Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation. Default value is `$false`.
+
+`Config` (string)
+
+The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files. Default value is `Config.ps1`.
+
 ### Example 1 - Validation
 `Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }}`
 
@@ -61,7 +75,18 @@ I'd like to see more tests added for things people find important. This will be 
 
 # Contribution
 
-Everyone is welcome to contribute to this project. Here are the steps involved:
+Everyone is welcome to contribute to this project. The goal is to add fine-grained tests that look at specific values within a vSphere environment, compare them to defined configuration value, and optionally remediate discrepancies if the user so decides. However, there is nothing wrong with submitting a pull request (PR) with a non-remediating test. This is a great starting point for those newer to coding with PowerShell!
+
+### Your First Contribution
+
+If you're looking for your first bit of code to add, try this list:
+
+1. Identify a configuration value in your vSphere environment that isn't being inspected by Vester.
+2. Use the [Template](https://github.com/WahlNetwork/Vester/blob/master/Templates/Update-Template.ps1) to create a test that inspects this value and try it out locally.
+3. At this point you can submit a pull request (PR) for a non-remediating test. If someone else wants the remediation code added, they will grab your code and write that portion.
+4. Optionally, write the remediation portion yourself to make a fully remediating test.
+
+### Contribution Process
 
 1. Create a fork of the project into your own repository.
 2. From your fork, create a new feature branch (other than master) that expresses your feature or enhancement.
