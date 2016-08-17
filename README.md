@@ -22,15 +22,23 @@ Because this repository is simply a collection of Pester tests, there is no inst
 
 ### `Path` (string)
 
-The relative path to where you have downloaded the Vester tests. Some folks like to use different versions of tests, or subdivide tests into smaller groups. The `path` input is required by Pester when sending parameters as shown in the examples below.
+* The relative path to where you have downloaded the Vester tests.
+* Some folks like to use different versions of tests, or subdivide tests into smaller groups.
+* The `path` input is required by Pester when sending parameters as shown in the examples below.
 
 ### `Remediate` (bool)
 
-Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation.
+* Set to `$false` to report on differences without remediation.
+* Set to `$true` to remediate any differences found.
+
+Default: `$false`
 
 ### `Config` (string)
 
-The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
+* The relative path to where you have located a Vester config file.
+* You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
+
+Default: `Vester\Configs\Config.ps1`
 
 # Usage Instructions
 
