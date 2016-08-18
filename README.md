@@ -20,7 +20,7 @@ Because this repository is simply a collection of Pester tests, there is no inst
 
 # Variables
 
-This project ultimately uses Pester to provide the testing framework. Because of this, we leverage a combination of Pester variables and custom ones written for Vester.
+This project ultimately uses Pester to provide the testing framework. Because of this, we leverage a combination of Pester variables and custom ones written for Vester. If you're wondering why the command structure looks a bit complex, reference Pester [#271](https://github.com/pester/Pester/issues/271) and [#423](https://github.com/pester/Pester/issues/423).
 
 ### `Path` (string)
 
