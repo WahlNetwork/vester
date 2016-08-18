@@ -1,21 +1,18 @@
-﻿#requires -Modules Pester
-#requires -Modules VMware.VimAutomation.Core
-
+﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory = $true,Position = 0,HelpMessage = 'Remediation toggle')]
-    [ValidateNotNullorEmpty()]
-    [switch]$Remediate,
-    [Parameter(Mandatory = $true,Position = 1,HelpMessage = 'Path to the configuration file')]
-    [ValidateNotNullorEmpty()]
-    [string]$Config
+    # Optionally fix all config drift that is discovered. Defaults to false (off)
+    [switch]$Remediate = $false,
+
+    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
+    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
 )
 
 Process {
     # Tests
     # CPU Limits 
-    Describe -Name 'VM Configuration: CPU Limit' -Fixture {
+    Describe -Name 'VM Configuration: CPU Limit' -Tags @("vm") -Fixture {
         # Variables
         . $Config
         [bool]$allowcpulimit    = $config.vm.allowcpulimit
@@ -49,7 +46,7 @@ Process {
     }
 
     # Memory Limits 
-    Describe -Name 'VM Configuration: Memory Limit' -Fixture {
+    Describe -Name 'VM Configuration: Memory Limit'-Tag @("vm") -Fixture {
         # Variables
         . $Config
         [bool]$allowmemorylimit = $config.vm.allowmemorylimit

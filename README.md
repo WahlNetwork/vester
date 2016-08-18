@@ -20,17 +20,30 @@ Because this repository is simply a collection of Pester tests, there is no inst
 
 # Variables
 
+This project ultimately uses Pester to provide the testing framework. Because of this, we leverage a combination of Pester variables and custom ones written for Vester.
+
 ### `Path` (string)
 
-The relative path to where you have downloaded the Vester tests. Some folks like to use different versions of tests, or subdivide tests into smaller groups. The `path` input is required by Pester when sending parameters as shown in the examples below.
+* Used to tell `Invoke-Pester` the relative path to where you have downloaded the Vester tests.
+* Some folks like to use different versions of tests, or subdivide tests into smaller groups.
+* The `path` input is required by Pester when sending parameters as shown in the examples below.
+ 
+Default: A folder named `Tests` found as a child item from the current location.
 
 ### `Remediate` (bool)
 
-Set to `$true` to remediate any differences found. Set to `$false` to report on differences without remediation.
+* Tells Vester in which mode to operate.
+* Set to `$false` to report on differences without any remediation.
+* Set to `$true` to report on differences while also trying to remediate them.
+
+Default: `$false`
 
 ### `Config` (string)
 
-The relative path to where you have located a Vester config file. You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
+* The relative path to where you have located a Vester config file.
+* You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
+
+Default: `Vester\Configs\Config.ps1`
 
 # Usage Instructions
 
@@ -40,34 +53,57 @@ If you have multiple environments that have unique settings, create a copy of th
 
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
 
-### Example 1 - Validation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }}`
+[![Watch the Tutorial on YouTube](http://i.imgur.com/qXrGlar.png)](https://www.youtube.com/watch?v=CyVfzZ4jA8Q "Watch the Tutorial on YouTube")
+
+### Example 1 - Validation using Defaults
+`Invoke-Pester`
+
+* Runs all tests found in the default path `.\Vester\Tests`
+* Uses the default remediation value of `$false` (disabled) - drift will be shown but not corrected
+* Uses the default configuration settings found in `.\Vester\Configs\Config.ps1`.
+
+### Example 2 - Validation using Specific Values
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Configs\Config.ps1' }}`
 
 * Runs all tests found in the path `.\Vester\Tests`
 * Remediation is `$false` (disabled) - drift will be shown but not corrected
-* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
+* Configuration settings found in `.\Vester\Configs\Config.ps1` will be used.
 
-### Example 2 - Remediation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $true ; Config = '.\Vester\Tests\Config-Prod.ps1' }}`
+### Example 3 - Remediation using Specific Values
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $true ; Config = '.\Vester\Configs\Config-Prod.ps1' }}`
 
 * Runs all tests found in the path `.\Vester\Tests`
 * Remediation is `$true` (enabled) - drift will be shown and also corrected
-* Configuration settings found in `.\Vester\Tests\Config-Prod.ps1` will be used.
+* Configuration settings found in `.\Vester\Configs\Config-Prod.ps1` will be used.
 
-### Example 3 - Single Test Validation
-`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }} -TestName '*DNS*'`
-
-* Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
-* Remediation is `$true` (enabled) - drift will be shown and also corrected
-* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
-
-### Example 4 - Single Test Validation with NUnit Output (for Jenkins, AppVeyor, etc.)
-`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Tests\Config.ps1' }} -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile '.\Vester\Results'`
+### Example 4 - Single Test Validation
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Configs\Config.ps1' }} -TestName '*DNS*'`
 
 * Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
 * Remediation is `$true` (enabled) - drift will be shown and also corrected
-* Configuration settings found in `.\Vester\Tests\Config.ps1` will be used.
+* Configuration settings found in `.\Vester\Configs\Config.ps1` will be used.
+
+### Example 5 - Single Test Validation with NUnit Output (for Jenkins, AppVeyor, etc.)
+`Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Configs\Config.ps1' }} -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile '.\Vester\Results'`
+
+* Runs any test with the string `DNS` found in the name, using the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Configs\Config.ps1` will be used.
 * The results of the tests will be stored in NUnit XML format in the path `.\Vester\Results\Sample.xml`
+
+### Example 6 - Validation using Tag Inclusion
+`Invoke-Pester -Tag host -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Configs\Config.ps1' }} `
+
+* Runs any test that is tagged with `host`, using the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Configs\Config.ps1` will be used.
+ 
+### Example 7 - Validation using Tag Exclusion
+`Invoke-Pester -ExcludeTag vm -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $false ; Config = '.\Vester\Configs\Config.ps1' }} `
+
+* Runs any test that is not tagged with `vm`, using the path `.\Vester\Tests`
+* Remediation is `$true` (enabled) - drift will be shown and also corrected
+* Configuration settings found in `.\Vester\Configs\Config.ps1` will be used.
 
 # Future
 
@@ -78,6 +114,14 @@ I'd like to see more tests added for things people find important. This will be 
 # Contribution
 
 Everyone is welcome to contribute to this project. The goal is to add fine-grained tests that look at specific values within a vSphere environment, compare them to defined configuration value, and optionally remediate discrepancies if the user so decides. However, there is nothing wrong with submitting a pull request (PR) with a non-remediating test. This is a great starting point for those newer to coding with PowerShell!
+
+### Contribution Requirements
+
+Every test that is added to Vester needs three things:
+
+1. An update to the example [`Config.ps1`](https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.ps1) file with your required configuration value(s), comments, and accepted input type.
+2. An update to the [`Config.Tests.ps1`](https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.Tests.ps1) file to validate that the `Config.ps1` file contains valid entries.
+3. A test file using a properly formatted `Verb-Noun` format (use `Get-Verb` for more details) placed into the Tests folder.
 
 ### Your First Contribution
 
