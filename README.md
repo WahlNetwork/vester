@@ -53,6 +53,8 @@ If you have multiple environments that have unique settings, create a copy of th
 
 Once that's complete, you can start running Pester tests by opening your PowerShell console, using `Connect-VIServer` to authenticate to your vCenter Server, and finally using the parameters and examples below.
 
+[![Watch the Tutorial on YouTube](http://i.imgur.com/qXrGlar.png)](https://www.youtube.com/watch?v=CyVfzZ4jA8Q "Watch the Tutorial on YouTube")
+
 ### Example 1 - Validation using Defaults
 `Invoke-Pester`
 
