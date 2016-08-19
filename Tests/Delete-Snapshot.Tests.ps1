@@ -11,14 +11,14 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'VM Configuration: Snaphot(s)' -Tag @("vm") -Fixture {
+    Describe -Name 'VM Configuration: Snapshot(s)' -Tag @("vm") -Fixture {
         # Variables
         . $Config
         [int]$snapretention = $config.vm.snapretention
 
         foreach ($VM in (Get-VM -Name $config.scope.vm)) 
         {
-            It -name "$($VM.name) has no snaphsot older than $snapretention day(s)" -test {
+            It -name "$($VM.name) has no snapshot older than $snapretention day(s)" -test {
                 [array]$value = $VM |
                 Get-Snapshot |
                 Where-Object -FilterScript {
