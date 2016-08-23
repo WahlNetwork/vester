@@ -14,7 +14,7 @@ Param(
 
 Process {
     # Tests
-    Describe -Name 'Host Configuration: NFS Advanced Configuration  - CRT ' -Tag @("host","storage","nfs") -Fixture {
+    Describe -Name 'Host Configuration: NFS Advanced Configuration' -Tag @("host","storage","nfs") -Fixture {
         # Variables
         . $Config
         [System.Collections.Hashtable]$nfsadvconfig = $config.nfsadvconfig
