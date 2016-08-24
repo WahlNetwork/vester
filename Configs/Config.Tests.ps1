@@ -31,8 +31,8 @@ Process {
         }
 
         It 'Contains proper settings for .scope' {
-            $config.scope.Keys | Should Match 'cluster|host|vm'
-            $config.scope.Keys.Count | Should Be 3
+            $config.scope.Keys | Should Match 'cluster|host|vm|vds'
+            $config.scope.Keys.Count | Should Be 4
             $config.scope.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             Get-Cluster $config.scope.cluster | Should Not BeNullOrEmpty
             Get-VMHost $config.scope.host | Should Not BeNullOrEmpty
@@ -90,6 +90,19 @@ Process {
             $NFSKeys -replace '\\','' -split '\|' | ForEach-Object {
                 $config.nfsadvconfig.$_ | Should BeOfType Int
             }
+        }
+
+        It 'Contains proper settings for .vds' {
+            $VDSKeys = 'linkproto|linkoperation|mtu'
+            $config.vds.Keys | Should Match $VMKeys
+            $config.vds.Keys.Count | Should Be 3
+            $config.vds.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
+            $config.vds.linkproto | Should BeOfType String
+            $config.vds.linkproto | Should Match 'LLDP|CDP'
+            $config.vds.linkoperation | Should BeOfType String
+            $config.vds.linkoperation | Should Match 'Listen|Advertise|Both|Disabled'
+            $config.vds.mtu | Should BeOfType Int
+            $config.vds.mtu | Should Match '[1500-9000]'
         }
     } #Describe
 } #Process

@@ -7,12 +7,14 @@
         cluster = [string] vSphere cluster names
         host = [string] ESXi host names
         vm = [string] Virtual machine names
+        vds = [string] vSphere Distributed Switch (VDS) names
 #>
 
 $config.scope = @{
     cluster = '*'
     host    = '*'
     vm      = '*'
+    vds     = '*'
 
 }
 
@@ -22,7 +24,7 @@ $config.scope = @{
 #>
 
 $config.vcenter = @{
-    vc = '172.17.48.17'
+    vc = [string]'172.17.48.17'
 }
 
 <########################################################################################
@@ -32,8 +34,8 @@ $config.vcenter = @{
 #>
 
 $config.cluster = @{
-    drsmode  = 'FullyAutomated'
-    drslevel = 2
+    drsmode  = [string]'FullyAutomated'
+    drslevel = [int]2
 }
 
 <########################################################################################
@@ -48,8 +50,8 @@ $config.cluster = @{
 
 
 $config.host = @{
-    sshenable     = $true
-    sshwarn       = 1
+    sshenable     = [bool]$true
+    sshwarn       = [int]1
     esxntp        = @('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org')
     esxdns        = @('172.17.48.11', '172.17.48.12')
     searchdomains = @('rubrik.demo')
@@ -65,10 +67,10 @@ $config.host = @{
 #>
 
 $config.vm = @{
-    snapretention       = 9999
-    allowconnectedcdrom = $false
-    allowcpulimit       = $false
-    allowmemorylimit    = $false
+    snapretention       = [int]9999
+    allowconnectedcdrom = [bool]$false
+    allowcpulimit       = [bool]$false
+    allowmemorylimit    = [bool]$false
 }
 
 <########################################################################################
@@ -77,10 +79,23 @@ $config.vm = @{
 #>
 
 $config.nfsadvconfig = @{
-    'NFS.MaxQueueDepth'    = 32
-    'NFS.DeleteRPCTimeout' = 30
-    'NFS.HeartbeatFrequency' = 20
-    'NFS.MaxVolumes'       = 256
-    'Net.TcpipHeapSize'    = 32
-    'Net.TcpipHeapMax'     = 1536
+    'NFS.MaxQueueDepth'    = [int]32
+    'NFS.DeleteRPCTimeout' = [int]30
+    'NFS.HeartbeatFrequency' = [int]20
+    'NFS.MaxVolumes'       = [int]256
+    'Net.TcpipHeapSize'    = [int]32
+    'Net.TcpipHeapMax'     = [int]1536
+}
+
+<########################################################################################
+        VDS (vSphere Distributed Switch) Settings
+        linkproto = [string] LLDP or CDP 
+        linkoperation = [string] Listen, Advertise, Both, Disabled
+        mtu = [int] Maximum Transmission Unit. Max is 9000.
+#>
+
+$config.vds = @{
+        linkproto = [string]'LLDP'
+        linkoperation = [string]'Both'
+        mtu = [int]1500
 }
