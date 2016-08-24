@@ -7,6 +7,7 @@
         cluster = [string] vSphere cluster names
         host = [string] ESXi host names
         vm = [string] Virtual machine names
+        vds = [string] vSphere Distributed Switch (VDS) names
 #>
 
 $config.scope = @{
