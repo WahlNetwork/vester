@@ -94,7 +94,7 @@ Process {
 
         It 'Contains proper settings for .vds' {
             $VDSKeys = 'linkproto|linkoperation|mtu'
-            $config.vds.Keys | Should Match $VMKeys
+            $config.vds.Keys | Should Match $VDSKeys
             $config.vds.Keys.Count | Should Be 3
             $config.vds.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.vds.linkproto | Should BeOfType String
