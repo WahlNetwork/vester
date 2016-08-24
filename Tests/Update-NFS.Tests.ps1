@@ -32,10 +32,9 @@ Process {
                 $hostadvsettings[$sname] = $svalue
         }
             $value =@() 
-            $hostadv
             foreach ($setting in $nfsadvconfig.Keys) {
                 if ($hostadvsettings.ContainsKey($setting)){
-                    $value += $hostadvsetting.$setting
+                    $value += $hostadvsettings.$setting
                 } else { 
                     #nop 
                 }
