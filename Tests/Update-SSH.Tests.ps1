@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -34,22 +35,26 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $server"
-                        if ($sshenable -eq $true) 
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
                         {
-                            Start-VMHostService -HostService ($server |
-                                Get-VMHostService |
-                                Where-Object -FilterScript {
-                                    $_.Key -eq 'TSM-SSH'
-                            }) -ErrorAction Stop
-                        }
-                        if ($sshenable -eq $false) 
-                        {
-                            Stop-VMHostService -HostService ($server |
-                                Get-VMHostService |
-                                Where-Object -FilterScript {
-                                    $_.Key -eq 'TSM-SSH'
-                            }) -ErrorAction Stop
+                            Write-Warning -Message "Remediating $server"
+                            if ($sshenable -eq $true) 
+                            {
+                                Start-VMHostService -HostService ($server |
+                                    Get-VMHostService |
+                                    Where-Object -FilterScript {
+                                        $_.Key -eq 'TSM-SSH'
+                                }) -ErrorAction Stop
+                            }
+                            if ($sshenable -eq $false) 
+                            {
+                                Stop-VMHostService -HostService ($server |
+                                    Get-VMHostService |
+                                    Where-Object -FilterScript {
+                                        $_.Key -eq 'TSM-SSH'
+                                }) -ErrorAction Stop
+                            }
                         }
                     }
                     else 
@@ -71,12 +76,16 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $server"
-                        (Get-AdvancedSetting -Entity $server |
-                            Where-Object -FilterScript {
-                                $_.Name -eq 'UserVars.SuppressShellWarning'
-                            } |
-                        Set-AdvancedSetting -Value $sshwarn -Confirm:$false -ErrorAction Stop)
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $server"
+                            (Get-AdvancedSetting -Entity $server |
+                                Where-Object -FilterScript {
+                                    $_.Name -eq 'UserVars.SuppressShellWarning'
+                                } |
+                            Set-AdvancedSetting -Value $sshwarn -Confirm:$false -ErrorAction Stop)
+                        }
                     }
                     else 
                     {

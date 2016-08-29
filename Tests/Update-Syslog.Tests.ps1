@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -29,9 +30,13 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $server"
-                        Set-VMHostSysLogServer -VMHost $server -SysLogServer $esxsyslog -ErrorAction Stop
-                        (Get-EsxCli -VMHost $server).system.syslog.reload()
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $server"
+                            Set-VMHostSysLogServer -VMHost $server -SysLogServer $esxsyslog -ErrorAction Stop
+                            (Get-EsxCli -VMHost $server).system.syslog.reload()
+                        }
                     }
                     else 
                     {

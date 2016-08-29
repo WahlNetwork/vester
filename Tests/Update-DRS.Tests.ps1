@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -30,8 +31,12 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $cluster"
-                        Set-Cluster -Cluster $cluster -DrsAutomationLevel:$drsmode -Confirm:$false -ErrorAction Stop
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $cluster"
+                            Set-Cluster -Cluster $cluster -DrsAutomationLevel:$drsmode -Confirm:$false -ErrorAction Stop
+                        }
                     }
                     else 
                     {
@@ -50,12 +55,16 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $cluster"
-                        $clusterview = Get-Cluster -Name $cluster | Get-View
-                        $clusterspec = New-Object -TypeName VMware.Vim.ClusterConfigSpecEx
-                        $clusterspec.drsConfig = New-Object -TypeName VMware.Vim.ClusterDrsConfigInfo
-                        $clusterspec.drsConfig.vmotionRate = $drslevel
-                        $clusterview.ReconfigureComputeResource_Task($clusterspec, $true)
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $cluster"
+                            $clusterview = Get-Cluster -Name $cluster | Get-View
+                            $clusterspec = New-Object -TypeName VMware.Vim.ClusterConfigSpecEx
+                            $clusterspec.drsConfig = New-Object -TypeName VMware.Vim.ClusterDrsConfigInfo
+                            $clusterspec.drsConfig.vmotionRate = $drslevel
+                            $clusterview.ReconfigureComputeResource_Task($clusterspec, $true)
+                        }
                     }
                     else 
                     {

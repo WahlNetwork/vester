@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -31,9 +32,12 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            Write-Warning -Message "Remediating $VM"
-
-                            $value | Set-VMResourceConfiguration -CpuLimitMhz $null
+                            # TODO: Update ShouldProcess with useful info
+                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            {
+                                Write-Warning -Message "Remediating $VM"
+                                $value | Set-VMResourceConfiguration -CpuLimitMhz $null
+                            }
                         }
                         else 
                         {
@@ -65,9 +69,13 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            Write-Warning -Message "Remediating $VM"
+                            # TODO: Update ShouldProcess with useful info
+                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            {
+                                Write-Warning -Message "Remediating $VM"
 
-                            $value | Set-VMResourceConfiguration -MemLimitMB $null
+                                $value | Set-VMResourceConfiguration -MemLimitMB $null
+                            }
                         }
                         else 
                         {

@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core, VMware.VimAutomation.Vds
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -31,8 +32,12 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $vds"
-                        Set-VDSwitch $vds -LinkDiscoveryProtocol $linkproto -Confirm:$false -ErrorAction Stop
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $vds"
+                            Set-VDSwitch $vds -LinkDiscoveryProtocol $linkproto -Confirm:$false -ErrorAction Stop
+                        }
                     }
                     else 
                     {
@@ -51,8 +56,12 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $vds"
-                        Set-VDSwitch $vds -LinkDiscoveryProtocolOperation $linkoperation -Confirm:$false -ErrorAction Stop
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $vds"
+                            Set-VDSwitch $vds -LinkDiscoveryProtocolOperation $linkoperation -Confirm:$false -ErrorAction Stop
+                        }
                     }
                     else 
                     {
@@ -71,8 +80,12 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $vds"
-                        Set-VDSwitch $vds -Mtu $mtu -Confirm:$false -ErrorAction Stop
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $vds"
+                            Set-VDSwitch $vds -Mtu $mtu -Confirm:$false -ErrorAction Stop
+                        }
                     }
                     else 
                     {
