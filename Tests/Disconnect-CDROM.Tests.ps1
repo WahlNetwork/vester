@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -30,8 +31,12 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            Write-Warning -Message "Remediating $VM"
-                            $Value | Set-CDDrive -NoMedia -Confirm:$false
+                            # TODO: Update ShouldProcess with useful info
+                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            {
+                                Write-Warning -Message "Remediating $VM"
+                                $Value | Set-CDDrive -NoMedia -Confirm:$false
+                            }
                         }
                         else 
                         {
@@ -49,8 +54,12 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            Write-Warning -Message "Remediating $VM"
-                            $Value | Set-CDDrive -NoMedia -Confirm:$false
+                            # TODO: Update ShouldProcess with useful info
+                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            {
+                                Write-Warning -Message "Remediating $VM"
+                                $Value | Set-CDDrive -NoMedia -Confirm:$false
+                            }
                         }
                         else 
                         {

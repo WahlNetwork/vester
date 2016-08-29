@@ -1,6 +1,7 @@
 ﻿#requires -Modules Pester, VMware.VimAutomation.Core
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, 
+               ConfirmImpact = 'Medium')]
 Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
@@ -29,16 +30,20 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating $server"
-                        Get-VMHostNtpServer -VMHost $server | ForEach-Object -Process {
-                            Remove-VMHostNtpServer -VMHost $server -NtpServer $_ -Confirm:$false -ErrorAction Stop
+                        # TODO: Update ShouldProcess with useful info
+                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        {
+                            Write-Warning -Message "Remediating $server"
+                            Get-VMHostNtpServer -VMHost $server | ForEach-Object -Process {
+                                Remove-VMHostNtpServer -VMHost $server -NtpServer $_ -Confirm:$false -ErrorAction Stop
+                            }
+                            Add-VMHostNtpServer -VMHost $server -NtpServer $esxntp -ErrorAction Stop
+                            $ntpclient = Get-VMHostService -VMHost $server | Where-Object -FilterScript {
+                                $_.Key -match 'ntpd'
+                            }
+                            $ntpclient | Set-VMHostService -Policy:On -Confirm:$false -ErrorAction:Stop
+                            $ntpclient | Restart-VMHostService -Confirm:$false -ErrorAction:Stop
                         }
-                        Add-VMHostNtpServer -VMHost $server -NtpServer $esxntp -ErrorAction Stop
-                        $ntpclient = Get-VMHostService -VMHost $server | Where-Object -FilterScript {
-                            $_.Key -match 'ntpd'
-                        }
-                        $ntpclient | Set-VMHostService -Policy:On -Confirm:$false -ErrorAction:Stop
-                        $ntpclient | Restart-VMHostService -Confirm:$false -ErrorAction:Stop
                     }
                     else 
                     {
