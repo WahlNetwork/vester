@@ -49,9 +49,9 @@ Process {
         }
 
         It 'Contains proper settings for .host' {
-            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog'
+            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog|esxsyslogfirewallexception'
             $config.host.Keys | Should Match $HostKeys
-            $config.host.Keys.Count | Should Be 6
+            $config.host.Keys.Count | Should Be 7
             $config.host.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.host.sshenable | Should BeOfType Bool
             $config.host.sshwarn | Should BeOfType Int
@@ -68,6 +68,7 @@ Process {
             $config.host.esxsyslog | ForEach-Object {
                 $_ | Should Not BeNullOrEmpty
             }
+            $config.host.esxsyslogfirewallexception | Should BeOfType Bool
         }
 
         It 'Contains proper settings for .vm' {

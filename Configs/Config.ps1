@@ -46,6 +46,7 @@ $config.cluster = @{
         esxdns = [array] @('DNS Server 1', 'DNS Server 2 (optional)')
         searchdomains = [array] @('Domain 1', 'Domain 2 (optional)')
         esxsyslog = [array] @('tcp://ip_address:port')
+        esxsyslogfirewallexception = [bool] $true or $false
 #>
 
 
@@ -56,6 +57,7 @@ $config.host = @{
     esxdns        = @('172.17.48.11', '172.17.48.12')
     searchdomains = @('rubrik.demo')
     esxsyslog     = @('tcp://172.16.20.243:514')
+    esxsyslogfirewallexception  = [bool]$true
 }
 
 <########################################################################################
