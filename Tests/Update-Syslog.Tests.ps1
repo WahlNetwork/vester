@@ -15,6 +15,7 @@ Process {
         # Variables
         . $Config
         [array]$esxsyslog = $config.host.esxsyslog
+        [bool]$esxsyslogfirewallexception = $config.host.esxsyslogfirewallexception
 
         foreach ($server in (Get-VMHost -Name $config.scope.host)) 
         {
@@ -32,6 +33,25 @@ Process {
                         Write-Warning -Message "Remediating $server"
                         Set-VMHostSysLogServer -VMHost $server -SysLogServer $esxsyslog -ErrorAction Stop
                         (Get-EsxCli -VMHost $server).system.syslog.reload()
+                    }
+                    else 
+                    {
+                        throw $_
+                    }
+                }
+            }
+
+            It -name "$($server.name) Host Syslog Firewall State" -test {
+                [array]$value = $server | Get-VMHostFirewallException -name syslog
+                try {
+                    $value.enabled | Should be $True
+                }
+                catch {
+                    if ($Remediate) 
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $server"
+                        $value | Set-VMHostFirewallException -Enabled $true -ErrorAction Stop
                     }
                     else 
                     {
