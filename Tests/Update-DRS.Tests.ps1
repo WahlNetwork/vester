@@ -20,7 +20,7 @@ Process {
         foreach ($cluster in (Get-Cluster -Name $config.scope.cluster)) 
         {
             It -name "$($cluster.name) Cluster DRS Mode" -test {
-                $value = (Get-Cluster $cluster).DrsAutomationLevel
+                $value = $cluster.DrsAutomationLevel
                 try 
                 {
                     $value | Should Be $drsmode
@@ -40,7 +40,7 @@ Process {
                 }
             }
             It -name "$($cluster.name) Cluster DRS Automation Level" -test {
-                $value = (Get-Cluster $cluster | Get-View).Configuration.DrsConfig.VmotionRate
+                $value = ($cluster | Get-View).Configuration.DrsConfig.VmotionRate
                 try 
                 {
                     $value | Should Be $drslevel
