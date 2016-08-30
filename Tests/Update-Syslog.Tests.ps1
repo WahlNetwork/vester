@@ -44,7 +44,7 @@ Process {
             It -name "$($server.name) Host Syslog Firewall State" -test {
                 [array]$value = $server | Get-VMHostFirewallException -name syslog
                 try {
-                    $value.enabled | Should be $True
+                    $value.enabled | Should be $esxsyslogfirewallexception
                 }
                 catch {
                     if ($Remediate) 
