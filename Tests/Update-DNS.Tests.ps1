@@ -47,7 +47,7 @@ Process {
                 }
                 catch 
                 {
-                    if ($fix) 
+                    if ($Remediate) 
                     {
                         Write-Warning -Message $_
                         Write-Warning -Message "Remediating $server"
