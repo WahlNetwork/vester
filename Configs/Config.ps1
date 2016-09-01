@@ -28,6 +28,9 @@ $config.scope = @{
 
 $config.vcenter = @{
     vc = [string]'172.17.48.17'
+    smtpsender = [string]'vcenter@domain.com'
+    smtpport = [int]'25'
+    smtpserver = [string]'mailserver.domain.com'
 }
 
 <########################################################################################
