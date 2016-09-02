@@ -20,8 +20,10 @@ Process {
 
         foreach ($VCServer in ($Global:DefaultVIServers)) 
         {
+        $VCMailSettings = Get-AdvancedSetting -Entity $VCServer.name -Name @('mail*')
+
             It -name "$($VCServer.name) SMTP Sender" -test {
-                $value = Get-AdvancedSetting -Entity $VCServer.name -Name mail.sender | Select Value
+                $value = $VCMailSettings[0].value
                 try 
                 {
                     $value | Should Be $SMTPSender
@@ -43,7 +45,7 @@ Process {
 
 
             It -name "$($VCServer.name) SMTP Port" -test {
-                $value = Get-AdvancedSetting -Entity $VCServer.name -Name mail.smtp.port | Select Value
+                $value = $VCMailSettings[2].value
                 try 
                 {
                     $value | Should Be $SMTPPort
@@ -65,7 +67,7 @@ Process {
 
             
             It -name "$($VCServer.name) SMTP Server" -test {
-                $value = Get-AdvancedSetting -Entity $VCServer.name -Name mail.smtp.server | Select Value
+                $value = $VCMailSettings[3].value
                 try 
                 {
                     $value | Should Be $SMTPServer
@@ -85,6 +87,6 @@ Process {
                 }
             }
 
-        }#End Foreach
+        }
     }
 }
