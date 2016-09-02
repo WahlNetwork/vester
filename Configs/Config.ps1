@@ -32,12 +32,22 @@ $config.vcenter = @{
         drsmode = [string] FullyAutomated, Manual, or PartiallyAutomated
         drslevel = [int] 1 (Aggressive), 2, 3, 4, 5 (Conservative)
         haenable = [bool] $true or $false
+        enableVMCP = [bool] $true or $false
+        VmStorageProtectionForPDL = [string] warning, disabled, restartAgressive
+        VmStorageProtectionForAPD = [string] warning, disabled, restartAgressive, restartConservative
+        VmTerminateDelayForAPDSec = [int] x = number of seconds
+        VmReactionOnAPDCleared = [string] reset, none
 #>
 
 $config.cluster = @{
     drsmode  = [string]'FullyAutomated'
     drslevel = [int]2
     haenable = [bool]$true
+    enableVMCP = [bool]$true
+    VmStorageProtectionForPDL = [string]'warning'
+    VmStorageProtectionForAPD = [string]'restartConservative'
+    VmTerminateDelayForAPDSec = [int]300
+    VmReactionOnAPDCleared = [string]'none'
 }
 
 <########################################################################################
