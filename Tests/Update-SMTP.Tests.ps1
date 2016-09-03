@@ -20,7 +20,7 @@ Process {
 
         foreach ($VCServer in ($config.vcenter.vc)) 
         {
-        $VCMailSettings = Get-AdvancedSetting -Entity $VCServer -Name @('mail*')
+        $VCMailSettings = Get-AdvancedSetting -Entity $VCServer -Name mail.sender,mail.smtp.port,mail.smtp.server
 
             It -name "$($VCServer) SMTP Sender" -test {
                 $value = $VCMailSettings[0].value
@@ -45,7 +45,7 @@ Process {
 
 
             It -name "$($VCServer) SMTP Port" -test {
-                $value = $VCMailSettings[2].value
+                $value = $VCMailSettings[1].value
                 try 
                 {
                     $value | Should Be $SMTPPort
@@ -67,7 +67,7 @@ Process {
 
             
             It -name "$($VCServer) SMTP Server" -test {
-                $value = $VCMailSettings[3].value
+                $value = $VCMailSettings[2].value
                 try 
                 {
                     $value | Should Be $SMTPServer
