@@ -44,12 +44,13 @@ Process {
         }
 
         It 'Contains proper settings for .cluster' {
-            $config.cluster.Keys | Should Match 'drsmode|drslevel'
-            $config.cluster.Keys.Count | Should Be 2
+            $config.cluster.Keys | Should Match 'drsmode|drslevel|haenable'
+            $config.cluster.Keys.Count | Should Be 3
             $config.cluster.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.cluster.drsmode | Should Match 'FullyAutomated|Manual|PartiallyAutomated'
             $config.cluster.drslevel | Should BeOfType Int
             $config.cluster.drslevel | Should Match '[1-5]'
+            $config.cluster.haenable | Should BeOfType Bool
         }
 
         It 'Contains proper settings for .host' {

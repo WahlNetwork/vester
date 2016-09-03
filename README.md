@@ -5,6 +5,8 @@ Vester is a community project that aims to provide an extremely light-weight app
 
 ![Example](/Media/lab-config-example.jpg?raw=true "Example")
 
+Vester was featured in [INF8036 at VMworld 2016](https://youtu.be/hs4_DOwN-JU?t=20m36s)
+
 # Requirements
 
 You'll just need a few free pieces of software.

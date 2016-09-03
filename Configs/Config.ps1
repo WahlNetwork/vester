@@ -37,11 +37,13 @@ $config.vcenter = @{
         Cluster Settings
         drsmode = [string] FullyAutomated, Manual, or PartiallyAutomated
         drslevel = [int] 1 (Aggressive), 2, 3, 4, 5 (Conservative)
+        haenable = [bool] $true or $false
 #>
 
 $config.cluster = @{
     drsmode  = [string]'FullyAutomated'
     drslevel = [int]2
+    haenable = [bool]$true
 }
 
 <########################################################################################
