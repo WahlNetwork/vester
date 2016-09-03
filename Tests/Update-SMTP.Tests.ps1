@@ -18,11 +18,11 @@ Process {
         [int]$SMTPPort = $config.vcenter.smtpport
         [string]$SMTPServer = $config.vcenter.smtpserver
 
-        foreach ($VCServer in ($Global:DefaultVIServers)) 
+        foreach ($VCServer in ($config.vcenter.vc)) 
         {
-        $VCMailSettings = Get-AdvancedSetting -Entity $VCServer.name -Name @('mail*')
+        $VCMailSettings = Get-AdvancedSetting -Entity $VCServer -Name @('mail*')
 
-            It -name "$($VCServer.name) SMTP Sender" -test {
+            It -name "$($VCServer) SMTP Sender" -test {
                 $value = $VCMailSettings[0].value
                 try 
                 {
@@ -33,8 +33,8 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating SMTP Sender on $($VCServer.name)"
-                        Get-AdvancedSetting -Entity $VCServer.name -Name mail.sender | Set-AdvancedSetting -value $SMTPSender -Confirm:$false -ErrorAction Stop
+                        Write-Warning -Message "Remediating SMTP Sender on $($VCServer)"
+                        Get-AdvancedSetting -Entity $VCServer -Name mail.sender | Set-AdvancedSetting -value $SMTPSender -Confirm:$false -ErrorAction Stop
                     }
                     else 
                     {
@@ -44,7 +44,7 @@ Process {
             }
 
 
-            It -name "$($VCServer.name) SMTP Port" -test {
+            It -name "$($VCServer) SMTP Port" -test {
                 $value = $VCMailSettings[2].value
                 try 
                 {
@@ -55,8 +55,8 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating SMTP Port on $($VCServer.name)"
-                        Get-AdvancedSetting -Entity $VCServer.name -Name mail.smtp.port | Set-AdvancedSetting -value $SMTPPort -Confirm:$false -ErrorAction Stop
+                        Write-Warning -Message "Remediating SMTP Port on $($VCServer)"
+                        Get-AdvancedSetting -Entity $VCServer -Name mail.smtp.port | Set-AdvancedSetting -value $SMTPPort -Confirm:$false -ErrorAction Stop
                     }
                     else 
                     {
@@ -66,7 +66,7 @@ Process {
             }
 
             
-            It -name "$($VCServer.name) SMTP Server" -test {
+            It -name "$($VCServer) SMTP Server" -test {
                 $value = $VCMailSettings[3].value
                 try 
                 {
@@ -77,8 +77,8 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        Write-Warning -Message "Remediating SMTP Server on $($VCServer.name)"
-                        Get-AdvancedSetting -Entity $VCServer.name -Name mail.smtp.server | Set-AdvancedSetting -value $SMTPServer -Confirm:$false -ErrorAction Stop
+                        Write-Warning -Message "Remediating SMTP Server on $($VCServer)"
+                        Get-AdvancedSetting -Entity $VCServer -Name mail.smtp.server | Set-AdvancedSetting -value $SMTPServer -Confirm:$false -ErrorAction Stop
                     }
                     else 
                     {
