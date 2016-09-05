@@ -21,10 +21,16 @@ $config.scope = @{
 <########################################################################################
         vCenter Settings
         vc = [string] vCenter IP Address
+        smtpsender = [string] SMTP Address used for emails sent from vCenter Server
+        smtpport = [int] Port used to connect to SMTP Server
+        smtpserver = [string] SMTP Server used by vCenter to relay emails
 #>
 
 $config.vcenter = @{
     vc = [string]'172.17.48.17'
+    smtpsender = [string]'vcenter@domain.com'
+    smtpport = [int]'25'
+    smtpserver = [string]'mailserver.domain.com'
 }
 
 <########################################################################################
