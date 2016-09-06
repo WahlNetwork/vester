@@ -51,6 +51,11 @@ Process {
             $config.cluster.drslevel | Should BeOfType Int
             $config.cluster.drslevel | Should Match '[1-5]'
             $config.cluster.haenable | Should BeOfType Bool
+            $config.cluster.enableVMCP | Should BeOfType Bool
+            $config.cluster.VmStorageProtectionForPDL | Should Match 'warning|disabled|restartAgressive'
+            $config.cluster.VmStorageProtectionForAPD | Should Match 'warning|disabled|restartAgressive|restartConservative'
+            $config.cluster.VmTerminateDelayForAPDSec | Should BeOfType Int
+            $config.cluster.VmReactionOnAPDCleared |Should Match 'reset|none'
         }
 
         It 'Contains proper settings for .host' {
