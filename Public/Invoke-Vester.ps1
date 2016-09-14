@@ -8,7 +8,8 @@ function Invoke-Vester {
     .DESCRIPTION
     TODO: Write a full comment-based help section
     #>
-    [CmdletBinding(SupportsShouldProcess = $true, 
+    # Passes -WhatIf through to other tests
+    [CmdletBinding(SupportsShouldProcess = $true,
                    ConfirmImpact = 'Medium')]
     param (
         # Define the file/folder of test file(s) to call
@@ -22,29 +23,10 @@ function Invoke-Vester {
         [object]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
 
         # Optionally fix all config drift that is discovered. Defaults to false (off)
-        [switch]$Remediate = $false,
-
-        # Optionally run only tests that match the given tag(s)
-        [ValidateSet('cluster','host','network','nfs','storage','vcenter','vds','vm')]
-        # TODO: ^ That should be dynamic
-        [string[]]$Tag = $null,
-
-        # Optionally exclude tests with the given tag(s)
-        [ValidateSet('cluster','host','network','nfs','storage','vcenter','vds','vm')]
-        # TODO: ^ That should be dynamic
-        [string[]]$ExcludeTag = $null
+        [switch]$Remediate = $false
     )
 
     BEGIN {
-        If ((Get-Module).Name -notcontains 'VMware.VimAutomation.Core') {
-            Try {
-                Write-Verbose 'Importing PowerCLI module "VMware.VimAutomation.Core"'
-                Import-Module VMware.VimAutomation.Core -ErrorAction Stop
-            } Catch {
-                throw 'PowerCLI module "VMware.VimAutomation.Core" failed to import. Exiting'
-            }
-        }
-
         # Load the defined $cfg values to test
         . $Config
 
@@ -70,7 +52,7 @@ function Invoke-Vester {
         # Need to ForEach if multiple -Script locations are not piped in
         ForEach ($Path in $Script) {
             # Pester accepts Tag/Exclude being null, but each test will need $Config/$Remediate params
-            Invoke-Pester -Tag $Tag -ExcludeTag $ExcludeTag -Script @{
+            Invoke-Pester -Script @{
                 Path = $Path
                 Parameters = @{
                     Config = $Config
