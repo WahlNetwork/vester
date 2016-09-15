@@ -1,0 +1,68 @@
+﻿TOPIC
+    about_Vester
+
+SHORT DESCRIPTION
+    Test and fix configuration drift in your VMware vSphere environment.
+
+LONG DESCRIPTION
+    Vester removes discrepancies from your VMware vSphere environment.
+    It uses PowerCLI and Pester to compare desired settings versus actual.
+
+    Do you know if:
+	1) All of your hosts have the same NTP settings?
+	2) Your cluster's DRS is set to the desired aggression level?
+	3) Any of your VM CD drives have media currently mounted?
+	4) All of your NFS settings are uniform?
+	
+	Vester does!
+
+  GETTING STARTED
+		Import-Module Vester
+	
+	Review the supplied default config file with this line of magic:
+		ise "$(Split-Path (Get-Module Vester).Path -Parent)\Configs\Config.ps1"
+	
+    Each value should match the desired end-state of your environment.
+	You can also set a value to $null, which will skip its corresponding test.
+	For example, to skip the syslog test on each host:
+		$cfg.host = @{
+			esxsyslog = $null
+		}
+	
+	We'll make an auto-generating config file soon™ ;)
+
+  RUNNING TESTS
+	Invoke-Vester is used to run tests against config files.
+	Please refer to the cmdlet's help for more specific examples.
+	
+		Get-Help Invoke-Vester -Examples
+	
+	Tests can be filtered by piping in Get-ChildItem, or within the -Script
+	parameter (like Pester). Because Invoke-Vester just calls Pester,
+	it searches for tests the same way. When given a directory, it will search
+	recursively for *.Tests.ps1 files. When given a file, it will run it as a
+	test, regardless of whether it is named *.Tests.ps1 or not.
+	
+	You may	need multiple config files if you have an environment larger than
+	one cluster or one vCenter. Invoke-Vester allows you to specify the config
+	file to use, which determines the vCenter to connect to, the scope of
+	clusters/hosts/VMs/etc. to search, and the values to use. This is useful
+	if you have both Prod/Dev, if you have many sites to manage, and so on.
+	
+	The -Remediate parameter is designed to immediately fix any discovered issues.
+	You should always run a test without -Remediate first, to ensure all failed
+	tests are expected. Don't drink and admin! (...do so responsibly, anyway.)
+	As an advanced function, Invoke-Vester also supports -WhatIf and -Confirm.
+
+NOTE
+    Vester is a community-driven open source project; as such,
+	there is no official support, and it is used at your own risk.
+	Find us on GitHub to report bugs, submit questions, request
+	features, and maybe even lend a hand! :)
+
+SEE ALSO
+    The project on GitHub:
+        https://github.com/WahlNetwork/Vester
+
+KEYWORDS
+    Vester, VMware, vCenter, vSphere, ESXi, PowerCLI, Pester
