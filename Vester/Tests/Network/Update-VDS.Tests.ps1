@@ -15,11 +15,11 @@ Process {
     Describe -Name 'Network Configuration: VDS Settings' -Tags @('network','vds') -Fixture {
         # Variables
         . $Config
-        [string]$linkproto = $config.vds.linkproto
-        [string]$linkoperation = $config.vds.linkoperation
-        [int]$mtu = $config.vds.mtu
+        [string]$linkproto = $cfg.vds.linkproto
+        [string]$linkoperation = $cfg.vds.linkoperation
+        [int]$mtu = $cfg.vds.mtu
 
-        foreach ($vds in (Get-VDSwitch -Name $config.scope.vds)) 
+        foreach ($vds in (Get-VDSwitch -Name $cfg.scope.vds)) 
         {
             It -name "$($vds.name) VDS Link Protocol" -test {
                 $value = $vds.LinkDiscoveryProtocol

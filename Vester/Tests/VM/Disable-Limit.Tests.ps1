@@ -16,10 +16,10 @@ Process {
     Describe -Name 'VM Configuration: CPU Limit' -Tags @("vm") -Fixture {
         # Variables
         . $Config
-        [bool]$allowcpulimit    = $config.vm.allowcpulimit
+        [bool]$allowcpulimit    = $cfg.vm.allowcpulimit
 
         If (-not $allowcpulimit) {
-            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
+            foreach ($VM in (Get-VM -Name $cfg.scope.vm)) 
             {
                 It -name "$($VM.name) has no CPU limits configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration
@@ -53,10 +53,10 @@ Process {
     Describe -Name 'VM Configuration: Memory Limit'-Tag @("vm") -Fixture {
         # Variables
         . $Config
-        [bool]$allowmemorylimit = $config.vm.allowmemorylimit
+        [bool]$allowmemorylimit = $cfg.vm.allowmemorylimit
 
         If (-not $allowmemorylimit) {
-            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
+            foreach ($VM in (Get-VM -Name $cfg.scope.vm)) 
             {
                 It -name "$($VM.name) has no memory limits configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration

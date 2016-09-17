@@ -1,4 +1,4 @@
-﻿$config = @{}
+﻿$cfg = @{}
 
 <########################################################################################
         Scope Settings
@@ -10,7 +10,7 @@
         vds = [string] vSphere Distributed Switch (VDS) names
 #>
 
-$config.scope = @{
+$cfg.scope = @{
     cluster = '*'
     host    = '*'
     vm      = '*'
@@ -23,7 +23,7 @@ $config.scope = @{
         vc = [string] vCenter IP Address
 #>
 
-$config.vcenter = @{
+$cfg.vcenter = @{
     vc = [string]'172.17.48.17'
 }
 
@@ -33,7 +33,7 @@ $config.vcenter = @{
         drslevel = [int] 1 (Aggressive), 2, 3, 4, 5 (Conservative)
 #>
 
-$config.cluster = @{
+$cfg.cluster = @{
     drsmode  = [string]'FullyAutomated'
     drslevel = [int]2
 }
@@ -49,7 +49,7 @@ $config.cluster = @{
 #>
 
 
-$config.host = @{
+$cfg.host = @{
     sshenable     = [bool]$true
     sshwarn       = [int]1
     esxntp        = @('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org')
@@ -66,7 +66,7 @@ $config.host = @{
         allowmemorylimit = [bool] $true or $false
 #>
 
-$config.vm = @{
+$cfg.vm = @{
     snapretention       = [int]9999
     allowconnectedcdrom = [bool]$false
     allowcpulimit       = [bool]$false
@@ -78,7 +78,7 @@ $config.vm = @{
         Plug in your vendor's recommended NFS configuration values. Example: Tegile's Zebi array.
 #>
 
-$config.nfsadvconfig = @{
+$cfg.nfsadvconfig = @{
     'NFS.MaxQueueDepth'    = [int]32
     'NFS.DeleteRPCTimeout' = [int]30
     'NFS.HeartbeatFrequency' = [int]20
@@ -94,7 +94,7 @@ $config.nfsadvconfig = @{
         mtu = [int] Maximum Transmission Unit. Max is 9000.
 #>
 
-$config.vds = @{
+$cfg.vds = @{
         linkproto = [string]'LLDP'
         linkoperation = [string]'Both'
         mtu = [int]1500
