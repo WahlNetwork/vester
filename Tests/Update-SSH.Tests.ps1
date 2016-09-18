@@ -16,6 +16,8 @@ Process {
         . $Config
         [bool]$sshenable = $config.host.sshenable
         [int]$sshwarn = $config.host.sshwarn
+        [int]$sshtimeout = $config.host.sshtimeout
+        [int]$sshinteractivetimeout = $config.host.sshinteractivetimeout
 
         foreach ($server in (Get-VMHost -Name $config.scope.host)) 
         {
@@ -79,6 +81,58 @@ Process {
                         Set-AdvancedSetting -Value $sshwarn -Confirm:$false -ErrorAction Stop)
                     }
                     else 
+                    {
+                        throw $_
+                    }
+                }
+            }
+            It -name "$($server.name) Host SSH Timeout" -test {
+                $value = Get-AdvancedSetting -Entity $server | Where-Object -FilterScript {
+                    $_.Name -eq 'UserVars.ESXIShellTimeout'
+                }
+                try
+                {
+                    $value.value | Should be $sshtimeout
+                }
+                catch
+                {
+                    if ($Remediate)
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $server"
+                        (Get-AdvancedSetting -Entity $server |
+                            Where-Object -FilterScript {
+                                $_.Name -eq 'UserVars.ESXIShellTimeout'
+                            } |
+                        Set-AdvancedSetting -Value $sshtimeout -confirm:$false -ErrorAction Stop)
+                    }
+                    else
+                    {
+                        throw $_
+                    }
+                }
+            }
+            It -name "$($server.name) Host Interactive SSH Timeout" -test {
+                $value = Get-AdvancedSetting -Entity $server | Where-Object -FilterScript {
+                    $_.Name -eq 'UserVars.ESXIShellInteractiveTimeout'
+                }
+                try
+                {
+                    $value.value | Should be $sshinteractivetimeout
+                }
+                catch
+                {
+                    if ($Remediate)
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $server"
+                        (Get-AdvancedSetting -Entity $server |
+                            Where-Object -FilterScript {
+                                $_.Name -eq 'UserVars.ESXIShellInteractiveTimeout'
+                            } |
+                        Set-AdvancedSetting -Value $sshtimeout -confirm:$false -ErrorAction Stop)
+                    }
+                    else
                     {
                         throw $_
                     }

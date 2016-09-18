@@ -54,7 +54,7 @@ Process {
         }
 
         It 'Contains proper settings for .host' {
-            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog|esxsyslogfirewallexception'
+            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog|esxsyslogfirewallexception|sshtimeout|sshinteractivetimeout'
             $config.host.Keys | Should Match $HostKeys
             $config.host.Keys.Count | Should Be 7
             $config.host.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
@@ -74,6 +74,8 @@ Process {
                 $_ | Should Not BeNullOrEmpty
             }
             $config.host.esxsyslogfirewallexception | Should BeOfType Bool
+            $config.host.sshtimeout | Should BeOfType Int
+            $config.host.sshinteractivetimeout | Should BeOfType Int
         }
 
         It 'Contains proper settings for .vm' {
