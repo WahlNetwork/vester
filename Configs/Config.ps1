@@ -24,6 +24,10 @@ $config.scope = @{
         smtpsender = [string] SMTP Address used for emails sent from vCenter Server
         smtpport = [int] Port used to connect to SMTP Server
         smtpserver = [string] SMTP Server used by vCenter to relay emails
+	EventMaxAge = [int] Age in days that Events will be retained in the vCenter Server Database
+        EventMaxAgeEnabled = [bool] Enables Event cleanup and enforces the max age defined in EventMaxAge
+        TaskMaxAge = [int] Age in days that Tasks will be retained in the vCenter Server Database
+        TaskMaxAgeEnabled = [bool]Enables Task cleanup and enforces the max age defined in TaskMaxAge
 #>
 
 $config.vcenter = @{
@@ -31,6 +35,10 @@ $config.vcenter = @{
     smtpsender = [string]'vcenter@domain.com'
     smtpport = [int]'25'
     smtpserver = [string]'mailserver.domain.com'
+    EventMaxAge = [int]'30'
+    EventMaxAgeEnabled = [bool]$True
+    TaskMaxAge = [int]'30'
+    TaskMaxAgeEnabled = [bool]$True
 }
 
 <########################################################################################

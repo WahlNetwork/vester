@@ -20,12 +20,16 @@ Process {
         }
 
         It 'Contains proper settings for .vcenter' {
-            $config.vcenter.Keys | Should Match 'vc|smtpsender|smtpport|smtpserver'
-            $config.vcenter.Keys.Count | Should Be 4
+            $config.vcenter.Keys | Should Match 'vc|smtpsender|smtpport|smtpserver|EventMaxAge|EventMaxAgeEnabled|TaskMaxAge|TaskMaxAgeEnabled'
+            $config.vcenter.Keys.Count | Should Be 8
             $config.vcenter.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.vcenter.smtpsender | Should BeOfType String
             $config.vcenter.smtpport | Should BeOfType Int
             $config.vcenter.smtpserver | Should BeOfType String
+            $config.vcenter.EventMaxAge | Should BeOfType Int
+            $config.vcenter.EventMaxAgeEnabled | Should BeOfType Bool
+            $config.vcenter.TaskMaxAge | Should BeOfType Int
+            $config.vcenter.TaskMaxAgeEnabled  | Should BeOfType Bool
             # Connect, unless a connection that matches the .vc definition is found
             If ($DefaultVIServer.Name -ne $config.vcenter.vc) {
                 # Optionally, un-comment the next line to ignore certificate warnings in the current session
