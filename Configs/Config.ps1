@@ -66,6 +66,8 @@ $config.host = @{
     searchdomains = @('rubrik.demo')
     esxsyslog     = @('tcp://172.16.20.243:514')
     esxsyslogfirewallexception  = [bool]$true
+    sshtimeout    = [int]800
+    sshinteractivetimeout = [int]800
 }
 
 <########################################################################################
