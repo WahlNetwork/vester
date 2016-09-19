@@ -16,6 +16,18 @@ function Invoke-Vester {
     Invoke-Vester then calls Pester to run each test file. The test files
     leverage PowerCLI to gather values for comparison/remediation.
 
+    .PARAMETER Script
+    Define the file/folder of test file(s) to call.
+    Defaults to the current location.
+
+    .PARAMETER Config
+    Optionally define a different config file to use.
+    Defaults to Vester\Configs\Config.ps1.
+
+    .PARAMETER Remediate
+    Optionally fix all config drift that is discovered.
+    Defaults to false (disabled).
+
     .EXAMPLE
     Invoke-Vester -Verbose
     Using the default config file at \Configs\Config.ps1, Vester will run
@@ -74,7 +86,8 @@ function Invoke-Vester {
         # Optionally define a different config file to use
         # Defaults to Vester\Configs\Config.ps1
         # Currently only supports one Config file at a time
-        [object]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
+        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })] 
+        [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
@@ -82,39 +95,43 @@ function Invoke-Vester {
     )
 
     BEGIN {
-        # Load the defined $cfg values to test
-        . $Config
 
-        If (-not $cfg) {
-            throw "Valid config file not found at path '$Config'. Exiting"
-        }
-
-        # Check for already open session to desired vCenter server
-        If ($cfg.vcenter.vc -notin $global:DefaultVIServers.Name) {
-            Try {
-                # Attempt connection to vCenter, prompting for credentials
-                Write-Verbose "No active connection found to configured vCenter '$($cfg.vcenter.vc)'. Connecting"
-                Connect-VIServer -Server $cfg.vcenter.vc -Credential (Get-Credential) -ErrorAction Stop
-            } Catch {
-                # If unable to connect, stop
-                throw "Unable to connect to configured vCenter '$($cfg.vcenter.vc)'. Exiting"
-            }
-        }
-        Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
     } # Begin
 
     PROCESS {
-        # Need to ForEach if multiple -Script locations are not piped in
-        ForEach ($Path in $Script) {
-            # Pester accepts Tag/Exclude being null, but each test will need $Config/$Remediate params
-            Invoke-Pester -Script @{
-                Path = $Path
-                Parameters = @{
-                    Config = $Config
-                    Remediate = $Remediate
+        Foreach ($ConfigFile in $Config) {
+            # Load the defined $cfg values to test
+            Write-Verbose -Message "Processing Config file $ConfigFile"
+            . $ConfigFile
+
+            If (-not $cfg) {
+                throw "Valid config file not found at path '$ConfigFile'. Exiting"
+            }
+
+            # Check for already open session to desired vCenter server
+            If ($cfg.vcenter.vc -notin $global:DefaultVIServers.Name) {
+                Try {
+                    # Attempt connection to vCenter, prompting for credentials
+                    Write-Verbose "No active connection found to configured vCenter '$($cfg.vcenter.vc)'. Connecting"
+                    Connect-VIServer -Server $cfg.vcenter.vc -Credential (Get-Credential) -ErrorAction Stop
+                } Catch {
+                    # If unable to connect, stop
+                    throw "Unable to connect to configured vCenter '$($cfg.vcenter.vc)'. Exiting"
                 }
-            } # Invoke-Pester
-        } #ForEach Path
+            }
+            Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
+            # Need to ForEach if multiple -Script locations are not piped in
+            ForEach ($Path in $Script) {
+                # Pester accepts Tag/Exclude being null, but each test will need $Config/$Remediate params
+                Invoke-Pester -Script @{
+                    Path = $Path
+                    Parameters = @{
+                        Config = $ConfigFile
+                        Remediate = $Remediate
+                    }
+                } # Invoke-Pester
+            } #ForEach Path
+        } #Foreach Config
     } # Process
 
     END {
