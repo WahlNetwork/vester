@@ -82,6 +82,7 @@ $config.host = @{
         allowconnectedcdrom = [bool] $true or $false
         allowcpulimit = [bool] $true or $false
         allowmemorylimit = [bool] $true or $false
+        VMSyncTimeWithHost  = [bool] $true or $false
 #>
 
 $config.vm = @{
@@ -89,6 +90,7 @@ $config.vm = @{
     allowconnectedcdrom = [bool]$false
     allowcpulimit       = [bool]$false
     allowmemorylimit    = [bool]$false
+    VMSyncTimeWithHost  = [bool]$false
 }
 
 <########################################################################################
