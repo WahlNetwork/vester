@@ -82,6 +82,7 @@ $config.host = @{
         allowconnectedcdrom = [bool] $true or $false
         allowcpulimit = [bool] $true or $false
         allowmemorylimit = [bool] $true or $false
+        bootdelay = [int] Time in milliseconds
 #>
 
 $config.vm = @{
@@ -90,6 +91,7 @@ $config.vm = @{
     allowcpulimit       = [bool]$false
     allowmemorylimit    = [bool]$false
     syncTimeWithHost    = [bool]$false
+    bootDelay           = [int]0
 }
 
 <########################################################################################
