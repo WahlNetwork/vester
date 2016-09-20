@@ -16,18 +16,6 @@ function Invoke-Vester {
     Invoke-Vester then calls Pester to run each test file. The test files
     leverage PowerCLI to gather values for comparison/remediation.
 
-    .PARAMETER Script
-    Define the file/folder of test file(s) to call.
-    Defaults to the current location.
-
-    .PARAMETER Config
-    Optionally define a different config file to use.
-    Defaults to Vester\Configs\Config.ps1.
-
-    .PARAMETER Remediate
-    Optionally fix all config drift that is discovered.
-    Defaults to false (disabled).
-
     .EXAMPLE
     Invoke-Vester -Verbose
     Using the default config file at \Configs\Config.ps1, Vester will run
