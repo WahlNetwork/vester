@@ -89,6 +89,7 @@ $config.vm = @{
     allowconnectedcdrom = [bool]$false
     allowcpulimit       = [bool]$false
     allowmemorylimit    = [bool]$false
+    syncTimeWithHost    = [bool]$false
 }
 
 <########################################################################################
