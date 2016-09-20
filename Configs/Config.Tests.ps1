@@ -78,6 +78,8 @@ Process {
                 $_ | Should Not BeNullOrEmpty
             }
             $config.host.esxsyslogfirewallexception | Should BeOfType Bool
+            $config.host.sshtimeout | Should BeOfType Int
+            $config.host.sshinteractivetimeout | Should BeOfType Int
         }
 
         It 'Contains proper settings for .vm' {
