@@ -73,7 +73,6 @@ function Invoke-Vester {
 
         # Optionally define a different config file to use
         # Defaults to Vester\Configs\Config.ps1
-        # Currently only supports one Config file at a time
         [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })] 
         [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
 
