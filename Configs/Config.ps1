@@ -24,7 +24,7 @@ $config.scope = @{
         smtpsender = [string] SMTP Address used for emails sent from vCenter Server
         smtpport = [int] Port used to connect to SMTP Server
         smtpserver = [string] SMTP Server used by vCenter to relay emails
-	EventMaxAge = [int] Age in days that Events will be retained in the vCenter Server Database
+	    EventMaxAge = [int] Age in days that Events will be retained in the vCenter Server Database
         EventMaxAgeEnabled = [bool] Enables Event cleanup and enforces the max age defined in EventMaxAge
         TaskMaxAge = [int] Age in days that Tasks will be retained in the vCenter Server Database
         TaskMaxAgeEnabled = [bool]Enables Task cleanup and enforces the max age defined in TaskMaxAge
@@ -63,6 +63,10 @@ $config.cluster = @{
         searchdomains = [array] @('Domain 1', 'Domain 2 (optional)')
         esxsyslog = [array] @('tcp://ip_address:port')
         esxsyslogfirewallexception = [bool] $true or $false
+        netDumpEnabled = [string]true, false
+        netDumpHostVNic = [string]'vmk0' (interface name)
+        netDumpNetworkServerIP = [string]'10.54.48.102' (IP of Net Dump Collector)
+        netDumpNetworkServerPort =[int]6500 (Port of Net Dump Collector)
 #>
 
 
@@ -74,6 +78,10 @@ $config.host = @{
     searchdomains = @('rubrik.demo')
     esxsyslog     = @('tcp://172.16.20.243:514')
     esxsyslogfirewallexception  = [bool]$true
+    netDumpEnabled = [string]'true'
+    netDumpHostVNic = [string]'vmk0'
+    netDumpNetworkServerIP = [string]"10.54.48.102"
+    netDumpNetworkServerPort =[int]8500
 }
 
 <########################################################################################
