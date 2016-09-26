@@ -17,7 +17,7 @@ Process {
         [bool]$sshenable = $config.host.sshenable
         [int]$sshwarn = $config.host.sshwarn
 
-        foreach ($server in (Get-VMHost -Name $config.scope.host)) 
+        foreach ($server in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VMHost -Name $config.scope.host)) 
         {
             It -name "$($server.name) Host SSH Service State" -test {
                 $value = $server |

@@ -17,7 +17,7 @@ Process {
         [bool]$allowconnectedcdrom = $config.vm.allowconnectedcdrom
 
         If (-not $allowconnectedcdrom) {
-            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
+            foreach ($VM in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VM $config.scope.vm)) 
             {
                 [array]$value = $VM | get-cddrive
                 It -name "$($VM.name) has no CDROM connected to ISO file " -test {

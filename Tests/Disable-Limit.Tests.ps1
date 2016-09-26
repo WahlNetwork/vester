@@ -18,7 +18,7 @@ Process {
         [bool]$allowcpulimit    = $config.vm.allowcpulimit
 
         If (-not $allowcpulimit) {
-            foreach ($VM in (Get-VM -Name $config.scope.vm)) 
+            foreach ($VM in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VM $config.scope.vm)) 
             {
                 It -name "$($VM.name) has no CPU limits configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration
