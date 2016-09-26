@@ -15,7 +15,7 @@ $config.scope = @{
     cluster    = '*'
     host       = '*'
     vm         = '*'
-    vds        = '*'
+    vds      = '*'
 
 }
 
