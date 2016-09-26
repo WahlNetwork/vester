@@ -15,7 +15,7 @@ Process {
         # Variables
         . $Config
         [bool]$syncTimeWithHost = $config.vm.syncTimeWithHost
-            foreach ($VM in (Get-VM -Name $config.scope.vm))
+            foreach ($VM in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VM $config.scope.vm))
             {
                 $value = get-view $VM | select name,@{N='syncTimeWithHost';E={$_.Config.Tools.syncTimeWithHost}}
                 It -name "$($VM.name) VM Sync Time With Host " -test {

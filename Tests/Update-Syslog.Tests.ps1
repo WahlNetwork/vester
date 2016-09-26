@@ -17,7 +17,7 @@ Process {
         [array]$esxsyslog = $config.host.esxsyslog
         [bool]$esxsyslogfirewallexception = $config.host.esxsyslogfirewallexception
 
-        foreach ($server in (Get-VMHost -Name $config.scope.host)) 
+        foreach ($server in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VMHost -Name $config.scope.host)) 
         {
             It -name "$($server.name) Host Syslog Service State" -test {
                 [array]$value = Get-VMHostSysLogServer -VMHost $server

@@ -16,7 +16,7 @@ Process {
         . $Config
         [bool]$haenable = $config.cluster.haenable
 
-        foreach ($cluster in (Get-Cluster -Name $config.scope.cluster)) 
+        foreach ($cluster in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster)) 
         {
             It -name "$($cluster.name) Cluster HA State" -test {
                 $value = $cluster.HAEnabled

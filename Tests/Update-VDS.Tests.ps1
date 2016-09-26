@@ -18,7 +18,7 @@ Process {
         [string]$linkoperation = $config.vds.linkoperation
         [int]$mtu = $config.vds.mtu
 
-        foreach ($vds in (Get-VDSwitch -Name $config.scope.vds)) 
+        foreach ($vds in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-VDSwitch -Name $config.scope.vds)) 
         {
             It -name "$($vds.name) VDS Link Protocol" -test {
                 $value = $vds.LinkDiscoveryProtocol
