@@ -16,7 +16,7 @@ Process {
         . $Config
         [int]$VMBootDelay = $config.vm.bootDelay
 
-            foreach ($VM in (Get-VM -Name $config.scope.vm))
+            foreach ($VM in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VM $config.scope.vm))
             {
                 [int]$value = ($VM | Get-View).Config.BootOptions.BootDelay
                 It -name "$($VM.name) VM Boot Delay " -test {

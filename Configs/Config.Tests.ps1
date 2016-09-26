@@ -39,9 +39,10 @@ Process {
         }
 
         It 'Contains proper settings for .scope' {
-            $config.scope.Keys | Should Match 'cluster|host|vm|vds'
-            $config.scope.Keys.Count | Should Be 4
+            $config.scope.Keys | Should Match 'datacenter|cluster|host|vm|vds'
+            $config.scope.Keys.Count | Should Be 5
             $config.scope.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
+            Get-Datacenter $config.scope.datacenter | Should Not BeNullOrEmpty
             Get-Cluster $config.scope.cluster | Should Not BeNullOrEmpty
             Get-VMHost $config.scope.host | Should Not BeNullOrEmpty
             Get-VM $config.scope.vm | Should Not BeNullOrEmpty

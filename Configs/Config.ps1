@@ -11,10 +11,11 @@
 #>
 
 $config.scope = @{
-    cluster = '*'
-    host    = '*'
-    vm      = '*'
-    vds     = '*'
+    datacenter = '*'
+    cluster    = '*'
+    host       = '*'
+    vm         = '*'
+    vds        = '*'
 
 }
 
@@ -31,7 +32,7 @@ $config.scope = @{
 #>
 
 $config.vcenter = @{
-    vc = [string]'172.17.48.17'
+    vc = [string]'10.54.48.102'
     smtpsender = [string]'vcenter@domain.com'
     smtpport = [int]'25'
     smtpserver = [string]'mailserver.domain.com'

@@ -17,7 +17,7 @@ Process {
         [string]$drsmode = $config.cluster.drsmode
         [int]$drslevel = $config.cluster.drslevel
 
-        foreach ($cluster in (Get-Cluster -Name $config.scope.cluster)) 
+        foreach ($cluster in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster)) 
         {
             It -name "$($cluster.name) Cluster DRS Mode" -test {
                 $value = $cluster.DrsAutomationLevel

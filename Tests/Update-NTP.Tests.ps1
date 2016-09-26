@@ -16,7 +16,7 @@ Process {
         . $Config
         [array]$esxntp = $config.host.esxntp
 
-        foreach ($server in (Get-VMHost $config.scope.host)) 
+        foreach ($server in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VMHost -Name $config.scope.host)) 
         {
             It -name "$($server.name) Host NTP settings" -test {
                 $value = Get-VMHostNtpServer -VMHost $server

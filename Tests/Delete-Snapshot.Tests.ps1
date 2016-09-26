@@ -16,7 +16,7 @@ Process {
         . $Config
         [int]$snapretention = $config.vm.snapretention
 
-        foreach ($VM in (Get-VM -Name $config.scope.vm)) 
+        foreach ($VM in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VM $config.scope.vm)) 
         {
             It -name "$($VM.name) has no snapshot older than $snapretention day(s)" -test {
                 [array]$value = $VM |

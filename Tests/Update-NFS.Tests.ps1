@@ -19,7 +19,7 @@ Process {
         $nfsadvconfig.Values | ForEach-Object -Process {
             $compare += $_
         }
-        foreach ($server in (Get-VMHost -Name $config.scope.host).name) 
+        foreach ($server in (Get-Datacenter $config.scope.datacenter -server $config.vc.vcenter | Get-Cluster $config.scope.cluster | Get-VMHost -Name $config.scope.host)) 
         {
             $hostadvcfg = Get-AdvancedSetting -Entity $server
             $hostadvsettings = @{}
