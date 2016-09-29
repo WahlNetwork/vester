@@ -32,8 +32,7 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - vDS '$vds'", "Link protocol should be '$linkproto'"))
                         {
                             Write-Warning -Message "Remediating $vds"
                             Set-VDSwitch $vds -LinkDiscoveryProtocol $linkproto -Confirm:$false -ErrorAction Stop
@@ -56,8 +55,7 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - vDS '$vds'", "Link operation should be '$linkoperation'"))
                         {
                             Write-Warning -Message "Remediating $vds"
                             Set-VDSwitch $vds -LinkDiscoveryProtocolOperation $linkoperation -Confirm:$false -ErrorAction Stop
@@ -80,8 +78,7 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - vDS '$vds'", "MTU should be '$mtu'"))
                         {
                             Write-Warning -Message "Remediating $vds"
                             Set-VDSwitch $vds -Mtu $mtu -Confirm:$false -ErrorAction Stop

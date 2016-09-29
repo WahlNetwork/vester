@@ -30,8 +30,7 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "Set NTP server(s) to '$esxntp'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             Get-VMHostNtpServer -VMHost $server | ForEach-Object -Process {

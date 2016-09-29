@@ -31,8 +31,7 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            # TODO: Update ShouldProcess with useful info
-                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - VM '$VM'", "Unmount ISO from CDROM drive"))
                             {
                                 Write-Warning -Message "Remediating $VM"
                                 $Value | Set-CDDrive -NoMedia -Confirm:$false
@@ -54,8 +53,7 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            # TODO: Update ShouldProcess with useful info
-                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - VM '$VM'", "Remove host media from CDROM drive"))
                             {
                                 Write-Warning -Message "Remediating $VM"
                                 $Value | Set-CDDrive -NoMedia -Confirm:$false

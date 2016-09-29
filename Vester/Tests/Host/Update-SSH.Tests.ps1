@@ -35,8 +35,12 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        If ($sshenable -eq $true) {
+                            $WhatIf1 = 'running'
+                        } Else {
+                            $WhatIf1 = 'stopped'
+                        }
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "SSH service should be '$WhatIf1'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             if ($sshenable -eq $true) 
@@ -76,8 +80,12 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        If ($sshwarn -eq 0) {
+                            $WhatIf2 = 'disabled'
+                        } Else {
+                            $WhatIf2 = 'enabled'
+                        }
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "SSH warning should be '$WhatIf2'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             (Get-AdvancedSetting -Entity $server |
