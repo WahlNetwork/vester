@@ -31,8 +31,7 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "Set DNS address to '$esxdns'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             Get-VMHostNetwork -VMHost $server | Set-VMHostNetwork -DnsAddress $esxdns -ErrorAction Stop
@@ -55,8 +54,7 @@ Process {
                     if ($fix) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "Set DNS search domain(s) to '$searchdomains'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             Get-VMHostNetwork -VMHost $server | Set-VMHostNetwork -SearchDomain $searchdomains -ErrorAction Stop

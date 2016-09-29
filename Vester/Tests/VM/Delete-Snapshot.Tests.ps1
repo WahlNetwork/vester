@@ -34,8 +34,7 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - VM '$VM'", "Removing snapshots older than '$snapretention' days"))
                         {
                             Write-Warning -Message "Remediating $VM"
                             Remove-Snapshot -Snapshot $value -ErrorAction Stop -Confirm:$false

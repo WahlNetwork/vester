@@ -31,8 +31,7 @@ Process {
                     if ($Remediate)
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Cluster '$cluster'", "Set DRS mode to '$drsmode'"))
                         {
                             Write-Warning -Message "Remediating $cluster"
                             Set-Cluster -Cluster $cluster -DrsAutomationLevel:$drsmode -Confirm:$false -ErrorAction Stop
@@ -55,8 +54,7 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Cluster '$cluster'", "Set DRS level to '$drslevel'"))
                         {
                             Write-Warning -Message "Remediating $cluster"
                             $clusterview = Get-Cluster -Name $cluster | Get-View

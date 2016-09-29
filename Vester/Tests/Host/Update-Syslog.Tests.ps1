@@ -30,8 +30,7 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "Syslog target should be '$esxsyslog'"))
                         {
                             Write-Warning -Message "Remediating $server"
                             Set-VMHostSysLogServer -VMHost $server -SysLogServer $esxsyslog -ErrorAction Stop

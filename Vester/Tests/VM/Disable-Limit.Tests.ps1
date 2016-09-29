@@ -32,8 +32,7 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            # TODO: Update ShouldProcess with useful info
-                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - VM '$VM'", "Disable CPU limit"))
                             {
                                 Write-Warning -Message "Remediating $VM"
                                 $value | Set-VMResourceConfiguration -CpuLimitMhz $null
@@ -69,8 +68,7 @@ Process {
                         if ($Remediate) 
                         {
                             Write-Warning -Message $_
-                            # TODO: Update ShouldProcess with useful info
-                            if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                            if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - VM '$VM'", "Disable memory limit"))
                             {
                                 Write-Warning -Message "Remediating $VM"
 

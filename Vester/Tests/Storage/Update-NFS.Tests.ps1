@@ -47,10 +47,9 @@ Process {
                     if ($Remediate) 
                     {
                         Write-Warning -Message $_
-                        # TODO: Update ShouldProcess with useful info
-                        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+                        if ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - Host '$server'", "NFS config settings should be '$($nfsadvconfig.Values)'"))
                         {
-                            Write-Warning -Message "Remediating $server"                    
+                            Write-Warning -Message "Remediating $server"
                             $nfsadvconfig.Keys | ForEach-Object -Process {
                                 Get-AdvancedSetting -Entity $server -Name $_ | Set-AdvancedSetting -Value $nfsadvconfig.Item($_) -Confirm:$false -ErrorAction Stop
                             }
