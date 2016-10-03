@@ -7,7 +7,10 @@ Param(
     [switch]$Remediate = $false,
 
     # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
@@ -17,7 +20,7 @@ Process {
         . $Config
         [int]$snapretention = $cfg.vm.snapretention
 
-        foreach ($VM in (Get-VM -Name $cfg.scope.vm)) 
+        foreach ($VM in (Get-VM -Name $cfg.scope.vm -Server $VIServer)) 
         {
             It -name "$($VM.name) has no snapshot older than $snapretention day(s)" -test {
                 [array]$value = $VM |

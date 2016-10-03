@@ -100,11 +100,13 @@ function Invoke-Vester {
                 Try {
                     # Attempt connection to vCenter, prompting for credentials
                     Write-Verbose "No active connection found to configured vCenter '$($cfg.vcenter.vc)'. Connecting"
-                    Connect-VIServer -Server $cfg.vcenter.vc -Credential (Get-Credential) -ErrorAction Stop
+                    $VIServer = Connect-VIServer -Server $cfg.vcenter.vc -Credential (Get-Credential) -ErrorAction Stop
                 } Catch {
                     # If unable to connect, stop
                     throw "Unable to connect to configured vCenter '$($cfg.vcenter.vc)'. Exiting"
                 }
+            } else {
+                $VIServer = $global:DefaultVIServers | where-Object {$_.Name -match $cfg.vcenter.vc}
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
             # Need to ForEach if multiple -Script locations are not piped in
@@ -113,7 +115,8 @@ function Invoke-Vester {
                 Invoke-Pester -Script @{
                     Path = $Path
                     Parameters = @{
-                        Config = $ConfigFile
+                        Cfg = $cfg
+                        VIServer = $VIServer
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester

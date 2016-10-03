@@ -7,7 +7,10 @@ Param(
     [switch]$Remediate = $false,
 
     # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
@@ -19,7 +22,7 @@ Process {
         [string]$linkoperation = $cfg.vds.linkoperation
         [int]$mtu = $cfg.vds.mtu
 
-        foreach ($vds in (Get-VDSwitch -Name $cfg.scope.vds)) 
+        foreach ($vds in (Get-VDSwitch -Name $cfg.scope.vds -Server $VIServer)) 
         {
             It -name "$($vds.name) VDS Link Protocol" -test {
                 $value = $vds.LinkDiscoveryProtocol

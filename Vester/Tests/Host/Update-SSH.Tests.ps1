@@ -7,7 +7,10 @@ Param(
     [switch]$Remediate = $false,
 
     # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
@@ -18,7 +21,7 @@ Process {
         [bool]$sshenable = $cfg.host.sshenable
         [int]$sshwarn = $cfg.host.sshwarn
 
-        foreach ($server in (Get-VMHost -Name $cfg.scope.host)) 
+        foreach ($server in (Get-Datacenter -name $cfg.scope.datacenter -Server $VIServer | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host)) 
         {
             It -name "$($server.name) Host SSH Service State" -test {
                 $value = $server |

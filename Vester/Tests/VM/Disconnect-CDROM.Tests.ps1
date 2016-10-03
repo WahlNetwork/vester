@@ -7,7 +7,10 @@ Param(
     [switch]$Remediate = $false,
 
     # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
@@ -18,7 +21,7 @@ Process {
         [bool]$allowconnectedcdrom = $cfg.vm.allowconnectedcdrom
 
         If (-not $allowconnectedcdrom) {
-            foreach ($VM in (Get-VM -Name $cfg.scope.vm)) 
+            foreach ($VM in (Get-VM -Name $cfg.scope.vm -Server $VIServer)) 
             {
                 [array]$value = $VM | get-cddrive
                 It -name "$($VM.name) has no CDROM connected to ISO file " -test {
