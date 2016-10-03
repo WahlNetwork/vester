@@ -64,17 +64,17 @@ function Invoke-Vester {
                    ConfirmImpact = 'Medium')]
     # Passes -WhatIf through to other tests
     param (
+        # Optionally define a different config file to use
+        # Defaults to Vester\Configs\Config.ps1
+        [Parameter(ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)]
+        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })] 
+        [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
+
         # Define the file/folder of test file(s) to call
         # Defaults to the current location
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
         [Alias('Path','FullName')]
         [object[]]$Script = '.',
         # Aliasing FullName enables easy pipe from Get-ChildItem
-
-        # Optionally define a different config file to use
-        # Defaults to Vester\Configs\Config.ps1
-        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })] 
-        [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
@@ -87,6 +87,7 @@ function Invoke-Vester {
 
     PROCESS {
         Foreach ($ConfigFile in $Config) {
+
             # Load the defined $cfg values to test
             Write-Verbose -Message "Processing Config file $ConfigFile"
             . $ConfigFile
@@ -109,7 +110,7 @@ function Invoke-Vester {
                 $VIServer = $global:DefaultVIServers | where-Object {$_.Name -match $cfg.vcenter.vc}
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
-            # Need to ForEach if multiple -Script locations are not piped in
+            # Need to ForEach if multiple -Script locations
             ForEach ($Path in $Script) {
                 # Pester accepts Tag/Exclude being null, but each test will need $Config/$Remediate params
                 Invoke-Pester -Script @{

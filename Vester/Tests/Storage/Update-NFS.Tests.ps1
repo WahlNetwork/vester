@@ -6,7 +6,7 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
+    # $Cfg hastable imported in Invoke-Vester
     [Hashtable]$Cfg,
 
     # VIserver Object
@@ -17,7 +17,6 @@ Process {
     # Tests
     Describe -Name 'Host Configuration: NFS Advanced Configuration' -Tag @("host","storage","nfs") -Fixture {
         # Variables
-        . $Config
         [Hashtable]$nfsadvconfig = $cfg.nfsadvconfig
         $compare = @()
         $nfsadvconfig.Values | ForEach-Object -Process {
