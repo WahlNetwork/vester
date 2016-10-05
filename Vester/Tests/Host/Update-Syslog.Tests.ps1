@@ -6,18 +6,20 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    # $Cfg hastable imported in Invoke-Vester
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
     # Tests
     Describe -Name 'Host Configuration: Syslog Server' -Tags @("host") -Fixture {
         # Variables
-        . $Config
         [array]$esxsyslog = $cfg.host.esxsyslog
 
-        foreach ($server in (Get-VMHost -Name $cfg.scope.host)) 
+        foreach ($server in (Get-Datacenter -name $cfg.scope.datacenter -Server $VIServer | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host)) 
         {
             It -name "$($server.name) Host Syslog Service State" -test {
                 [array]$value = Get-VMHostSysLogServer -VMHost $server

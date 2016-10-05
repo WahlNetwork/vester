@@ -6,20 +6,22 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    # $Cfg hastable imported in Invoke-Vester
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
     # Tests
     Describe -Name 'Network Configuration: VDS Settings' -Tags @('network','vds') -Fixture {
         # Variables
-        . $Config
         [string]$linkproto = $cfg.vds.linkproto
         [string]$linkoperation = $cfg.vds.linkoperation
         [int]$mtu = $cfg.vds.mtu
 
-        foreach ($vds in (Get-VDSwitch -Name $cfg.scope.vds)) 
+        foreach ($vds in (Get-VDSwitch -Name $cfg.scope.vds -Server $VIServer)) 
         {
             It -name "$($vds.name) VDS Link Protocol" -test {
                 $value = $vds.LinkDiscoveryProtocol

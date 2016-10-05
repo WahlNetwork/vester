@@ -6,18 +6,20 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    # $Cfg hastable imported in Invoke-Vester
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
     # Tests
     Describe -Name 'VM Configuration: Snapshot(s)' -Tag @("vm") -Fixture {
         # Variables
-        . $Config
         [int]$snapretention = $cfg.vm.snapretention
 
-        foreach ($VM in (Get-VM -Name $cfg.scope.vm)) 
+        foreach ($VM in (Get-Datacenter -name $cfg.scope.datacenter -Server $VIServer | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host | Get-VM -Name $cfg.scope.vm)) 
         {
             It -name "$($VM.name) has no snapshot older than $snapretention day(s)" -test {
                 [array]$value = $VM |

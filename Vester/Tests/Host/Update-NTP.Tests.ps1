@@ -6,18 +6,20 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    # $Cfg hastable imported in Invoke-Vester
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
     # Tests
     Describe -Name 'Host Configuration: NTP Server(s)' -Tags @("host") -Fixture {
         # Variables
-        . $Config
         [array]$esxntp = $cfg.host.esxntp
 
-        foreach ($server in (Get-VMHost $cfg.scope.host)) 
+        foreach ($server in (Get-Datacenter -name $cfg.scope.datacenter -Server $VIServer | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host)) 
         {
             It -name "$($server.name) Host NTP settings" -test {
                 $value = Get-VMHostNtpServer -VMHost $server

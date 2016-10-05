@@ -6,19 +6,21 @@ Param(
     # Optionally fix all config drift that is discovered. Defaults to false (off)
     [switch]$Remediate = $false,
 
-    # Optionally define a different config file to use. Defaults to Vester\Configs\Config.ps1
-    [string]$Config = (Split-Path $PSScriptRoot) + '\Configs\Config.ps1'
+    # $Cfg hastable imported in Invoke-Vester
+    [Hashtable]$Cfg,
+
+    # VIserver Object
+    [VMware.VimAutomation.ViCore.Impl.V1.VIServerImpl]$VIServer
 )
 
 Process {
     # Tests
     Describe -Name 'Cluster Configuration: DRS Settings' -Tags @("vcenter","cluster") -Fixture {
         # Variables
-        . $Config
         [string]$drsmode = $cfg.cluster.drsmode
         [int]$drslevel = $cfg.cluster.drslevel
 
-        foreach ($cluster in (Get-Cluster -Name $cfg.scope.cluster)) 
+        foreach ($cluster in (Get-Datacenter -Name $cfg.scope.datacenter -Server $VIServer | Get-Cluster -Name $cfg.scope.cluster)) 
         {
             It -name "$($cluster.name) Cluster DRS Mode" -test {
                 $value = (Get-Cluster $cluster).DrsAutomationLevel

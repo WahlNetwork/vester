@@ -11,10 +11,11 @@
 #>
 
 $cfg.scope = @{
-    cluster = '*'
-    host    = '*'
-    vm      = '*'
-    vds     = '*'
+    datacenter = '*'
+    cluster    = '*'
+    host       = '*'
+    vm         = '*'
+    vds        = '*'
 
 }
 
