@@ -17,6 +17,7 @@ Process {
         [string]$linkproto = $config.vds.linkproto
         [string]$linkoperation = $config.vds.linkoperation
         [int]$mtu = $config.vds.mtu
+        [int]$uplinkCount = $config.vds.uplinkCount
 
         foreach ($vds in (Get-VDSwitch -Name $config.scope.vds)) 
         {
@@ -73,6 +74,26 @@ Process {
                         Write-Warning -Message $_
                         Write-Warning -Message "Remediating $vds"
                         Set-VDSwitch $vds -Mtu $mtu -Confirm:$false -ErrorAction Stop
+                    }
+                    else 
+                    {
+                        throw $_
+                    }
+                }
+            }
+            It -name "$($vds.name) VDS Uplink Port Count" -test {
+                $value = $vds.NumUplinkPorts
+                try 
+                {
+                    $value | Should Be $uplinkCount
+                }
+                catch 
+                {
+                    if ($Remediate)
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $vds"
+                        Set-VDSwitch $vds -NumUplinkPorts $uplinkCount -Confirm:$false -ErrorAction Stop
                     }
                     else 
                     {

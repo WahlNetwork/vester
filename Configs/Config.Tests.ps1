@@ -117,6 +117,7 @@ Process {
             $config.vds.linkoperation | Should Match 'Listen|Advertise|Both|Disabled'
             $config.vds.mtu | Should BeOfType Int
             $config.vds.mtu | Should Match '[1500-9000]'
+            $config.vds.UplinkCount | Should Match '[1-16]'
         }
     } #Describe
 } #Process
