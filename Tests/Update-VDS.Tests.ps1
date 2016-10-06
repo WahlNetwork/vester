@@ -17,6 +17,7 @@ Process {
         [string]$linkproto = $config.vds.linkproto
         [string]$linkoperation = $config.vds.linkoperation
         [int]$mtu = $config.vds.mtu
+        $uplinkNames = $config.vds.uplinkNames
 
         foreach ($vds in (Get-VDSwitch -Name $config.scope.vds)) 
         {
@@ -78,6 +79,35 @@ Process {
                     {
                         throw $_
                     }
+                }
+            }
+            IT -name "$($vds.name) VDS Uplink Port Name" -test {
+                [array]$value = $vds.ExtensionData.Config.UplinkPortPolicy.UplinkPortName
+                try 
+                {
+                    Compare-Object -ReferenceObject $uplinkNames -DifferenceObject $value | Should Be $null
+                }
+                catch 
+                {
+                    if ($Remediate)
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $vds"
+                        
+                        $sw = Get-VDSwitch -Name $($vds.Name)
+                        $spec = New-Object VMware.Vim.VMwareDVSConfigSpec
+                        $spec.configVersion = $sw.ExtensionData.Config.ConfigVersion
+                        $spec.uplinkPortPolicy = New-Object VMware.Vim.DVSNameArrayUplinkPortPolicy
+                        $spec.uplinkPortPolicy.uplinkPortName = $uplinkNames 
+                        $sw.ExtensionData.ReconfigureDvs($spec) 
+
+                    }
+                    else 
+                    {
+                        throw $_
+                    }
+                
+                
                 }
             }
         }

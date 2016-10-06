@@ -121,4 +121,5 @@ $config.vds = @{
         linkproto = [string]'LLDP'
         linkoperation = [string]'Both'
         mtu = [int]1500
+        uplinkNames = @('dv0','dv1','dv2','dv3','dv4','dv5','dv6','dv7')
 }
