@@ -121,4 +121,5 @@ $config.vds = @{
         linkproto = [string]'LLDP'
         linkoperation = [string]'Both'
         mtu = [int]1500
+        uplinkCount = [int]8
 }
