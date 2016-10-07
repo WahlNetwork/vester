@@ -107,9 +107,9 @@ Process {
         }
 
         It 'Contains proper settings for .vds' {
-            $VDSKeys = 'linkproto|linkoperation|mtu'
+            $VDSKeys = 'linkproto|linkoperation|mtu|UplinkCount'
             $config.vds.Keys | Should Match $VDSKeys
-            $config.vds.Keys.Count | Should Be 3
+            $config.vds.Keys.Count | Should Be 4
             $config.vds.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.vds.linkproto | Should BeOfType String
             $config.vds.linkproto | Should Match 'LLDP|CDP'
@@ -117,6 +117,7 @@ Process {
             $config.vds.linkoperation | Should Match 'Listen|Advertise|Both|Disabled'
             $config.vds.mtu | Should BeOfType Int
             $config.vds.mtu | Should Match '[1500-9000]'
+            $config.vds.uplinkCount | Should BeOfType Int
             $config.vds.UplinkCount | Should Match '[1-16]'
         }
     } #Describe
