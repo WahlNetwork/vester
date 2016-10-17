@@ -85,6 +85,8 @@ $config.host = @{
         allowcpulimit = [bool] $true or $false
         allowmemorylimit = [bool] $true or $false
         bootdelay = [int] Time in milliseconds
+        allowcpureservation = [bool] $true or $false
+        allowmemoryreservation = [bool] $true or $false
 #>
 
 $config.vm = @{
@@ -94,6 +96,8 @@ $config.vm = @{
     allowmemorylimit    = [bool]$false
     syncTimeWithHost    = [bool]$false
     bootDelay           = [int]0
+    allowcpureservation = [bool]$false
+    allowmemoryreservation = [bool]$false
 }
 
 <########################################################################################

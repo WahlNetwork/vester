@@ -83,7 +83,7 @@ Process {
         }
 
         It 'Contains proper settings for .vm' {
-            $VMKeys = 'snapretention|allowconnectedcdrom|allowcpulimit|allowmemorylimit|syncTimeWithHost|bootDelay'
+            $VMKeys = 'snapretention|allowconnectedcdrom|allowcpulimit|allowmemorylimit|syncTimeWithHost|bootDelay|allowcpureservation|allowmemoryreservation'
             $config.vm.Keys | Should Match $VMKeys
             $config.vm.Keys.Count | Should Be 6
             $config.vm.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
@@ -94,6 +94,8 @@ Process {
             $config.vm.allowmemorylimit | Should BeOfType Bool
             $config.vm.syncTimeWithHost | Should BeOfType Bool
             $config.vm.bootDelay | Should BeOfType Int
+            $config.vm.allowcpureservation | Should BeOfType Bool
+            $config.vm.allowmemoryreservation | Should BeOfType Bool
         }
 
         It 'Contains proper settings for .nfs' {
