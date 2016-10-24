@@ -14,11 +14,32 @@ Process {
     Describe -Name 'Cluster Configuration: DRS Settings' -Tags @("vcenter","cluster") -Fixture {
         # Variables
         . $Config
+        [bool]$drsenabled = $config.cluster.drsenabled
         [string]$drsmode = $config.cluster.drsmode
         [int]$drslevel = $config.cluster.drslevel
 
         foreach ($cluster in (Get-Cluster -Name $config.scope.cluster)) 
         {
+            It -name "$($cluster.name) Cluster DRS Enabled" -test {
+                $value = $cluster.DrsEnabled
+                try 
+                {
+                    $value | Should Be $drsenabled
+                }
+                catch 
+                {
+                    if ($Remediate)
+                    {
+                        Write-Warning -Message $_
+                        Write-Warning -Message "Remediating $cluster"
+                        Set-Cluster -Cluster $cluster -DrsEnabled:$drsenabled -Confirm:$false -ErrorAction Stop
+                    }
+                    else 
+                    {
+                        throw $_
+                    }
+                }
+            }
             It -name "$($cluster.name) Cluster DRS Mode" -test {
                 $value = $cluster.DrsAutomationLevel
                 try 
