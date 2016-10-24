@@ -48,9 +48,10 @@ Process {
         }
 
         It 'Contains proper settings for .cluster' {
-            $config.cluster.Keys | Should Match 'drsmode|drslevel|haenable'
+            $config.cluster.Keys | Should Match 'drsenabled|drsmode|drslevel|haenable'
             $config.cluster.Keys.Count | Should Be 3
             $config.cluster.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
+            $config.cluster.drsenabled | Should BeOfType Bool
             $config.cluster.drsmode | Should Match 'FullyAutomated|Manual|PartiallyAutomated'
             $config.cluster.drslevel | Should BeOfType Int
             $config.cluster.drslevel | Should Match '[1-5]'
