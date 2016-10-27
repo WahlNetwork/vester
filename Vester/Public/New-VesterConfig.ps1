@@ -289,7 +289,7 @@ function New-VesterConfig {
 
     # Set the section's config, and then display it for review
     $config.vm = [ordered]@{
-        snapretention       = &{If (($vm | Get-Snapshot) -eq $null) {1} Else {<# TODO: New-Timespan here by counting snapshot age #>}}
+        snapretention       = &{If (($vmsnap = $vm | Get-Snapshot) -eq $null) {1} Else {(New-TimeSpan -Start $vmsnap.Created).Days + 1}}
         allowconnectedcdrom = &{If (($vm | Get-CDDrive).IsoPath -eq $null) {$false} Else {$true}}
         allowcpulimit       = &{If (($vm | Get-VMResourceConfiguration).CpuLimitMhz -eq -1) {$false} Else {$true}}
         allowmemorylimit    = &{If (($vm | Get-VMResourceConfiguration).MemLimitMB -eq -1) {$false} Else {$true}}
