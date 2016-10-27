@@ -1,11 +1,5 @@
 ﻿#requires -Modules VMware.VimAutomation.Core, VMware.VimAutomation.Vds
 
-# TODO: Move to the Private functions folder
-function Read-HostColor ($Text) {
-    Write-Host $Text -ForegroundColor Yellow -NoNewline
-    Write-Output (Read-Host ' ')
-}
-
 function New-VesterConfig {
     <#
     TODO: Comment-based help
@@ -67,12 +61,12 @@ function New-VesterConfig {
         Write-Host "`n  ### vCenter Settings" -ForegroundColor Green
         Write-Host 'vc                 = [string] vCenter IP Address'
         Write-Host 'smtpsender         = [string] SMTP Address used for emails sent from vCenter Server'
-        Write-Host 'smtpport           = [int] Port used to connect to SMTP Server'
+        Write-Host 'smtpport           = [int]    Port used to connect to SMTP Server'
         Write-Host 'smtpserver         = [string] SMTP Server used by vCenter to relay emails'
-        Write-Host 'EventMaxAge        = [int] Age in days that Events will be retained in the vCenter Server Database'
-        Write-Host 'EventMaxAgeEnabled = [bool] Enables Event cleanup and enforces the max age defined in EventMaxAge'
-        Write-Host 'TaskMaxAge         = [int] Age in days that Tasks will be retained in the vCenter Server Database'
-        Write-Host 'TaskMaxAgeEnabled  = [bool] Enables Task cleanup and enforces the max age defined in TaskMaxAge'
+        Write-Host 'EventMaxAge        = [int]    Age in days that Events will be retained in the vCenter Server Database'
+        Write-Host 'EventMaxAgeEnabled = [bool]   Enables Event cleanup and enforces the max age defined in EventMaxAge'
+        Write-Host 'TaskMaxAge         = [int]    Age in days that Tasks will be retained in the vCenter Server Database'
+        Write-Host 'TaskMaxAgeEnabled  = [bool]   Enables Task cleanup and enforces the max age defined in TaskMaxAge'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -173,8 +167,8 @@ function New-VesterConfig {
     # Explain each setting
         Write-Host "`n  ### Cluster Settings" -ForegroundColor Green
         Write-Host 'drsmode  = [string] FullyAutomated, Manual, or PartiallyAutomated'
-        Write-Host 'drslevel = [int] 1 (Aggressive), 2, 3, 4, 5 (Conservative)'
-        Write-Host 'haenable = [bool] $true or $false'
+        Write-Host 'drslevel = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
+        Write-Host 'haenable = [bool]   $true or $false'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -246,8 +240,8 @@ function New-VesterConfig {
     If (-not $Quiet) {
         # Explain each setting
         Write-Host "`n  ### ESXi Host Settings" -ForegroundColor Green
-        Write-Host 'sshenable     = [bool] $true or $false'
-        Write-Host 'sshwarn       = [int] 1 (off) or 0 (on)'
+        Write-Host 'sshenable     = [bool]  $true or $false'
+        Write-Host 'sshwarn       = [int]   1 (off) or 0 (on)'
         Write-Host 'esxntp        = [array] @("NTP Server 1", "NTP Server 2 (optional)", "NTP Server 3 (optional)", "NTP Server 4 (optional)")'
         Write-Host 'esxdns        = [array] @("DNS Server 1", "DNS Server 2 (optional)")'
         Write-Host 'searchdomains = [array] @("Domain 1", "Domain 2 (optional)")'
@@ -313,11 +307,11 @@ function New-VesterConfig {
     If (-not $Quiet) {
         # Explain each setting
         Write-Host "`n  ### VM Settings" -ForegroundColor Green
-        Write-Host 'snapretention       = [int] Allowed number of days for a VM snapshot to exist'
+        Write-Host 'snapretention       = [int]  Allowed number of days for a VM snapshot to exist'
         Write-Host 'allowconnectedcdrom = [bool] $true or $false'
         Write-Host 'allowcpulimit       = [bool] $true or $false'
         Write-Host 'allowmemorylimit    = [bool] $true or $false'
-        Write-Host 'bootdelay           = [int] Time in milliseconds'
+        Write-Host 'bootdelay           = [int]  Time in milliseconds'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -413,7 +407,7 @@ function New-VesterConfig {
         Write-Host "`n  ### VDS (vSphere Distributed Switch) Settings" -ForegroundColor Green
         Write-Host 'linkproto     = [string] LLDP or CDP'
         Write-Host 'linkoperation = [string] Listen, Advertise, Both, Disabled'
-        Write-Host 'mtu           = [int] Maximum Transmission Unit. Max is 9000'
+        Write-Host 'mtu           = [int]    Maximum Transmission Unit. Max is 9000'
         Write-Host '  ###' -ForegroundColor Green
     }
 
