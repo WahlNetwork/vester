@@ -11,7 +11,7 @@ Param(
 
 Process {
     # Tests
-    # CPU Limits 
+    # CPU reservations 
     Describe -Name 'VM Configuration: CPU Reservation' -Tags @("vm") -Fixture {
         # Variables
         . $Config
@@ -33,7 +33,7 @@ Process {
                             Write-Warning -Message $_
                             Write-Warning -Message "Remediating $VM"
 
-                            $value | Set-VMResourceConfiguration -CpuReservationMhz $null
+                            $value | Set-VMResourceConfiguration -CpuReservationMhz 0
                         }
                         else 
                         {
@@ -45,7 +45,7 @@ Process {
         }
     }
 
-    # Memory Limits 
+    # Memory reservations 
     Describe -Name 'VM Configuration: Memory Reservation'-Tag @("vm") -Fixture {
         # Variables
         . $Config
@@ -54,7 +54,7 @@ Process {
         If (-not $AllowMemoryReservation) {
             foreach ($VM in (Get-VM -Name $config.scope.vm)) 
             {
-                It -name "$($VM.name) has no memory limits configured" -test {
+                It -name "$($VM.name) has no memory reservations configured" -test {
                     [array]$value = $VM | Get-VMResourceConfiguration
                     try 
                     {
@@ -67,7 +67,7 @@ Process {
                             Write-Warning -Message $_
                             Write-Warning -Message "Remediating $VM"
 
-                            $value | Set-VMResourceConfiguration -MemReservationMB $null
+                            $value | Set-VMResourceConfiguration -MemReservationMB 0
                         }
                         else 
                         {
