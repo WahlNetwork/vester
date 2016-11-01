@@ -59,9 +59,9 @@ Process {
         }
 
         It 'Contains proper settings for .host' {
-            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog|esxsyslogfirewallexception|sshtimeout|sshinteractivetimeout'
+            $HostKeys = 'sshenable|sshwarn|esxntp|esxdns|searchdomains|esxsyslog|esxsyslogfirewallexception|sshtimeout|sshinteractivetimeout|netDumpEnabled|netDumpHostVNic|netDumpNetworkServerIP|netDumpNetworkServerPort'
             $config.host.Keys | Should Match $HostKeys
-            $config.host.Keys.Count | Should Be 9
+            $config.host.Keys.Count | Should Be 13
             $config.host.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.host.sshenable | Should BeOfType Bool
             $config.host.sshwarn | Should BeOfType Int
@@ -81,6 +81,10 @@ Process {
             $config.host.esxsyslogfirewallexception | Should BeOfType Bool
             $config.host.sshtimeout | Should BeOfType Int
             $config.host.sshinteractivetimeout | Should BeOfType Int
+            $config.host.netDumpEnabled | Should Match 'true|false'
+            $config.host.netDumpHostVNic | Should Not BeNullorEmpty
+            $config.host.netDumpNetworkServerIP | Should Not BeNullorEmpty
+            $config.host.netDumpNetworkServerPort | Should BeOfType Int
         }
 
         It 'Contains proper settings for .vm' {
