@@ -30,9 +30,11 @@ function Invoke-Vester {
     It outputs a report of all passed and failed tests.
 
     .EXAMPLE
-    Get-ChildItem -Path Z:\ -Filter *dns* -File -Recurse | Invoke-Vester
-    Use Get-ChildItem to get all files below Z:\ with 'dns' in the name.
-    Pipe those files into Invoke-Vester to run them as tests.
+    $DNS = Get-ChildItem -Path Z:\ -Filter *dns* -File -Recurse
+    PS C:\>Get-ChildItem -Path Z:\ -Filter *config* -File | Invoke-Vester -Script $DNS
+    Get all files below Z:\ with 'dns' in the name and store in variable $DNS.
+    Then, get all files named like 'config' and pipe them into the -Config parameter.
+    Each config file piped in will run through all $DNS tests found.
 
     .EXAMPLE
     Invoke-Vester -Script .\Tests\VM -Remediate -WhatIf
@@ -66,15 +68,17 @@ function Invoke-Vester {
     param (
         # Optionally define a different config file to use
         # Defaults to Vester\Configs\Config.ps1
-        [Parameter(ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)]
-        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })] 
-        [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.ps1",
+        [Parameter(ValueFromPipeline = $True,
+                   ValueFromPipelinebyPropertyName=$True)]
+        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })]
+        [Alias('FullName')]
+        [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.json",
 
         # Define the file/folder of test file(s) to call
         # Defaults to the current location
-        [Alias('Path','FullName')]
-        [object[]]$Script = '.',
-        # Aliasing FullName enables easy pipe from Get-ChildItem
+        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })]
+        [Alias('Path','Script')]
+        [object[]]$Test = '.',
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
@@ -82,15 +86,14 @@ function Invoke-Vester {
     )
 
     BEGIN {
-
-    } # Begin
+    }
 
     PROCESS {
-        Foreach ($ConfigFile in $Config) {
+        ForEach ($ConfigFile in $Config) {
 
             # Load the defined $cfg values to test
             Write-Verbose -Message "Processing Config file $ConfigFile"
-            . $ConfigFile
+            $cfg = Get-Content $ConfigFile | ConvertFrom-Json
 
             If (-not $cfg) {
                 throw "Valid config file not found at path '$ConfigFile'. Exiting"
@@ -110,19 +113,16 @@ function Invoke-Vester {
                 $VIServer = $global:DefaultVIServers | where-Object {$_.Name -match $cfg.vcenter.vc}
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
-            # Need to ForEach if multiple -Script locations
-            ForEach ($Path in $Script) {
-                # Pester accepts Tag/Exclude being null, but each test will need $Config/$Remediate params
-                Invoke-Pester -Script @{
-                    Path = $Path
-                    Parameters = @{
-                        Cfg = $cfg
-                        VIServer = $VIServer
-                        Remediate = $Remediate
-                    }
-                } # Invoke-Pester
+
+            # Need to ForEach if multiple -Test locations
+            ForEach ($Path in $Test) {
+                Write-Verbose "Processing test file $Path"
+                $Scope = (Split-Path $Path -Parent) -replace '^.*\\',''
+                # Pass the specified parameters down to the testing template
+                Invoke-VesterTest -Test $Path -Scope $Scope -Cfg $cfg -Remediate:$Remediate
             } #ForEach Path
-        } #Foreach Config
+
+        } #ForEach Config
     } # Process
 
     END {
