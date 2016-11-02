@@ -134,6 +134,7 @@ function New-VesterConfig {
         If ($Quiet) {
             # Automatically select the first cluster (sorted alphabetically)
             $cluster = $clusterList[0]
+            Write-Verbose "Generating cluster settings from cluster: $cluster"
         } Else {
             Write-Host ''
 
@@ -200,6 +201,7 @@ function New-VesterConfig {
         If ($Quiet) {
             # Automatically select the first host (sorted alphabetically)
             $esxi = $hostList[0]
+            Write-Verbose "Generating host settings from host: $esxi"
         } Else {
             Write-Host ''
 
@@ -281,6 +283,7 @@ function New-VesterConfig {
         If ($Quiet) {
             # Automatically select the first VM (sorted alphabetically)
             $vm = $vmList[0]
+            Write-Verbose "Generating VM settings from VM: $vm"
         } Else {
             Write-Host ''
 
@@ -374,7 +377,8 @@ function New-VesterConfig {
     If ($vdsList.Count -gt 1) {
         If ($Quiet) {
             # Automatically select the first VDS (sorted alphabetically)
-            $vm = $vmList[0]
+            $vds = $vdsList[0]
+            Write-Verbose "Generating VDS settings from VDS: $vds"
         } Else {
             Write-Host ''
 
