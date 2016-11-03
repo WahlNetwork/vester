@@ -49,7 +49,7 @@ Process {
 
         It 'Contains proper settings for .cluster' {
             $config.cluster.Keys | Should Match 'drsenabled|drsmode|drslevel|haenable'
-            $config.cluster.Keys.Count | Should Be 3
+            $config.cluster.Keys.Count | Should Be 4
             $config.cluster.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.cluster.drsenabled | Should BeOfType Bool
             $config.cluster.drsmode | Should Match 'FullyAutomated|Manual|PartiallyAutomated'
@@ -90,7 +90,7 @@ Process {
         It 'Contains proper settings for .vm' {
             $VMKeys = 'snapretention|allowconnectedcdrom|allowcpulimit|allowmemorylimit|syncTimeWithHost|bootDelay|allowcpureservation|allowmemoryreservation'
             $config.vm.Keys | Should Match $VMKeys
-            $config.vm.Keys.Count | Should Be 6
+            $config.vm.Keys.Count | Should Be 8
             $config.vm.Values | ForEach-Object {$_ | Should Not BeNullOrEmpty}
             $config.vm.snapretention | Should BeOfType Int
             $config.vm.snapretention | Should BeGreaterThan -1
