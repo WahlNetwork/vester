@@ -70,13 +70,12 @@ function Invoke-Vester {
         # Defaults to Vester\Configs\Config.ps1
         [Parameter(ValueFromPipeline = $True,
                    ValueFromPipelinebyPropertyName=$True)]
-        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })]
+        [ValidateScript({ForEach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })]
         [Alias('FullName')]
         [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.json",
 
         # Define the file/folder of test file(s) to call
         # Defaults to the current location
-        [ValidateScript({Foreach ($Path in $_) {Test-Path $Path -PathType 'Leaf'} })]
         [Alias('Path','Script')]
         [object[]]$Test = '.',
 
@@ -86,6 +85,39 @@ function Invoke-Vester {
     )
 
     BEGIN {
+        $TestFiles = New-Object 'System.Collections.Generic.List[String]'
+
+        # Need to ForEach if multiple -Test locations
+        ForEach ($TestPath in $Test) {
+            # If Test-Path returns false, we're done
+            If (-not (Test-Path $TestPath -PathType Any)) {
+                throw "Test parameter '$TestPath' does not resolve to a path."
+            # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it
+            } ElseIf (Test-Path $TestPath -PathType Container) {
+                Write-Verbose "Discovering *.Vester.ps1 files below directory '$TestPath'."
+                $GCI = (Get-ChildItem $TestPath -Recurse -Filter '*.Vester.ps1').FullName
+
+                If ($GCI) {
+                    # Add each *.Vester.ps1 file found to the array
+                    $GCI | ForEach-Object {
+                        $TestFiles.Add($_)
+                    }
+                } Else {
+                    throw "No *.Vester.ps1 files found at location '$TestPath'."
+                }
+
+                $GCI = $null
+            # Add the single file to the array if it matches *.Vester.ps1
+            } Else {
+                If ($TestPath -match '\.Vester\.ps1') {
+                    $TestFiles.Add($TestPath)
+                } Else {
+                    # Just because Vester tests have a very specific format
+                    # Prefer that tests are consciously named *.Vester.ps1
+                    throw "'$TestPath' does not match the *.Vester.ps1 naming convention for test files."
+                }
+            }
+        }
     }
 
     PROCESS {
@@ -114,8 +146,7 @@ function Invoke-Vester {
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
 
-            # Need to ForEach if multiple -Test locations
-            ForEach ($Path in $Test) {
+            ForEach ($Path in $TestFiles) {
                 Write-Verbose "Processing test file $Path"
                 $Scope = (Split-Path $Path -Parent) -replace '^.*\\',''
                 # Pass the specified parameters down to the testing template
