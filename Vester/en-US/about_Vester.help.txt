@@ -12,47 +12,63 @@ LONG DESCRIPTION
 	1) All of your hosts have the same NTP settings?
 	2) Your cluster's DRS is set to the desired aggression level?
 	3) Any of your VM CD drives have media currently mounted?
-	4) All of your NFS settings are uniform?
+	4) You've been doing a good job of deleting old VM snapshots?
 	
 	Vester does!
 
   GETTING STARTED
-		Import-Module Vester
-	
-	Review the supplied default config file with this line of magic:
-		ise "$(Split-Path (Get-Module Vester).Path -Parent)\Configs\Config.ps1"
-	
-    Each value should match the desired end-state of your environment.
-	You can also set a value to $null, which will skip its corresponding test.
-	For example, to skip the syslog test on each host:
-		$cfg.host = @{
-			esxsyslog = $null
-		}
-	
-	We'll make an auto-generating config file soon™ ;)
+    For your first run, you should run PowerShell with admin rights. This allows
+    the new config.json file to be created within the default module directory.
 
+      Import-Module Vester
+        # Use PowerCLI to connect to your VMware vCenter server
+      Connect-VIServer 'Your-vCenter.example.com'
+        # Following prompts, copy existing settings from cluster, host, VM, etc.
+      New-VesterConfig
+        # Run Vester, using your new config, against the default suite of tests
+        # -Test uses your current location, but this command works everywhere
+      Invoke-Vester -Test "$(Split-Path (Get-Module Vester).Path -Parent)\Tests"
+	
+    By default, your config.json file will be created at:
+      "$(Split-Path (Get-Module Vester).Path -Parent)\Configs\config.json"
+    This file is used to define your desired end-state. You can manually review
+    and edit the config file as desired. You can 'null' or delete any rows you
+    do not want to test.
+	
   RUNNING TESTS
 	Invoke-Vester is used to run tests against config files.
 	Please refer to the cmdlet's help for more specific examples.
 	
 		Get-Help Invoke-Vester -Examples
 	
-	Tests can be filtered by piping in Get-ChildItem, or within the -Script
-	parameter (like Pester). Because Invoke-Vester just calls Pester,
-	it searches for tests the same way. When given a directory, it will search
-	recursively for *.Tests.ps1 files. When given a file, it will run it as a
-	test, regardless of whether it is named *.Tests.ps1 or not.
-	
 	You may	need multiple config files if you have an environment larger than
-	one cluster or one vCenter. Invoke-Vester allows you to specify the config
+	one vCenter server. Invoke-Vester allows you to specify the config
 	file to use, which determines the vCenter to connect to, the scope of
 	clusters/hosts/VMs/etc. to search, and the values to use. This is useful
 	if you have both Prod/Dev, if you have many sites to manage, and so on.
+	
+    Vester test files follow the *.Vester.ps1 convention. Test files are designed
+    to be as easy to contribute and manage as possible, so they don't look like
+    a normal Pester test.
+
+    When running Invoke-Vester, by default it:
+        - Uses one config file, .\Vester\Configs\config.json
+        - Searches your current location for *.Vester.ps1 files to run as tests
+
+    -Config and -Test can both be overridden, and both accept multiple values.
+    If overriding -Test, folders and individual *.Vester.ps1 files are accepted.
 	
 	The -Remediate parameter is designed to immediately fix any discovered issues.
 	You should always run a test without -Remediate first, to ensure all failed
 	tests are expected. Don't drink and admin! (...do so responsibly, anyway.)
 	As an advanced function, Invoke-Vester also supports -WhatIf and -Confirm.
+
+ADVANCED PESTER FUNCTIONALITY
+    Currently, because of the way Vester sweeps Pester complexity under the rug,
+    advanced Pester features like NUnitXML output and CodeCoverage aren't here.
+
+    If significant interest in any of that functionality is voiced,
+    the desired feature(s) could be evaluated for future implementation.
 
 NOTE
     Vester is a community-driven open source project; as such,
