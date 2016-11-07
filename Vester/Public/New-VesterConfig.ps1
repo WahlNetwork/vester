@@ -8,7 +8,7 @@ function New-VesterConfig {
     param (
         # Select a folder to create a new Config.json file inside
         [ValidateScript({Test-Path $_})]
-        [object]$OutputFolder = (Get-Location).Path,
+        [object]$OutputFolder = "$(Split-Path -Parent $PSScriptRoot)\Configs",
 
         # Suppress all prompts and Write-Host. Create the config file
         # with the values of the first Cluster/Host/VM/etc. found.
