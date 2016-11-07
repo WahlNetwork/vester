@@ -41,6 +41,7 @@ function Invoke-VesterTest {
                 $Datacenter = Get-Datacenter -name $cfg.scope.datacenter -Server $cfg.vcenter.vc
                 $InventoryList = switch ($Scope)
                 {
+                    'vCenter'    {$cfg.vcenter.vc}
                     'Datacenter' {$Datacenter}
                     'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
                     'Host'       {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
