@@ -18,7 +18,7 @@ $Title = 'CD-ROM Host Device'
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     If ($Desired -eq $false) {
-        $Object | Set-CDDrive -NoMedia -Confirm:$false
+        $Object | Get-CDDrive | Set-CDDrive -NoMedia -Confirm:$false
     } Else {
         Write-Warning 'CD-ROM tests do not remediate against a desired value of $true'
     }
