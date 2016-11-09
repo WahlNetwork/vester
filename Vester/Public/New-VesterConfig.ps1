@@ -177,7 +177,7 @@ function New-VesterConfig {
     If ($noCluster -ne $true) {
         # Set the section's config, and then display it for review
         $config.cluster = [ordered]@{
-            drsmode  = $cluster.DrsAutomationLevel
+            drsmode  = "$($cluster.DrsAutomationLevel)"
             drslevel = ($cluster | Get-View).Configuration.DrsConfig.VmotionRate
             haenable = $cluster.HAEnabled
         }
