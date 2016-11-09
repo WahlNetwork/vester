@@ -150,25 +150,29 @@ function Invoke-Vester {
                     throw "Unable to connect to configured vCenter '$($cfg.vcenter.vc)'. Exiting"
                 }
             } else {
-                $VIServer = $global:DefaultVIServers | where-Object {$_.Name -match $cfg.vcenter.vc}
+                $VIServer = $global:DefaultVIServers | Where {$_.Name -match $cfg.vcenter.vc}
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
 
-            ForEach ($Path in $TestFiles) {
-                Write-Verbose "Processing test file $Path"
-                $Scope = (Split-Path $Path -Parent) -replace '^.*\\',''
-                If ($Scope -notmatch 'vCenter|Datacenter|Cluster|Host|VM|Network') {
-                    Write-Warning "Skipping test $(Split-Path $Path -Leaf). Use -Verbose for more details"
-                    Write-Verbose 'Test files should be in a folder with one of the following names:'
-                    Write-Verbose 'vCenter / Datacenter / Cluster / Host / VM / Network'
-                    Write-Verbose 'This helps Vester determine which inventory object(s) to use during the test.'
-                    # Use continue to skip this test and go to the next loop iteration
-                    continue
-                }
-
-                # Pass the specified parameters down to the testing template
-                Invoke-VesterTest -Test $Path -Scope $Scope -Cfg $cfg -Remediate:$Remediate -XML $XMLOutputPath
-            } #ForEach Test
+            If ($XMLOutputPath) {
+                Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputPath -Script @{
+                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
+                    Parameters = @{
+                        Cfg       = $cfg
+                        TestFiles = $TestFiles
+                        Remediate = $Remediate
+                    }
+                } # Invoke-Pester
+            } Else {
+                Invoke-Pester -Script @{
+                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
+                    Parameters = @{
+                        Cfg       = $cfg
+                        TestFiles = $TestFiles
+                        Remediate = $Remediate
+                    }
+                } # Invoke-Pester
+            } #If XML
 
             # In case multiple config files were provided and some aren't valid
             $cfg = $null
