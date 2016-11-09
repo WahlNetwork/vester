@@ -14,6 +14,7 @@ Param(
 ForEach ($Test in $TestFiles) {
     Write-Verbose "Processing test file $Test"
 
+    # Use RegEx to strip everything but the parent folder's name
     $Scope = (Split-Path $Test -Parent) -replace '^.*\\',''
 
     If ($Scope -notmatch 'vCenter|Datacenter|Cluster|Host|VM|Network') {
@@ -47,6 +48,7 @@ ForEach ($Test in $TestFiles) {
             continue
         } Else {
             $Datacenter = Get-Datacenter -name $cfg.scope.datacenter -Server $cfg.vcenter.vc
+            # Use $Scope (parent folder) to get the correct objects to test against
             $InventoryList = switch ($Scope) {
                 'vCenter'    {$cfg.vcenter.vc}
                 'Datacenter' {$Datacenter}
