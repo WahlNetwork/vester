@@ -93,7 +93,7 @@ function Invoke-Vester {
 
         # Optionally save Pester output in NUnitXML format to a specified path
         # Specifying a path automatically triggers Pester in NUnitXML mode
-        [object]$XMLOutputPath
+        [object]$XMLOutputFile
     )
 
     BEGIN {
