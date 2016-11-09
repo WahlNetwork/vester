@@ -1,9 +1,14 @@
 ﻿[CmdletBinding(SupportsShouldProcess = $true,
                 ConfirmImpact = 'Medium')]
 Param(
-    $Cfg,
-    $TestFiles,
-    $Remediate
+    # The $cfg hashtable from a single config file
+    [object]$Cfg,
+
+    # Array of paths for tests to run against this config file
+    [object]$TestFiles,
+
+    # Pass through the user's preference to fix differences or not
+    [switch]$Remediate
 )
 
 ForEach ($Test in $TestFiles) {
@@ -24,7 +29,10 @@ ForEach ($Test in $TestFiles) {
         Try {
             Import-Module VMware.VimAutomation.Vds -ErrorAction Stop
         } Catch {
-            throw 'Failed to import PowerCLI module "VMware.VimAutomation.Vds"'
+            Write-Warning 'Failed to import PowerCLI module "VMware.VimAutomation.Vds"'
+            Write-Warning "Skipping network test $(Split-Path $Test -Leaf)"
+            # Use continue to skip this test and go to the next loop iteration
+            continue
         }
     }
 
@@ -35,6 +43,8 @@ ForEach ($Test in $TestFiles) {
         # Pump the brakes if the config value is $null
         If ($Desired -eq $null) {
             Write-Verbose "Due to null config value, skipping test $(Split-Path $Test -Leaf)"
+            # Use continue to skip this test and go to the next loop iteration
+            continue
         } Else {
             $Datacenter = Get-Datacenter -name $cfg.scope.datacenter -Server $cfg.vcenter.vc
             $InventoryList = switch ($Scope) {
@@ -48,7 +58,9 @@ ForEach ($Test in $TestFiles) {
         } #If Desired
 
         ForEach ($Object in $InventoryList) {
-            It -Name "$Scope $($Object.name) - $Title" -Test {
+            Write-Verbose "Processing $($Object.Name) within test $(Split-Path $Test -Leaf)"
+
+            It -Name "$Scope $($Object.Name) - $Title" -Test {
                 Try {
                     Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual) | Should BeNullOrEmpty
                 } Catch {

@@ -21,15 +21,18 @@ LONG DESCRIPTION
     the new config.json file to be created within the default module directory.
 
       Import-Module Vester
+
         # Use PowerCLI to connect to your VMware vCenter server
       Connect-VIServer 'Your-vCenter.example.com'
+
         # Following prompts, copy existing settings from cluster, host, VM, etc.
       New-VesterConfig
+
         # Run Vester, using your new config, against the default suite of tests
         # -Test uses your current location, but this command works everywhere
-      Invoke-Vester -Test "$(Split-Path (Get-Module Vester).Path -Parent)\Tests"
+      Invoke-Vester
 	
-    By default, your config.json file will be created at:
+    By default, New-VesterConfig creates your config.json file at:
       "$(Split-Path (Get-Module Vester).Path -Parent)\Configs\config.json"
     This file is used to define your desired end-state. You can manually review
     and edit the config file as desired. You can 'null' or delete any rows you
@@ -52,8 +55,8 @@ LONG DESCRIPTION
     a normal Pester test.
 
     When running Invoke-Vester, by default it:
-        - Uses one config file, .\Vester\Configs\config.json
-        - Searches your current location for *.Vester.ps1 files to run as tests
+        - Uses one config file, \Vester\Configs\config.json
+        - Runs all *.Vester.ps1 tests below the \Vester\Tests\ folder
 
     -Config and -Test can both be overridden, and both accept multiple values.
     If overriding -Test, folders and individual *.Vester.ps1 files are accepted.
@@ -62,13 +65,6 @@ LONG DESCRIPTION
 	You should always run a test without -Remediate first, to ensure all failed
 	tests are expected. Don't drink and admin! (...do so responsibly, anyway.)
 	As an advanced function, Invoke-Vester also supports -WhatIf and -Confirm.
-
-ADVANCED PESTER FUNCTIONALITY
-    Currently, because of the way Vester sweeps Pester complexity under the rug,
-    advanced Pester features like NUnitXML output and CodeCoverage aren't here.
-
-    If significant interest in any of that functionality is voiced,
-    the desired feature(s) could be evaluated for future implementation.
 
 NOTE
     Vester is a community-driven open source project; as such,

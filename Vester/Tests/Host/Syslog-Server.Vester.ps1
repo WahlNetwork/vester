@@ -1,5 +1,5 @@
 ﻿# Test file for the Vester module - https://github.com/WahlNetwork/Vester
-# Called by private function Invoke-VesterTest
+# Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
 $Title = 'Syslog Server'

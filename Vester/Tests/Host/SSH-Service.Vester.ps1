@@ -1,5 +1,5 @@
 ﻿# Test file for the Vester module - https://github.com/WahlNetwork/Vester
-# Called by private function Invoke-VesterTest
+# Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
 $Title = 'SSH Service State'
@@ -24,7 +24,7 @@ $Title = 'SSH Service State'
             Get-VMHostService |
             Where-Object -FilterScript {
                 $_.Key -eq 'TSM-SSH'
-        }) -ErrorAction Stop
+        }) -ErrorAction Stop -Confirm:$false
     }
     if ($Desired -eq $false) 
     {
@@ -32,6 +32,6 @@ $Title = 'SSH Service State'
             Get-VMHostService |
             Where-Object -FilterScript {
                 $_.Key -eq 'TSM-SSH'
-        }) -ErrorAction Stop
+        }) -ErrorAction Stop -Confirm:$false
     }
 }

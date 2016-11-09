@@ -18,24 +18,24 @@ function Invoke-Vester {
 
     .EXAMPLE
     Invoke-Vester -Verbose
-    Using the default config file at \Configs\Config.json, Vester will run
-    all *.Vester.ps1 files found inside of the current location, recursively.
+    Using the default config file at \Vester\Configs\Config.json,
+    Vester will run all included tests inside of \Vester\Tests\.
     Verbose output will be displayed on the screen.
-    It outputs a report of all passed and failed tests.
+    It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
     Invoke-Vester -Config C:\Tests\Config.json -Test C:\Tests\
-    Vester runs all *.Vester.ps1 files found underneath the C:\Tests directory,
+    Vester runs all *.Vester.ps1 files found underneath the C:\Tests\ directory,
     and compares values to the config file in the same location.
-    It outputs a report of all passed and failed tests.
+    It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
-    $TestsDNS = Get-ChildItem -Path Z:\ -Filter *dns* -File -Recurse
-    PS C:\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $TestsDNS
+    $DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse
+    PS C:\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS
 
-    Get all files below Z:\ with 'dns' in the name; store in variable $TestsDNS.
-    Then, get all *.json files and pipe them into the -Config parameter.
-    Each config file piped in will run through all $TestsDNS tests found.
+    Get all Vester tests below Z:\ with 'dns' in the name; store in variable $DNS.
+    Then, pipe all *.json files at the root of Z: into the -Config parameter.
+    Each config file piped in will run through all $DNS tests found.
 
     .EXAMPLE
     Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf
@@ -46,10 +46,17 @@ function Invoke-Vester {
 
     .EXAMPLE
     Invoke-Vester -Config .\Config-Dev.json -Remediate
-    Run all \Vester\Tests files, and compare values to those defined within the
-    Config-Dev.json file at the current location.
+    Run all \Vester\Tests\ files, and compare values to those defined within
+    the Config-Dev.json file at the current location.
     For all failed tests, -Remediate attempts to immediately correct your
     infrastructure to match the previously defined values in your config file.
+
+    .EXAMPLE
+    Invoke-Vester -XMLOutputFile .\vester.xml
+    Runs Vester with the default config and test files.
+    Uses Pester to send test results in NUnitXML format to vester.xml
+    at your current folder location.
+    Option is primarily used for CI/CD integration solutions.
 
     .INPUTS
     [System.Object]
@@ -76,7 +83,7 @@ function Invoke-Vester {
 
         # Optionally define the file/folder of test file(s) to call
         # Defaults to \Vester\Tests\, grabbing all tests recursively
-        # Individual test files must be named *.Vester.ps1
+        # All test files must be named *.Vester.ps1
         [Alias('Path','Script')]
         [object[]]$Test = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
 
@@ -84,6 +91,8 @@ function Invoke-Vester {
         # Defaults to false (disabled)
         [switch]$Remediate = $false,
 
+        # Optionally save Pester output in NUnitXML format to a specified path
+        # Specifying a path automatically triggers Pester in NUnitXML mode
         [object]$XMLOutputPath
     )
 
@@ -93,6 +102,7 @@ function Invoke-Vester {
             throw 'No config file provided.'
         }
 
+        # Construct empty array to throw file paths of tests into
         $TestFiles = New-Object 'System.Collections.Generic.List[String]'
 
         # Need to ForEach if multiple -Test locations
@@ -117,22 +127,22 @@ function Invoke-Vester {
                 $GCI = $null
             # Add the single file to the array if it matches *.Vester.ps1
             } Else {
-                If ($TestPath -match '\.Vester\.ps1') {
+                If ($TestPath -like '*.Vester.ps1') {
                     $TestFiles.Add($TestPath)
                 } Else {
-                    # Just because Vester tests have a very specific format
-                    # Prefer that tests are consciously named *.Vester.ps1
+                    # Because Vester tests have a very specific format,
+                    # and for future discoverability of that test if parent folder is specified,
+                    # prefer that tests are consciously named *.Vester.ps1
                     throw "'$TestPath' does not match the *.Vester.ps1 naming convention for test files."
                 }
-            }
-        } #ForEach TestPath
+            } #If Test-Path
+        } #ForEach -Test param entry
     } #Begin
 
     PROCESS {
         ForEach ($ConfigFile in $Config) {
-
-            # Load the defined $cfg values to test
             Write-Verbose -Message "Processing Config file $ConfigFile"
+            # Load the defined $cfg values to test
             $cfg = Get-Content $ConfigFile | ConvertFrom-Json
 
             If (-not $cfg) {
@@ -154,8 +164,8 @@ function Invoke-Vester {
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
 
-            If ($XMLOutputPath) {
-                Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputPath -Script @{
+            If ($XMLOutputFile) {
+                Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputFile -Script @{
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
