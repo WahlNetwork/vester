@@ -82,10 +82,17 @@ function Invoke-Vester {
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
-        [switch]$Remediate = $false
+        [switch]$Remediate = $false,
+
+        [object]$XMLOutputPath
     )
 
     BEGIN {
+        If ((Test-Path $Config) -eq $false) {
+            Write-Warning 'Config file not found. Try running New-VesterConfig with admin rights.'
+            throw 'No config file provided.'
+        }
+
         $TestFiles = New-Object 'System.Collections.Generic.List[String]'
 
         # Need to ForEach if multiple -Test locations
@@ -129,7 +136,7 @@ function Invoke-Vester {
             $cfg = Get-Content $ConfigFile | ConvertFrom-Json
 
             If (-not $cfg) {
-                throw "Valid config file not found at path '$ConfigFile'. Exiting"
+                throw "Valid config data not found at path '$ConfigFile'. Exiting"
             }
 
             # Check for established session to desired vCenter server
@@ -150,13 +157,21 @@ function Invoke-Vester {
             ForEach ($Path in $TestFiles) {
                 Write-Verbose "Processing test file $Path"
                 $Scope = (Split-Path $Path -Parent) -replace '^.*\\',''
+                If ($Scope -notmatch 'vCenter|Datacenter|Cluster|Host|VM|Network') {
+                    Write-Warning "Skipping test $(Split-Path $Path -Leaf). Use -Verbose for more details"
+                    Write-Verbose 'Test files should be in a folder with one of the following names:'
+                    Write-Verbose 'vCenter / Datacenter / Cluster / Host / VM / Network'
+                    Write-Verbose 'This helps Vester determine which inventory object(s) to use during the test.'
+                    # Use continue to skip this test and go to the next loop iteration
+                    continue
+                }
+
                 # Pass the specified parameters down to the testing template
-                Invoke-VesterTest -Test $Path -Scope $Scope -Cfg $cfg -Remediate:$Remediate
+                Invoke-VesterTest -Test $Path -Scope $Scope -Cfg $cfg -Remediate:$Remediate -XML $XMLOutputPath
             } #ForEach Test
 
+            # In case multiple config files were provided and some aren't valid
+            $cfg = $null
         } #ForEach Config
     } #Process
-
-    END {
-    }
 } #function
