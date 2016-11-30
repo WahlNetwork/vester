@@ -417,8 +417,8 @@ function New-VesterConfig {
 
     # Set the section's config, and then display it for review
     $config.vds = [ordered]@{
-            linkproto     = $vds.LinkDiscoveryProtocol
-            linkoperation = $vds.LinkDiscoveryProtocolOperation
+            linkproto     = "$($vds.LinkDiscoveryProtocol)"
+            linkoperation = "$($vds.LinkDiscoveryProtocolOperation)"
             mtu           = $vds.Mtu
     }
 

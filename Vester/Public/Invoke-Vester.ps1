@@ -143,7 +143,8 @@ function Invoke-Vester {
         ForEach ($ConfigFile in $Config) {
             Write-Verbose -Message "Processing Config file $ConfigFile"
             # Load the defined $cfg values to test
-            $cfg = Get-Content $ConfigFile | ConvertFrom-Json
+            # -Raw needed for PS v3/v4
+            $cfg = Get-Content $ConfigFile -Raw | ConvertFrom-Json
 
             If (-not $cfg) {
                 throw "Valid config data not found at path '$ConfigFile'. Exiting"
