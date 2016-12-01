@@ -1,4 +1,4 @@
-﻿#requires -Modules VMware.VimAutomation.Core, VMware.VimAutomation.Vds
+﻿#Requires -Modules VMware.VimAutomation.Core, VMware.VimAutomation.Vds
 
 function New-VesterConfig {
     <#

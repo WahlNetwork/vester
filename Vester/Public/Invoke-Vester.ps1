@@ -1,4 +1,4 @@
-﻿#Requires -Version 3
+﻿#Requires -Version 3 -Modules Pester, VMware.VimAutomation.Core
 
 function Invoke-Vester {
     <#
