@@ -12,8 +12,8 @@ Every test that is added to Vester needs three things:
 2. An update to the `Config.Tests.ps1`_ file to validate that the `Config.ps1` file contains valid entries.
 3. A test file using a properly formatted `Verb-Noun` format (use `Get-Verb` for more details) placed into the Tests folder.
 
-.. _`Configs.ps1`: https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.ps1
-.. _`Configs.Tests.ps1`: https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.Tests.ps1
+.. _`Config.ps1`: https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.ps1
+.. _`Config.Tests.ps1`: https://github.com/WahlNetwork/Vester/blob/master/Configs/Config.Tests.ps1
 
 Your First Contribution
 ------------------------
