@@ -1,11 +1,8 @@
 Vester - Configuration Management for vSphere
 ========================
 
-.. image:: https://ci.appveyor.com/api/projects/status/52cv3jshak2w7624?svg=true
-   :target: https://ci.appveyor.com/project/chriswahl/powershell-module
-
-.. image:: http://readthedocs.org/projects/powershell-module/badge/?version=latest
-   :target: http://powershell-module.readthedocs.io/en/latest/?badge=latest
+.. image:: http://readthedocs.org/projects/vester/badge/?version=latest
+   :target: http://vester.readthedocs.io/en/latest/?badge=latest
 
 Vester is a community project that aims to provide an extremely light-weight approach to vSphere configuration management using Pester and PowerCLI. The end-state configuration for each vSphere component, such as clusters and hosts, are abstracted into a simple config file. The configuration is tested and optionally remediated when drift is identified. The entire project is written in PowerShell. The code is open source, and `available on GitHub`_.
 
