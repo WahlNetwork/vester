@@ -1,102 +1,52 @@
 Getting Started
 ========================
 
-This project ultimately uses Pester to provide the testing framework. Because of this, we leverage a combination of Pester variables and custom ones written for Vester. If you're wondering why the command structure looks a bit complex, reference `Pester Issue 271`_ and `Pester Issue 423`_.
+Invoke-Vester will run each test it finds and report on discrepancies. It compares actual values against the values you supply in a config file, and can fix them immediately if you include the -Remediate parameter. If you are not already connected to the vCenter server defined in the config file, Invoke-Vester will prompt for credentials to connect to it.
 
-.. _Pester Issue 271: https://github.com/pester/Pester/issues/271
-.. _Pester Issue 271: https://github.com/pester/Pester/issues/423
+Invoke-Vester then calls Pester to run each test file. The test files leverage PowerCLI to gather values for comparison/remediation.
 
-Path Variable
-------------------------
-
-Type: String
-
-* Used to tell ``Invoke-Pester`` the relative path to where you have downloaded the Vester tests.
-* Some folks like to use different versions of tests, or subdivide tests into smaller groups.
-* The ``path`` input is required by Pester when sending parameters as shown in the examples below.
- 
-Default:
-    None hard-coded. Your current location when calling ``Invoke-Pester``, or the relative/absolute path you provide
-
-Remediate Variable
-------------------------
-
-Type: Bool (boolean)
-
-* Tells Vester in which mode to operate.
-* Set to ``$false`` to report on differences without any remediation.
-* Set to ``$true`` to report on differences while also trying to remediate them.
-
-Default:
-    ``$false``
-
-Config Variable
-------------------------
-
-Type: String
-
-* The relative path to where you have located a Vester config file.
-* You can use multiple config files to represent your different environments, such as Prod and Dev, while at the same time using the same testing files.
-
-Default:
-    ``Vester\Configs\Config.ps1``
-
-Usage Instructions
--------------------------
-
-The end-state configuration for each vSphere component is stored inside of the ``Config.ps1`` file. Make sure to read through the configuration items and set them with your specific environmental variables for DRS, NTP, SSH, etc.
-
-If you have multiple environments that have unique settings, create a copy of the ``Config.ps1`` file for each environment and call it whatever you wish (such as ``Config-Prod.ps1`` for Production and ``Config-Dev.ps1`` for your Dev).
-
-Once that's complete, you can start running Pester tests by opening your PowerShell console, using ``Connect-VIServer`` to authenticate to your vCenter Server, and finally using the parameters and examples below.
-
-.. image:: http://i.imgur.com/qXrGlar.png
-   :target: https://www.youtube.com/watch?v=CyVfzZ4jA8Q
+SYNTAX:
+    Invoke-Vester [[-Config] <Object[]>] [[-Test] <Object[]>] [-Remediate] [[-XMLOutputFile] <Object>] [-WhatIf] [-Confirm] [<CommonParameters>]
 
 Example 1 - Validation using Defaults
----------------------------
+------------------------
 
-``Invoke-Pester .\Vester``
+``PS C:\>Invoke-Vester -Verbose``
 
-* Runs all tests underneath directory ``.\Vester``
-* Will validate that the default config file has proper values first, then run all tests
-* Uses the default remediation value of ``$false`` (disabled) - drift will be shown but not corrected
-* Uses the default configuration settings found in ``.\Vester\Configs\Config.ps1``
+Using the default config file at \Vester\Configs\Config.json, Vester will run all included tests inside of \Vester\Tests\. Verbose output will be displayed on the screen. It outputs a report to the host of all passed and failed tests.
 
-Example 2 - Validation using Different Config Values
----------------------------
+Example 2 - Validation using Custom Config and Test Path
+------------------------
 
-``Invoke-Pester -Script @{Path = '.\Vester'; Parameters = @{ Config = '.\Vester\Configs\Config-Prod.ps1' }}``
+``PS C:\>Invoke-Vester -Config C:\Tests\Config.json -Test C:\Tests\``
 
-* Runs all tests underneath directory ``.\Vester``. Path is mandatory if supplying a parameter
-* Will validate config and then run all tests
-* Configuration settings found in ``.\Vester\Configs\Config-Prod.ps1`` will be used
-* By not supplying the Remediate parameter, it defaults to ``$false``
+Vester runs all *.Vester.ps1 files found underneath the C:\Tests\ directory, and compares values to the config file in the same location. It outputs a report to the host of all passed and failed tests.
 
-Example 3 - Remediation using Different Config Values
----------------------------
+Example 3 - Validation with Piped Test Values
+------------------------
 
-``Invoke-Pester -Script @{Path = '.\Vester\Tests'; Parameters = @{ Remediate = $true ; Config = '.\Vester\Configs\Config-Prod.ps1' }}``
+``PS C:\>$DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse``
+``PS C:\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS``
 
-* Runs all tests found in the path ``.\Vester\Tests``
-* Remediation is ``$true`` (enabled) - drift will be shown and also corrected
-* Configuration settings found in ``.\Vester\Configs\Config-Prod.ps1`` will be used
+Get all Vester tests below Z:\ with 'dns' in the name; store in variable $DNS. Then, pipe all *.json files at the root of Z: into the -Config parameter. Each config file piped in will run through all $DNS tests found.
 
-Example 4 - Single Test Validation and NUnit Output (for Jenkins, AppVeyor, etc.)
----------------------------
+Example 4 - Remediation with Custom Test Path and WhatIf
+------------------------
 
-``Invoke-Pester .\Vester\Tests -TestName '*DNS*' -OutputFormat NUnitXml -OutputFile .\Vester\results.xml``
+``PS C:\>Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf``
 
-* Runs any test under the path ``.\Vester\Tests`` with the string "DNS" found in the name
-* NUnitXml output will be created in the file ``.\Vester\results.xml``
-* Because there are no hashtables ``@{}``, defaults for Config/Remediate would be used
-* Can easily be combined with Examples 2-3 to use a different config file and/or remediate
+Run *.Vester.ps1 tests in the .\Tests\VM path below the current location. For all tests that fail against the values in \Configs\Config.json, -Remediate attempts to immediately fix them to match your defined config. -WhatIf prevents remediation, and instead reports what would have changed.
 
-Example 5 - Validation using Tags
----------------------------
+Example 5 - Remediation with Custom Config
+------------------------
 
-``Invoke-Pester .\Vester\Tests -Tag host -ExcludeTag nfs``
+``PS C:\>Invoke-Vester -Config .\Config-Dev.json -Remediate``
 
-* At the path ``.\Vester\Tests``, runs all tests with the "host" tag, except for those also tagged "nfs"
-* Because there are no hashtables ``@{}``, defaults for Config/Remediate would be used
-* Can easily be combined with Examples 2-3 to use a different config file and/or remediate
+Run all \Vester\Tests\ files, and compare values to those defined within the Config-Dev.json file at the current location. For all failed tests, -Remediate attempts to immediately correct your infrastructure to match the previously defined values in your config file.
+
+Example 6 - Validation with XML Output
+------------------------
+
+``PS C:\>Invoke-Vester -XMLOutputFile .\vester.xml``
+
+Runs Vester with the default config and test files. Uses Pester to send test results in NUnitXML format to vester.xml at your current folder location. Option is primarily used for CI/CD integration solutions.

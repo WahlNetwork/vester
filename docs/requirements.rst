@@ -3,9 +3,9 @@ Requirements
 
 The code assumes that you've already deployed at least one Rubrik Brik into your environment and have completed the initial configuration process to form a cluster. At a minimum, make sure you have installed the following:
 
-1. PowerShell version 4+
-2. `PowerCLI`_ version 6.0+
-3. `Pester`_
+1. PowerShell version 4 or higher
+2. `PowerCLI`_ version 6.0 or higher
+3. `Pester`_ version 3.4.3 or higher
 4. (optional) `Windows Management Framework 5.0`_
 
 Note: Although an alpha build of PowerShell exists for Linux and Mac OS environments, the code is currently being written and validated using a Microsoft Windows Server environment.

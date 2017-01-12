@@ -1,8 +1,6 @@
-﻿$verbs = (Get-Command -Module Rubrik |
-  ForEach-Object -Process {
-    $_.Name.Split('-')[0]
-  } |
-Select-Object -Unique)
+﻿$modname = 'Vester'
+Import-Module -Name "$PSScriptRoot\..\$modname" -Force
+$verbs = (Get-Command -Module $modname).Verb | Select-Object -Unique
  
 foreach ($verb in $verbs)
 {
@@ -12,8 +10,8 @@ foreach ($verb in $verbs)
   $data += ''
   $data += "This page contains details on **$verb** commands."
   $data += ''
-  foreach ($help in (Get-Command -Module Rubrik | Where-Object -FilterScript {
-        $_.name -match $verb
+  foreach ($help in (Get-Command -Module $modname | Where-Object -FilterScript {
+        $_.name -like "$verb-*"
   }))
   {
     $data += $help.Name
