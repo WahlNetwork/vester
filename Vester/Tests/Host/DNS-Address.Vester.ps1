@@ -5,7 +5,9 @@
 $Title = 'DNS Servers'
 
 # The config entry stating the desired values
-$Desired = $cfg.host.esxdns
+if($cfg.host.esxdns){
+    $Desired = $cfg.host.esxdns
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

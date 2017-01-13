@@ -5,7 +5,9 @@
 $Title = 'Syslog Server'
 
 # The config entry stating the desired values
-$Desired = $cfg.host.esxsyslog
+if($cfg.host.esxsyslog){
+    $Desired = $cfg.host.esxsyslog
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

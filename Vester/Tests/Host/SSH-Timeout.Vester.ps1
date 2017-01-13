@@ -5,7 +5,9 @@
 $Title = 'SSH Timeout'
 
 # The config entry stating the desired values
-[int]$Desired = $cfg.host.sshtimeout
+if($cfg.host.sshtimeout){
+    [int]$Desired = $cfg.host.sshtimeout
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

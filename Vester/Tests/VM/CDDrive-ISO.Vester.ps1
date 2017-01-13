@@ -5,7 +5,9 @@
 $Title = 'CD-ROM ISO File'
 
 # The config entry stating the desired values
-[bool]$Desired = $cfg.vm.allowconnectedcdrom
+if($cfg.vm.allowconnectedcdrom){
+    [bool]$Desired = $cfg.vm.allowconnectedcdrom
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

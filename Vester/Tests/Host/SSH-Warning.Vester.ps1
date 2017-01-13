@@ -5,7 +5,9 @@
 $Title = 'SSH Warning'
 
 # The config entry stating the desired values
-[int]$Desired = $cfg.host.sshwarn
+if($cfg.host.sshwarn){
+    [int]$Desired = $cfg.host.sshwarn
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

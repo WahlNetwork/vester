@@ -5,7 +5,9 @@
 $Title = 'HA State'
 
 # The config entry stating the desired values
-[bool]$Desired = $cfg.cluster.haenable
+if($cfg.cluster.haenable){
+    [bool]$Desired = $cfg.cluster.haenable
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
