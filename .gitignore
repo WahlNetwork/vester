@@ -40,3 +40,7 @@ Tests/TestVars
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Custom Test Config #
+######################
+Configs/test.json
