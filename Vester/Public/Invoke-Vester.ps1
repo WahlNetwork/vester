@@ -70,8 +70,7 @@ function Invoke-Vester {
     .LINK
     https://github.com/WahlNetwork/Vester
     #>
-    [CmdletBinding(SupportsShouldProcess = $true,
-                   ConfirmImpact = 'Medium')]
+
     # Passes -WhatIf through to other tests
     param (
         # Optionally define a different config file to use
