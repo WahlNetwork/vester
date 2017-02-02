@@ -296,12 +296,13 @@ function New-VesterConfig {
         Write-Host 'searchdomains = [array] @("Domain 1", "Domain 2 (optional)")'
         Write-Host 'esxsyslog     = [array] @("tcp://ip_address:port")'
         Write-Host 'esxsyslogfirewallexception = [bool] $true or $false'
-        Write-Host 'accountunlocktime = [int] number of seconds that a user is locked out'
-        Write-Host 'accountlockfailures = [int] 0 (off) or maximum number of failed logon attempts'
-        Write-Host 'dcuiaccess = [string] Comma separated list of users with DCUI access'
-        Write-Host 'dcuitimeout = [int] 0 (off) number of seconds before the DCUI timout occurs'
-        Write-Host 'passwordpolicy = [string] pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
-        Write-Host 'tpsforcesalting = [int] 0 (TPS enabled) 1 (TPS enabled for VMs with same salt) 2 (No inter-VM TPS)'
+        Write-Host 'accountunlocktime   = [int]    number of seconds that a user is locked out'
+        Write-Host 'accountlockfailures = [int]    0 (off) or maximum number of failed logon attempts'
+        Write-Host 'dcuiaccess          = [string] Comma separated list of users with DCUI access'
+        Write-Host 'dcuitimeout         = [int]    0 (off) number of seconds before the DCUI timout occurs'
+        Write-Host 'passwordpolicy      = [string] pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
+        Write-Host 'tpsforcesalting     = [int]    0 (TPS enabled) 1 (TPS enabled for VMs with same salt) 2 (No inter-VM TPS)'
+        Write-Host 'vibacceptancelevel  = [string] VMwareCertified, VMwareAccepted, PartnerSupported (default), CommunitySupported'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -322,6 +323,7 @@ function New-VesterConfig {
         dcuitimeout                = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.DCUITimeout').Value
         passwordpolicy             = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.PasswordQualityControl').Value
         tpsforcesalting            = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Mem.ShareForceSalting').Value
+        vibacceptancelevel         = (Get-EsxCli -VMHost $esxi -v2).software.acceptance.get.Invoke()
     }
 
     If (-not $Quiet) {
