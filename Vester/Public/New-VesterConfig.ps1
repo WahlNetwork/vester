@@ -202,18 +202,20 @@ function New-VesterConfig {
 
         # No cluster found; $null the values to skip cluster tests
         $config.cluster = [ordered]@{
-            drsmode  = $null
-            drslevel = $null
-            haenable = $null
+            drsenable = $null
+            drsmode   = $null
+            drslevel  = $null
+            haenable  = $null
         }
     }
 
     If (-not $Quiet) {
     # Explain each setting
         Write-Host "`n  ### Cluster Settings" -ForegroundColor Green
-        Write-Host 'drsmode  = [string] FullyAutomated, Manual, or PartiallyAutomated'
-        Write-Host 'drslevel = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
-        Write-Host 'haenable = [bool]   $true or $false'
+        Write-Host 'drsenable = [bool]  $true or $false'
+        Write-Host 'drsmode   = [string] FullyAutomated, Manual, or PartiallyAutomated'
+        Write-Host 'drslevel  = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
+        Write-Host 'haenable  = [bool]   $true or $false'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -221,6 +223,7 @@ function New-VesterConfig {
     If ($noCluster -ne $true) {
         # Set the section's config, and then display it for review
         $config.cluster = [ordered]@{
+            drsenable = $cluster.DRSEnabled
             drsmode  = "$($cluster.DrsAutomationLevel)"
             drslevel = ($cluster | Get-View).Configuration.DrsConfig.VmotionRate
             haenable = $cluster.HAEnabled
@@ -293,6 +296,10 @@ function New-VesterConfig {
         Write-Host 'searchdomains = [array] @("Domain 1", "Domain 2 (optional)")'
         Write-Host 'esxsyslog     = [array] @("tcp://ip_address:port")'
         Write-Host 'esxsyslogfirewallexception = [bool] $true or $false'
+        Write-Host 'accountunlocktime = [int] number of seconds that a user is locked out'
+        Write-Host 'accountlockfailures = [int] 0 (off) or maximum number of failed logon attempts'
+        Write-Host 'dcuiaccess = [string] Comma separated list of users with DCUI access'
+        Write-Host 'dcuitimeout = [int] 0 (off) number of seconds before the DCUI timout occurs'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -307,6 +314,10 @@ function New-VesterConfig {
         esxsyslogfirewallexception = ($esxi | Get-VMHostFirewallException -Name syslog).Enabled
         sshtimeout                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellTimeout').Value
         sshinteractivetimeout      = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellInteractiveTimeout').Value
+        accountunlocktime          = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.AccountUnlockTime').Value
+        accountlockfailures        = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.AccountLockFailures').Value
+        dcuiaccess                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'DCUI.Access').Value
+        dcuitimeout                = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.DCUITimeout').Value
     }
 
     If (-not $Quiet) {
