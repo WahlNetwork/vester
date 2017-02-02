@@ -300,6 +300,7 @@ function New-VesterConfig {
         Write-Host 'accountlockfailures = [int] 0 (off) or maximum number of failed logon attempts'
         Write-Host 'dcuiaccess = [string] Comma separated list of users with DCUI access'
         Write-Host 'dcuitimeout = [int] 0 (off) number of seconds before the DCUI timout occurs'
+        Write-Host 'passwordpolicy = [string] pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -318,6 +319,7 @@ function New-VesterConfig {
         accountlockfailures        = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.AccountLockFailures').Value
         dcuiaccess                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'DCUI.Access').Value
         dcuitimeout                = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.DCUITimeout').Value
+        passwordpolicy             = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.PasswordQualityControl').Value
     }
 
     If (-not $Quiet) {
