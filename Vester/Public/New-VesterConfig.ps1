@@ -301,6 +301,7 @@ function New-VesterConfig {
         Write-Host 'dcuiaccess = [string] Comma separated list of users with DCUI access'
         Write-Host 'dcuitimeout = [int] 0 (off) number of seconds before the DCUI timout occurs'
         Write-Host 'passwordpolicy = [string] pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
+        Write-Host 'tpsforcesalting = [int] 0 (TPS enabled) 1 (TPS enabled for VMs with same salt) 2 (No inter-VM TPS)'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -320,6 +321,7 @@ function New-VesterConfig {
         dcuiaccess                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'DCUI.Access').Value
         dcuitimeout                = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.DCUITimeout').Value
         passwordpolicy             = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.PasswordQualityControl').Value
+        tpsforcesalting            = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Mem.ShareForceSalting').Value
     }
 
     If (-not $Quiet) {
