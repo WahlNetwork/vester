@@ -5,7 +5,9 @@
 $Title = 'SSH Interactive Timeout'
 
 # The config entry stating the desired values
-[int]$Desired = $cfg.host.sshinteractivetimeout
+if($cfg.host.sshinteractivetimeout){
+    [int]$Desired = $cfg.host.sshinteractivetimeout
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

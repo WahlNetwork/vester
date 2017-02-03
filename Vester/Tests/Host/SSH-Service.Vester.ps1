@@ -5,7 +5,9 @@
 $Title = 'SSH Service State'
 
 # The config entry stating the desired values
-[bool]$Desired = $cfg.host.sshenable
+if($cfg.host.sshenable){
+    [bool]$Desired = $cfg.host.sshenable
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

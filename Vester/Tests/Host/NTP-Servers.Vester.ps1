@@ -5,7 +5,9 @@
 $Title = 'NTP Servers'
 
 # The config entry stating the desired values
-$Desired = $cfg.host.esxntp
+if($cfg.host.esxntp){
+    $Desired = $cfg.host.esxntp
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

@@ -5,7 +5,9 @@
 $Title = 'VDS Link Protocol'
 
 # The config entry stating the desired values
-[string]$Desired = $cfg.vds.linkproto
+if($cfg.vds.linkproto){
+    [string]$Desired = $cfg.vds.linkproto
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

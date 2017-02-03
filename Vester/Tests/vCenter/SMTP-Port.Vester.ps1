@@ -5,7 +5,9 @@
 $Title = 'SMTP Port'
 
 # The config entry stating the desired values
-[int]$Desired = $cfg.vcenter.smtpport
+if($cfg.vcenter.smtpport){
+    [int]$Desired = $cfg.vcenter.smtpport
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

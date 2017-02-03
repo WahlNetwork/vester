@@ -5,7 +5,9 @@
 $Title = 'Syslog Firewall'
 
 # The config entry stating the desired values
-[bool]$Desired = $cfg.host.esxsyslogfirewallexception
+if($cfg.host.esxsyslogfirewallexception){
+    [bool]$Desired = $cfg.host.esxsyslogfirewallexception
+}
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
