@@ -379,6 +379,7 @@ function New-VesterConfig {
         Write-Host 'allowcpulimit       = [bool] $true or $false'
         Write-Host 'allowmemorylimit    = [bool] $true or $false'
         Write-Host 'bootdelay           = [int]  Time in milliseconds'
+        Write-Host 'toolscopydisable    = [string] $true or $false'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -390,6 +391,7 @@ function New-VesterConfig {
         allowmemorylimit    = &{If (($vm | Get-VMResourceConfiguration).MemLimitMB -eq -1) {$false} Else {$true}}
         syncTimeWithHost    = ($vm | Get-View).Config.Tools.SyncTimeWithHost
         bootDelay           = ($vm | Get-View).Config.BootOptions.BootDelay
+        toolscopydisable    = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.copy.disable').Value
     }
 
     If (-not $Quiet) {
