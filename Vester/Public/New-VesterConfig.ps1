@@ -93,7 +93,8 @@ function New-VesterConfig {
         'event.maxAge',
         'event.maxAgeEnabled',
         'task.maxAge',
-        'task.maxAgeEnabled'
+        'task.maxAgeEnabled',
+        'config.nfc.useSSL'
     )
     $vcenterHash = @{}
     Get-AdvancedSetting -Entity $DefaultVIServers.Name -Name $vcenterProp | ForEach-Object {
@@ -111,6 +112,7 @@ function New-VesterConfig {
         Write-Host 'EventMaxAgeEnabled = [bool]   Enables Event cleanup and enforces the max age defined in EventMaxAge'
         Write-Host 'TaskMaxAge         = [int]    Age in days that Tasks will be retained in the vCenter Server Database'
         Write-Host 'TaskMaxAgeEnabled  = [bool]   Enables Task cleanup and enforces the max age defined in TaskMaxAge'
+        Write-Host 'nfcusessl          = [string] True or False - Default is True, however the key does not exist'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -124,6 +126,7 @@ function New-VesterConfig {
         EventMaxAgeEnabled = $vcenterHash['event.maxAgeEnabled']
         TaskMaxAge         = $vcenterHash['task.maxAge']
         TaskMaxAgeEnabled  = $vcenterHash['task.maxAgeEnabled']
+        nfcusessl          = $vcenterHash['config.nfc.useSSL']
     }
 
     If (-not $Quiet) {
@@ -202,18 +205,20 @@ function New-VesterConfig {
 
         # No cluster found; $null the values to skip cluster tests
         $config.cluster = [ordered]@{
-            drsmode  = $null
-            drslevel = $null
-            haenable = $null
+            drsenable = $null
+            drsmode   = $null
+            drslevel  = $null
+            haenable  = $null
         }
     }
 
     If (-not $Quiet) {
     # Explain each setting
         Write-Host "`n  ### Cluster Settings" -ForegroundColor Green
-        Write-Host 'drsmode  = [string] FullyAutomated, Manual, or PartiallyAutomated'
-        Write-Host 'drslevel = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
-        Write-Host 'haenable = [bool]   $true or $false'
+        Write-Host 'drsenable = [bool]  $true or $false'
+        Write-Host 'drsmode   = [string] FullyAutomated, Manual, or PartiallyAutomated'
+        Write-Host 'drslevel  = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
+        Write-Host 'haenable  = [bool]   $true or $false'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -221,6 +226,7 @@ function New-VesterConfig {
     If ($noCluster -ne $true) {
         # Set the section's config, and then display it for review
         $config.cluster = [ordered]@{
+            drsenable = $cluster.DRSEnabled
             drsmode  = "$($cluster.DrsAutomationLevel)"
             drslevel = ($cluster | Get-View).Configuration.DrsConfig.VmotionRate
             haenable = $cluster.HAEnabled
@@ -293,6 +299,13 @@ function New-VesterConfig {
         Write-Host 'searchdomains = [array] @("Domain 1", "Domain 2 (optional)")'
         Write-Host 'esxsyslog     = [array] @("tcp://ip_address:port")'
         Write-Host 'esxsyslogfirewallexception = [bool] $true or $false'
+        Write-Host 'accountunlocktime   = [int]    number of seconds that a user is locked out'
+        Write-Host 'accountlockfailures = [int]    0 (off) or maximum number of failed logon attempts'
+        Write-Host 'dcuiaccess          = [string] Comma separated list of users with DCUI access'
+        Write-Host 'dcuitimeout         = [int]    0 (off) number of seconds before the DCUI timout occurs'
+        Write-Host 'passwordpolicy      = [string] pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
+        Write-Host 'tpsforcesalting     = [int]    0 (TPS enabled) 1 (TPS enabled for VMs with same salt) 2 (No inter-VM TPS)'
+        Write-Host 'vibacceptancelevel  = [string] VMwareCertified, VMwareAccepted, PartnerSupported (default), CommunitySupported'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -307,6 +320,13 @@ function New-VesterConfig {
         esxsyslogfirewallexception = ($esxi | Get-VMHostFirewallException -Name syslog).Enabled
         sshtimeout                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellTimeout').Value
         sshinteractivetimeout      = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellInteractiveTimeout').Value
+        accountunlocktime          = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.AccountUnlockTime').Value
+        accountlockfailures        = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.AccountLockFailures').Value
+        dcuiaccess                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'DCUI.Access').Value
+        dcuitimeout                = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.DCUITimeout').Value
+        passwordpolicy             = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Security.PasswordQualityControl').Value
+        tpsforcesalting            = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'Mem.ShareForceSalting').Value
+        vibacceptancelevel         = (Get-EsxCli -VMHost $esxi -v2).software.acceptance.get.Invoke()
     }
 
     If (-not $Quiet) {
