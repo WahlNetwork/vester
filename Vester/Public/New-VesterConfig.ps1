@@ -93,7 +93,8 @@ function New-VesterConfig {
         'event.maxAge',
         'event.maxAgeEnabled',
         'task.maxAge',
-        'task.maxAgeEnabled'
+        'task.maxAgeEnabled',
+        'config.nfc.useSSL'
     )
     $vcenterHash = @{}
     Get-AdvancedSetting -Entity $DefaultVIServers.Name -Name $vcenterProp | ForEach-Object {
@@ -111,6 +112,7 @@ function New-VesterConfig {
         Write-Host 'EventMaxAgeEnabled = [bool]   Enables Event cleanup and enforces the max age defined in EventMaxAge'
         Write-Host 'TaskMaxAge         = [int]    Age in days that Tasks will be retained in the vCenter Server Database'
         Write-Host 'TaskMaxAgeEnabled  = [bool]   Enables Task cleanup and enforces the max age defined in TaskMaxAge'
+        Write-Host 'nfcusessl          = [string] True or False - Default is True, however the key does not exist'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -124,6 +126,7 @@ function New-VesterConfig {
         EventMaxAgeEnabled = $vcenterHash['event.maxAgeEnabled']
         TaskMaxAge         = $vcenterHash['task.maxAge']
         TaskMaxAgeEnabled  = $vcenterHash['task.maxAgeEnabled']
+        nfcusessl          = $vcenterHash['config.nfc.useSSL']
     }
 
     If (-not $Quiet) {
