@@ -37,8 +37,24 @@ Describe -Name 'Invoke-Vester unit tests' -Tag 'unit' {
         $Command.ParameterSets.Count | Should Be 1
     }
 
+    # Create barebones config.json files
+    @{vcenter = @{vc = 'vCenterServer1'}} |
+        ConvertTo-Json | Out-File "TestDrive:\config1.json"
+    @{vcenter = @{vc = 'vCenterServer2'}} |
+        ConvertTo-Json | Out-File "TestDrive:\config2.json"
+    $json = @("TestDrive:\config1.json", "TestDrive:\config2.json")
+
+    # Mocks
+    Mock Connect-VIServer {'asdf'}
+    Mock Invoke-Pester -MockWith {'xml'} -ParameterFilter {
+        $OutputFormat -eq 'NUnitXml' -and $OutputFile
+    }
+    Mock Invoke-Pester {'pester'}
+
     Context 'Input' {
         Context 'Parameters match expected values' {
+            # One It block here for each Invoke-Vester parameter
+
             It '-Config matches expected values' {
                 $ParamConfig = $Command.Parameters['Config']
                 $HelpConfig = $Help.Parameters.Parameter | Where Name -eq 'Config'
@@ -49,7 +65,6 @@ Describe -Name 'Invoke-Vester unit tests' -Tag 'unit' {
                 $ParamConfig.Attributes.ValueFromPipelineByPropertyName | Should Be $true
                 $ParamConfig.Attributes.Position | Should Be 0
                 $ParamConfig.Aliases | Should BeExactly 'FullName'
-
                 $HelpConfig.defaultValue | Should BeExactly '"$(Split-Path -Parent $PSScriptRoot)\Configs\Config.json"'
             }
 
@@ -63,7 +78,6 @@ Describe -Name 'Invoke-Vester unit tests' -Tag 'unit' {
                 $ParamConfig.Attributes.ValueFromPipelineByPropertyName | Should Be $false
                 $ParamConfig.Attributes.Position | Should Be 1
                 $ParamConfig.Aliases | Should BeExactly @('Path','Script')
-
                 $HelpConfig.defaultValue | Should BeExactly '"$(Split-Path -Parent $PSScriptRoot)\Tests\"'
             }
 
@@ -76,7 +90,6 @@ Describe -Name 'Invoke-Vester unit tests' -Tag 'unit' {
                 $ParamConfig.Attributes.ValueFromPipeline | Should Be $false
                 $ParamConfig.Attributes.ValueFromPipelineByPropertyName | Should Be $false
                 $ParamConfig.Aliases | Should BeNullOrEmpty
-
                 $HelpConfig.defaultValue | Should Be $false
             }
 
@@ -90,16 +103,64 @@ Describe -Name 'Invoke-Vester unit tests' -Tag 'unit' {
                 $ParamConfig.Attributes.ValueFromPipelineByPropertyName | Should Be $false
                 $ParamConfig.Attributes.Position | Should Be 2
                 $ParamConfig.Aliases | Should BeNullOrEmpty
-
                 $HelpConfig.defaultValue | Should BeNullOrEmpty
             }
         } #context parameters match expected
 
-        # TODO: Dump a .json config into $TestDrive:
+        Context 'Config .json input is handled properly' {
+            # TODO: Extensive mocking here (or further up the line?)
 
-        # TODO: Should intake .json config as expected
+            It 'Accepts one .json config file' {
+                {Invoke-Vester -Config $json[0]} | Should Not Throw
+                # Should accept in position 0
+                {Invoke-Vester $json[0]} | Should Not Throw
+                # Should accept piped input by value
+                {$json[0] | Invoke-Vester} | Should Not Throw
+                # Should accept piped input by property name (FullName)
+                {Get-Item $json[0] | Invoke-Vester} | Should Not Throw
+
+                # TODO: Needs tests that should fail
+            }
+
+            It 'Accepts multiple .json config files' {
+                {Invoke-Vester -Config $json} | Should Not Throw
+                # Should accept in position 0
+                {Invoke-Vester $json} | Should Not Throw
+                # Should accept piped input by value
+                {$json | Invoke-Vester} | Should Not Throw
+                # Should accept piped input by property name (FullName)
+                {Get-ChildItem TestDrive:\ | Invoke-Vester} | Should Not Throw
+                # One by value, one by property name
+                {@('TestDrive:\config1.json', (Get-Item $json[1])) | Invoke-Vester} | Should Not Throw
+
+                # TODO: Needs tests that should fail
+            }
+        } #context json
+
 
         # TODO: Should intake one/many .Vester.ps1 tests
+        Context 'Tests .Vester.ps1 input is handled properly' {
+            It 'Accepts one .Vester.ps1 test file' {
+                <#
+                Invoke-Vester -Config $json[0] -Test
+                # Parameter aliases
+                Invoke-Vester -Config $json[0] -Path
+                Invoke-Vester -Config $json[0] -Script
+                #>
+            }
+
+            It 'Accepts multiple .Vester.ps1 test files' {
+
+            }
+
+            It 'Accepts a directory' {
+
+            }
+
+            It 'Accepts multiple directories' {
+
+            }
+        }
 
         # TODO: Accepts -Remediate
     } #context input
