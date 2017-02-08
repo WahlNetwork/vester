@@ -380,6 +380,8 @@ function New-VesterConfig {
         Write-Host 'allowmemorylimit    = [bool] $true or $false'
         Write-Host 'bootdelay           = [int]  Time in milliseconds'
         Write-Host 'toolscopydisable    = [string] $true or $false'
+        Write-Host 'toolsdnddisable     = [string] $true or $false'
+        Write-Host 'toolsguioptions     = [string] $true or $false'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -392,6 +394,8 @@ function New-VesterConfig {
         syncTimeWithHost    = ($vm | Get-View).Config.Tools.SyncTimeWithHost
         bootDelay           = ($vm | Get-View).Config.BootOptions.BootDelay
         toolscopydisable    = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.copy.disable').Value
+        toolsdnddisable     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.dnd.disable').Value
+        toolsguioptions     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.setGUIOptions.enable').Value
     }
 
     If (-not $Quiet) {
