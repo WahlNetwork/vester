@@ -112,7 +112,7 @@ function New-VesterConfig {
         Write-Host 'EventMaxAgeEnabled = [bool]   Enables Event cleanup and enforces the max age defined in EventMaxAge'
         Write-Host 'TaskMaxAge         = [int]    Age in days that Tasks will be retained in the vCenter Server Database'
         Write-Host 'TaskMaxAgeEnabled  = [bool]   Enables Task cleanup and enforces the max age defined in TaskMaxAge'
-        Write-Host 'nfcusessl          = [string] True or False - Default is True, however the key does not exist'
+        Write-Host 'nfcusessl          = [string] "True" or "False" - Default is True, however the key does not exist'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -379,9 +379,10 @@ function New-VesterConfig {
         Write-Host 'allowcpulimit       = [bool] $true or $false'
         Write-Host 'allowmemorylimit    = [bool] $true or $false'
         Write-Host 'bootdelay           = [int]  Time in milliseconds'
-        Write-Host 'toolscopydisable    = [string] $true or $false'
-        Write-Host 'toolsdnddisable     = [string] $true or $false'
-        Write-Host 'toolsguioptions     = [string] $true or $false'
+        Write-Host 'toolscopydisable    = [string] "True" or "False"'
+        Write-Host 'toolsdnddisable     = [string] "True" or "False"'
+        Write-Host 'toolsguioptions     = [string] "True" or "False"'
+        Write-Host 'toolspastedisable   = [string] "True" or "False"'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -396,6 +397,7 @@ function New-VesterConfig {
         toolscopydisable    = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.copy.disable').Value
         toolsdnddisable     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.dnd.disable').Value
         toolsguioptions     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.setGUIOptions.enable').Value
+        toolspastedisable   = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.paste.disable').Value
     }
 
     If (-not $Quiet) {
