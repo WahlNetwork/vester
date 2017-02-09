@@ -21,7 +21,7 @@ $Desired = $cfg.vm.toolspastedisable
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     if ((Get-AdvancedSetting -Entity $Object -Name 'isolation.tools.paste.disable') -eq $null) {
-        New-AdvancedSEtting -Entity $Object -Name 'isolation.tools.paste.disable' -Value $Desired -Confirm:$false -ErrorAction Stop
+        New-AdvancedSetting -Entity $Object -Name 'isolation.tools.paste.disable' -Value $Desired -Confirm:$false -ErrorAction Stop
     } else {
         Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
             $_.Name -eq 'isolation.tools.paste.disable'

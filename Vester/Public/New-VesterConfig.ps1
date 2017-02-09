@@ -385,6 +385,25 @@ function New-VesterConfig {
         Write-Host 'toolspastedisable   = [string] "True" or "False"'
         Write-Host 'toolsdiskshrinkdisable = [string] "True" or "False"'
         Write-Host 'toolsdiskwiperdisable  = [string] "True" or "False"'
+        Write-Host 'toolshgfsServerdisable = [string] "True" or "False"'
+        Write-Host 'vmxautologon        = [string] "True" or "False"'
+        Write-Host 'vmxbiosbbs          = [string] "True" or "False"'
+        Write-Host 'vmxgetcreds         = [string] "True" or "False"'
+        Write-Host 'vmxlaunchmenu       = [string] "True" or "False"'
+        Write-Host 'vmxmemsfss          = [string] "True" or "False"'
+        Write-Host 'vmxprotocolhandler  = [string] "True" or "False"'
+        Write-Host 'vmxshellaction      = [string] "True" or "False"'
+        Write-Host 'vmxtoporequest      = [string] "True" or "False"'
+        Write-Host 'vmxtrashfolderstate = [string] "True" or "False"'
+        Write-Host 'vmxtrayicon         = [string] "True" or "False"'
+        Write-Host 'vmxunity            = [string] "True" or "False"'
+        Write-Host 'vmxunityinterlock   = [string] "True" or "False"'
+        Write-Host 'vmxunitypush        = [string] "True" or "False"'
+        Write-Host 'vmxunitytaskbar     = [string] "True" or "False"'
+        Write-Host 'vmxunityactive      = [string] "True" or "False"'
+        Write-Host 'vmxunitywindow      = [string] "True" or "False"'
+        Write-Host 'vmxversionget       = [string] "True" or "False"'
+        Write-Host 'vmxversionset       = [string] "True" or "False"'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -402,6 +421,25 @@ function New-VesterConfig {
         toolspastedisable   = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.paste.disable').Value
         toolsdiskshrinkdisable = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.diskShrink.disable').Value
         toolsdiskwiperdisable  = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.diskWiper.disable').Value
+        toolshgfsServerdisable = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.hgfsServerSet.disable').Value
+        vmxautologon        = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.ghi.autologon.disable').Value
+        vmxbiosbbs          = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.bios.bbs.disable').Value
+        vmxgetcreds         = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.getCreds.disable').Value
+        vmxlaunchmenu       = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.ghi.launchmenu.change').Value
+        vmxmemsfss          = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.memSchedFakeSampleStats.disable').Value
+        vmxprotocolhandler  = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.ghi.protocolhandler.info.disable').Value
+        vmxshellaction      = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.ghi.host.shellAction.disable').Value
+        vmxtoporequest      = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.dispTopoRequest.disable').Value
+        vmxtrashfolderstate = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.trashFolderState.disable').Value
+        vmxtrayicon         = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.ghi.trayicon.disable').Value
+        vmxunity            = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unity.disable').Value
+        vmxunityinterlock   = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unityInterlockOperation.disable').Value
+        vmxunitypush        = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unity.push.update.disable').Value
+        vmxunitytaskbar     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unity.taskbar.disable').Value
+        vmxunityactive      = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unityActive.disable').Value
+        vmxunitywindow      = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.unity.windowContents.disable').Value
+        vmxversionget       = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.vmxDnDVersionGet.disable').Value
+        vmxversionset       = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.guestDnDVersionSet.disable').Value
     }
 
     If (-not $Quiet) {
