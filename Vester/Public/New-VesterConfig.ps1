@@ -383,6 +383,8 @@ function New-VesterConfig {
         Write-Host 'toolsdnddisable     = [string] "True" or "False"'
         Write-Host 'toolsguioptions     = [string] "True" or "False"'
         Write-Host 'toolspastedisable   = [string] "True" or "False"'
+        Write-Host 'toolsdiskshrinkdisable = [string] "True" or "False"'
+        Write-Host 'toolsdiskwiperdisable  = [string] "True" or "False"'
         Write-Host '  ###' -ForegroundColor Green
     }
 
@@ -398,6 +400,8 @@ function New-VesterConfig {
         toolsdnddisable     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.dnd.disable').Value
         toolsguioptions     = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.setGUIOptions.enable').Value
         toolspastedisable   = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.paste.disable').Value
+        toolsdiskshrinkdisable = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.diskShrink.disable').Value
+        toolsdiskwiperdisable  = (Get-AdvancedSetting -Entity $vm | Where Name -eq 'isolation.tools.diskWiper.disable').Value
     }
 
     If (-not $Quiet) {
