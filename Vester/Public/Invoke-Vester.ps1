@@ -68,22 +68,33 @@ function Invoke-Vester {
     "Get-Help about_Vester" for more information.
 
     .LINK
+    http://vester.readthedocs.io/en/latest/
+
+    .LINK
     https://github.com/WahlNetwork/Vester
     #>
     [CmdletBinding(SupportsShouldProcess = $true,
                    ConfirmImpact = 'Medium')]
-    # Passes -WhatIf through to other tests
+    # ^ that passes -WhatIf through to other tests
     param (
         # Optionally define a different config file to use
         # Defaults to \Vester\Configs\Config.json
         [Parameter(ValueFromPipeline = $True,
                    ValueFromPipelinebyPropertyName=$True)]
+        [ValidateScript({
+            If ($_.FullName) {Test-Path $_.FullName}
+            Else {Test-Path $_}
+        })]
         [Alias('FullName')]
         [object[]]$Config = "$(Split-Path -Parent $PSScriptRoot)\Configs\Config.json",
 
         # Optionally define the file/folder of test file(s) to call
         # Defaults to \Vester\Tests\, grabbing all tests recursively
         # All test files must be named *.Vester.ps1
+        [ValidateScript({
+            If ($_.FullName) {Test-Path $_.FullName}
+            Else {Test-Path $_}
+        })]
         [Alias('Path','Script')]
         [object[]]$Test = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
 
@@ -93,25 +104,23 @@ function Invoke-Vester {
 
         # Optionally save Pester output in NUnitXML format to a specified path
         # Specifying a path automatically triggers Pester in NUnitXML mode
+        [ValidateScript({Test-Path (Split-Path $_ -Parent)})]
         [object]$XMLOutputFile
     )
 
     BEGIN {
-        If ((Test-Path $Config) -eq $false) {
-            Write-Warning 'Config file not found. Try running New-VesterConfig with admin rights.'
-            throw 'No config file provided.'
-        }
-
         # Construct empty array to throw file paths of tests into
         $TestFiles = New-Object 'System.Collections.Generic.List[String]'
 
         # Need to ForEach if multiple -Test locations
         ForEach ($TestPath in $Test) {
-            # If Test-Path returns false, we're done
-            If (-not (Test-Path $TestPath -PathType Any)) {
-                throw "Test parameter '$TestPath' does not resolve to a path."
-            # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it
-            } ElseIf (Test-Path $TestPath -PathType Container) {
+            # Gracefully handle Get-Item/Get-ChildItem
+            If ($TestPath.FullName) {
+                $TestPath = $TestPath.FullName
+            }
+
+            If (Test-Path $TestPath -PathType Container) {
+                # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it
                 Write-Verbose "Discovering *.Vester.ps1 files below directory '$TestPath'."
                 $GCI = (Get-ChildItem $TestPath -Recurse -Filter '*.Vester.ps1').FullName
 
@@ -125,8 +134,8 @@ function Invoke-Vester {
                 }
 
                 $GCI = $null
-            # Add the single file to the array if it matches *.Vester.ps1
             } Else {
+                # Add the single file to the array if it matches *.Vester.ps1
                 If ($TestPath -like '*.Vester.ps1') {
                     $TestFiles.Add($TestPath)
                 } Else {
@@ -141,7 +150,12 @@ function Invoke-Vester {
 
     PROCESS {
         ForEach ($ConfigFile in $Config) {
+            # Gracefully handle Get-Item/Get-ChildItem
+            If ($ConfigFile.FullName) {
+                $ConfigFile = $ConfigFile.FullName
+            }
             Write-Verbose -Message "Processing Config file $ConfigFile"
+
             # Load the defined $cfg values to test
             # -Raw needed for PS v3/v4
             $cfg = Get-Content $ConfigFile -Raw | ConvertFrom-Json
@@ -153,18 +167,20 @@ function Invoke-Vester {
             # Check for established session to desired vCenter server
             If ($cfg.vcenter.vc -notin $global:DefaultVIServers.Name) {
                 Try {
-                    # Attempt connection to vCenter, prompting for credentials
+                    # Attempt connection to vCenter; prompts for credentials if needed
                     Write-Verbose "No active connection found to configured vCenter '$($cfg.vcenter.vc)'. Connecting"
-                    $VIServer = Connect-VIServer -Server $cfg.vcenter.vc -Credential (Get-Credential) -ErrorAction Stop
+                    $VIServer = Connect-VIServer -Server $cfg.vcenter.vc -ErrorAction Stop
                 } Catch {
                     # If unable to connect, stop
                     throw "Unable to connect to configured vCenter '$($cfg.vcenter.vc)'. Exiting"
                 }
-            } else {
+            } Else {
                 $VIServer = $global:DefaultVIServers | Where {$_.Name -match $cfg.vcenter.vc}
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
 
+            # Call Invoke-Pester based on the parameters supplied
+            # Runs VesterTemplate.Tests.ps1, which constructs the .Vester.ps1 test files
             If ($XMLOutputFile) {
                 Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputFile -Script @{
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
