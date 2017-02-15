@@ -93,7 +93,11 @@ function Invoke-Vester {
 
         # Optionally save Pester output in NUnitXML format to a specified path
         # Specifying a path automatically triggers Pester in NUnitXML mode
-        [object]$XMLOutputFile
+        [object]$XMLOutputFile,
+
+        # Optionally returns the Pester result as an object containing the information about the whole test run, and each test
+        # Defaults to false (disabled)
+        [switch]$PassThru = $false
     )
 
     BEGIN {
@@ -167,6 +171,15 @@ function Invoke-Vester {
 
             If ($XMLOutputFile) {
                 Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputFile -Script @{
+                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
+                    Parameters = @{
+                        Cfg       = $cfg
+                        TestFiles = $TestFiles
+                        Remediate = $Remediate
+                    }
+                } # Invoke-Pester
+            } ElseIf ($PassThru) {
+                Invoke-Pester -PassThru -Script @{
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
