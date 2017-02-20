@@ -1,4 +1,4 @@
-﻿#Requires -Modules VMware.VimAutomation.Core, VMware.VimAutomation.Vds
+﻿#Requires -Modules VMware.VimAutomation.Core
 
 function New-VesterConfig {
     <#
@@ -15,7 +15,7 @@ function New-VesterConfig {
     You'll be prompted with the list of Clusters/Hosts/VMs/etc. discovered, and
     asked to choose one of each type to use as a baseline; i.e. "all my other
     hosts should be configured like this one." Those values are displayed
-    interactively, and you can edit them as desired.
+    interactively, and you can manually edit them as desired.
 
     Optionally, advanced users can use the -Quiet parameter. This suppresses
     all host output and prompts. Instead, values are pulled from the first
@@ -29,7 +29,8 @@ function New-VesterConfig {
     .EXAMPLE
     New-VesterConfig
     Ensures that you are connected to only one vCenter server.
-    Discovers values from your environment and displays them, occasionally
+    Based on all Vester test files found in '\Vester\Tests', the command
+    discovers values from your environment and displays them, occasionally
     prompting for a selection of which cluster/host/etc. to use.
     Outputs a new Vester config file to '\Vester\Configs\Config.json',
     which may require admin rights.
@@ -66,93 +67,43 @@ function New-VesterConfig {
     # Potential future work: loop through all vCenter connections
     If ($DefaultVIServers.Count -lt 1) {
         Write-Warning 'Please connect to vCenter before running this command.'
-        throw
+        throw 'A single connection with Connect-VIServer is required.'
     } ElseIf ($DefaultVIServers.Count -gt 1) {
         Write-Warning 'Vester config files are designed to be unique to each vCenter server.'
         Write-Warning 'Please connect to only one vCenter before running this command.'
         Write-Warning "Current connections:  $($DefaultVIServers -join ' / ')"
-        throw
+        throw 'A single connection with Connect-VIServer is required.'
     }
     Write-Verbose "vCenter: $($DefaultVIServers.Name)"
 
+    # TODO: Make this a param? Or keep hardcoded?
+    Write-Verbose "Assembling Vester files within $(Split-Path -Parent $PSScriptRoot)\Tests\"
+    $GetVesterTest = "$(Split-Path -Parent $PSScriptRoot)\Tests\" | Get-VesterTest
+    # Appending to a list is faster than rebuilding an array
+    $VesterTestSuite = New-Object 'System.Collections.Generic.List[PSCustomObject]'
+
+    # For each *.Vester.ps1 file found,
+    $GetVesterTest | ForEach-Object {
+        # Do the necessary Split-Path calls once and save them for later
+        $v = [PSCustomObject]@{
+            Full   = $_
+            Parent = Split-Path (Split-Path $_ -Parent) -Leaf
+            Leaf   = Split-Path $_ -Leaf
+        }
+        $VesterTestSuite.Add($v)
+    }
+
     If (-not $Quiet) {
         # Introduce and inform of $null
-        Write-Host 'Vester will now start pulling values from your vCenter server, ' -ForegroundColor Green -NoNewline
+        Write-Host 'Vester will now start pulling values from your vCenter server, '-NoNewline
         Write-Host "$($DefaultVIServers.Name)" -ForegroundColor Yellow
-        Write-Host 'After each section, you will be asked if you want to edit any values.' -ForegroundColor Green
-        Write-Host -ForegroundColor Green 'If there are any values you do not want to test, enter ' -NoNewline
-        Write-Host -ForegroundColor Red '$null' -NoNewline
-        Write-Host ' to skip those tests.' -ForegroundColor Green
+        Write-Host 'After each section, you will be asked if you want to edit any values.'
     }
 
     $config = [ordered]@{}
-
-#region vcenter
-    # List properties to check, dump their values into a hashtable
-    $vcenterProp = @(
-        'mail.sender',
-        'mail.smtp.port',
-        'mail.smtp.server',
-        'event.maxAge',
-        'event.maxAgeEnabled',
-        'task.maxAge',
-        'task.maxAgeEnabled'
-    )
-    $vcenterHash = @{}
-    Get-AdvancedSetting -Entity $DefaultVIServers.Name -Name $vcenterProp | ForEach-Object {
-        $vcenterHash.Add($_.Name, $_.Value)
-    }
-
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### vCenter Settings" -ForegroundColor Green
-        Write-Host 'vc                 = [string] vCenter IP Address'
-        Write-Host 'smtpsender         = [string] SMTP Address used for emails sent from vCenter Server'
-        Write-Host 'smtpport           = [int]    Port used to connect to SMTP Server'
-        Write-Host 'smtpserver         = [string] SMTP Server used by vCenter to relay emails'
-        Write-Host 'EventMaxAge        = [int]    Age in days that Events will be retained in the vCenter Server Database'
-        Write-Host 'EventMaxAgeEnabled = [bool]   Enables Event cleanup and enforces the max age defined in EventMaxAge'
-        Write-Host 'TaskMaxAge         = [int]    Age in days that Tasks will be retained in the vCenter Server Database'
-        Write-Host 'TaskMaxAgeEnabled  = [bool]   Enables Task cleanup and enforces the max age defined in TaskMaxAge'
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
-    # Set the section's config, and then display it for review
-    $config.vcenter = [ordered]@{
-        vc                 = $DefaultVIServers.Name
-        smtpsender         = $vcenterHash['mail.sender']
-        smtpport           = $vcenterHash['mail.smtp.port']
-        smtpserver         = $vcenterHash['mail.smtp.server']
-        EventMaxAge        = $vcenterHash['event.maxAge']
-        EventMaxAgeEnabled = $vcenterHash['event.maxAgeEnabled']
-        TaskMaxAge         = $vcenterHash['task.maxAge']
-        TaskMaxAgeEnabled  = $vcenterHash['task.maxAgeEnabled']
-    }
-
-    If (-not $Quiet) {
-        $config.vcenter
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
-    }
-#endregion
+    $config.vcenter = @{vc = $DefaultVIServers.Name}
 
 #region scope
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### Scope Settings" -ForegroundColor Green
-        Write-Host "This dictates the scope of your vSphere environment that will be tested by Pester."
-        Write-Host "Use string values. Wildcards are accepted."
-        Write-Host "datacenter = [string] vSphere datacenter name(s)"
-        Write-Host "cluster    = [string] vSphere cluster name(s)"
-        Write-Host "host       = [string] ESXi host name(s)"
-        Write-Host "vm         = [string] Virtual machine name(s)"
-        Write-Host "vds        = [string] vSphere Distributed Switch (VDS) name(s)"
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
     # Set the section's config, and then display it for review
     $config.scope = [ordered]@{
         datacenter = '*'
@@ -163,330 +114,177 @@ function New-VesterConfig {
     }
 
     If (-not $Quiet) {
+        # Explain each setting
+        Write-Host "`n  ### Inventory Scopes" -ForegroundColor Green
+        Write-Host "This dictates the scope of your vSphere environment that will be tested by Pester."
+        Write-Host "Use string values. Wildcards are accepted."
+        Write-Host "datacenter = [string] vSphere datacenter name(s)"
+        Write-Host "cluster    = [string] vSphere cluster name(s)"
+        Write-Host "host       = [string] ESXi host name(s)"
+        Write-Host "vm         = [string] Virtual machine name(s)"
+        Write-Host "vds        = [string] vSphere Distributed Switch (VDS) name(s)"
+
         # Empty Write-Host just to insert extra line breaks where desired
         Write-Host ''
         $config.scope
 
         If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
+            Write-Host "`nFor all values, entering nothing will keep the default * to check all objects of that category.`n"
+
+            [string]$ManualDatacenter = Read-HostColor 'datacenter = Filter the following command: Get-Datacenter -Name YOURINPUTHERE -Server $vCenter'
+            [string]$ManualCluster    = Read-HostColor 'cluster = Filter the following command: $Datacenter | Get-Cluster -Name YOURINPUTHERE'
+            [string]$ManualHost       = Read-HostColor 'host = Filter the following command: $Cluster | Get-VMHost -Name YOURINPUTHERE'
+            [string]$ManualVM         = Read-HostColor 'vm = Filter the following command: $Cluster | Get-VM -Name YOURINPUTHERE'
+            [string]$ManualVDS        = Read-HostColor 'vds = Filter the following command: $Datacenter | Get-VDSwitch -Name YOURINPUTHERE'
+
+            $config.scope.datacenter = If ($ManualDatacenter -eq '') {'*'} Else {$ManualDatacenter}
+            $config.scope.cluster    = If ($ManualCluster -eq '')    {'*'} Else {$ManualCluster}
+            $config.scope.host       = If ($ManualHost -eq '')       {'*'} Else {$ManualHost}
+            $config.scope.vm         = If ($ManualVM -eq '')         {'*'} Else {$ManualVM}
+            $config.scope.vds        = If ($ManualVDS -eq '')        {'*'} Else {$ManualVDS}
         }
+    } #if not $Quiet
+
+    Write-Verbose "Gathering inventory objects from $($DefaultVIServers.Name)"
+    $vCenter    = $DefaultVIServers.Name
+    $Datacenter = Get-Datacenter -Name $config.scope.datacenter -Server $vCenter
+    $Cluster    = $Datacenter | Get-Cluster -Name $config.scope.cluster
+    $Host       = $Cluster | Get-VMHost -Name $config.scope.host
+    $VM         = $Cluster | Get-VM -Name $config.scope.vm
+    # Secondary modules...PowerCLI doesn't do implicit module loading as of PCLI 6.5
+    # This is all the effort I'm willing to put into working around that right now
+    Try {
+        $Network = $Datacenter | Get-VDSwitch -Name $config.scope.vds -ErrorAction Stop
+    } Catch {
+        Write-Warning 'Get-VDSwitch failed. Have you manually imported module "VMware.VimAutomation.Vds"?'
     }
-#endregion
 
-#region cluster
-    $clusterList = Get-Datacenter -Name $config.scope.datacenter | Get-Cluster -Name $config.scope.cluster
-
-    If ($clusterList.Count -gt 1) {
-        If ($Quiet) {
-            # Automatically select the first cluster (sorted alphabetically)
-            $cluster = $clusterList[0]
-            Write-Verbose "Generating cluster settings from cluster: $cluster"
-        } Else {
-            Write-Host ''
-
-            # List clusters to choose from
-            for ($i = 1; $i -le $clusterList.Count; $i++) {
-                Write-Host "$i. " -ForegroundColor Green -NoNewline
-                Write-Host "$($clusterList.Name[$i-1])"
-            }
-
-            # Pick a cluster (repeat until valid input)
-            while (1..$clusterList.Count -notcontains $clusterSelection) {
-                $clusterSelection = [int](Read-HostColor "`n-- Select the number of the host to pull values from")
-            }
-            $cluster = $clusterList[$clusterSelection - 1]
-        }
-    } ElseIf ($clusterList.Count -eq 1) {
-        # If only one cluster, skip the manual prompt
-        $cluster = $clusterList
+    If ($Quiet) {
+        $Datacenter = If ($Datacenter) {$Datacenter[0]}
+        $Cluster    = If ($Cluster)    {$Cluster[0]}
+        $Host       = If ($Host)       {$Host[0]}
+        $VM         = If ($VM)         {$VM[0]}
+        $Network    = If ($Network)    {$Network[0]}
     } Else {
-        $noCluster = $true
-
-        # No cluster found; $null the values to skip cluster tests
-        $config.cluster = [ordered]@{
-            drsmode  = $null
-            drslevel = $null
-            haenable = $null
-        }
-    }
-
-    If (-not $Quiet) {
-    # Explain each setting
-        Write-Host "`n  ### Cluster Settings" -ForegroundColor Green
-        Write-Host 'drsmode  = [string] FullyAutomated, Manual, or PartiallyAutomated'
-        Write-Host 'drslevel = [int]    1 (Aggressive), 2, 3, 4, 5 (Conservative)'
-        Write-Host 'haenable = [bool]   $true or $false'
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
-    # Skip this block if there are no clusters
-    If ($noCluster -ne $true) {
-        # Set the section's config, and then display it for review
-        $config.cluster = [ordered]@{
-            drsmode  = "$($cluster.DrsAutomationLevel)"
-            drslevel = ($cluster | Get-View).Configuration.DrsConfig.VmotionRate
-            haenable = $cluster.HAEnabled
-        }
-    }
-
-    If (-not $Quiet) {
-        Write-Host ''
-        $config.cluster
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
+        $Datacenter = If ($Datacenter) {Select-InventoryObject $Datacenter 'Datacenter'}
+        $Cluster    = If ($Cluster)    {Select-InventoryObject $Cluster 'Cluster'}
+        $Host       = If ($Host)       {Select-InventoryObject $Host 'Host'}
+        $VM         = If ($VM)         {Select-InventoryObject $VM 'VM'}
+        $Network    = If ($Network)    {Select-InventoryObject $Network 'Network'}
     }
 #endregion
+        
+    $ScopeList = ($VesterTestSuite | Select -Property Parent -Unique).Parent
+    Write-Verbose "Scopes supplied by test files: $($ScopeList -join ' | ')"
+    
+    # Not used; called below to help with manual user overrides of values
+    # That block is also commented out, awaiting potential future improvements
+    # $TestHistory = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 
-#region host
-    $hostList = $clusterList | Get-VMHost -Name $config.scope.host | Sort Name
+    # Group tests by their scope
+    ForEach ($Scope in $ScopeList) {
+        Write-Verbose "Processing all tests for scope $Scope"
 
-    If ($hostList.Count -gt 1) {
-        If ($Quiet) {
-            # Automatically select the first host (sorted alphabetically)
-            $esxi = $hostList[0]
-            Write-Verbose "Generating host settings from host: $esxi"
-        } Else {
+        # Loop through each test file applicable in the current scope
+        # Couldn't resist calling each file a Vest. Sorry, everyone
+        ForEach ($Vest in $VesterTestSuite | Where Parent -eq $Scope) {
+            Write-Verbose "Processing test file $($Vest.Leaf)"
+            
+            # Import all variables from the current .Vester.ps1 file
+            . $Vest.Full
+
+            $Object = switch ($Scope) {
+                'vCenter'    {$vCenter}
+                'Datacenter' {$Datacenter}
+                'Cluster'    {$Cluster}
+                'Host'       {$Host}
+                'VM'         {$VM}
+                'Network'    {$Network}
+                # If not scoped properly, don't know what object to check
+                Default      {$null}
+            }
+
+            # TODO: Should probably offload this to a private function
+            $CfgLine = (Select-String -Path $Vest.Full -Pattern '\$cfg') -replace '.*\:[0-9]+\:',''
+            $CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
+
+            If ($Object) {
+                # Call module private function Set-VesterConfigValue to add the entry
+                Set-VesterConfigValue -Value ((& $Actual) -as $Type)
+            } Else {
+                # Inventory object doesn't exist; populate with null value
+                Set-VesterConfigValue -Value $null
+            } #if $Object
+
+            <# ### This works, but not currently used (see commented block below)
+            If ($config.$($Matches[1]).Keys -contains $($Matches[2]) -and -not $Quiet) {
+                # Record test/value correlation, if user wants to manually edit
+                $h = [PSCustomObject]@{
+                    Full = $Vest.Full
+                    Leaf = $Vest.Leaf
+                    CfgValue = "$($Matches[1]).$($Matches[2])"
+                }
+                $TestHistory.Add($h)
+            }
+            #>
+        } #foreach $Vest
+
+        # If any values were populated in this scope, and the -Quiet flag is not active,
+        # Display all values for this scope and ask about manual overrides
+        If ($config.$Scope -and -not $Quiet) {
+            # Empty Write-Host just to insert extra line breaks where desired
             Write-Host ''
+            Write-Host '  # Config values for scope ' -NoNewline
+            Write-Host "$Scope" -ForegroundColor Green
+            $config.$Scope.GetEnumerator() | Sort Name
 
-            # List hosts to choose from
-            for ($i = 1; $i -le $hostList.Count; $i++) {
-                Write-Host "$i. " -ForegroundColor Green -NoNewline
-                Write-Host "$($hostList.Name[$i-1])"
-            }
+            <# ###
+            # Users still need to manually edit the .json file if changes are desired
+            # The code block below works, but needs much more validation on entry
+            # For example, entering text into a "string[]" type does the following:
+                # The apostrophe, a common string wrapper, ends up in the json file as \u0027
+                # Not sure how to enter multiple string values (like muliple DNS servers)
 
-            # Pick a host (repeat until valid input)
-            while (1..$hostList.Count -notcontains $hostSelection) {
-                $hostSelection = [int](Read-HostColor "`n-- Select the number of the host to pull values from")
-            }
-            $esxi = $hostList[$hostSelection - 1]
-        }
-    } ElseIf ($hostList.Count -eq 1) {
-        # If only one host, skip the manual prompt
-        $esxi = $hostList
-    } Else {
-        # TODO: Got lazy here
-        Write-Warning 'No hosts found'
-    }
+            If ((Read-HostColor 'Would you like to change any of these values? Y/N [N]') -like 'y*') {
+                Write-Host "`nIf there are any values you never want to test, enter " -NoNewline
+                Write-Host '$null' -ForegroundColor Red -NoNewline
+                Write-Host " to skip those tests.`n"
+                # TODO: ^ Entering $null still good instructions?
 
-    $hostHash = @{}
-    $hostProp = @(
-        'mail.sender',
-        'mail.smtp.port',
-        'mail.smtp.server',
-        'event.maxAge',
-        'event.maxAgeEnabled',
-        'task.maxAge',
-        'task.maxAgeEnabled'
-    )
-    Get-AdvancedSetting -Entity $DefaultVIServers.Name -Name $hostProp | ForEach-Object {
-        $hostHash.Add($_.Name,$_.Value)
-    }
+                ForEach ($CfgLine in $config.$Scope.GetEnumerator() | Sort Name) {
+                    $TestHistory | Where CfgValue -eq "$Scope.$($CfgLine.Name)" | ForEach-Object {
+                        . $_.Full
 
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### ESXi Host Settings" -ForegroundColor Green
-        Write-Host 'sshenable     = [bool]  $true or $false'
-        Write-Host 'sshwarn       = [int]   1 (off) or 0 (on)'
-        Write-Host 'esxntp        = [array] @("NTP Server 1", "NTP Server 2 (optional)", "NTP Server 3 (optional)", "NTP Server 4 (optional)")'
-        Write-Host 'esxdns        = [array] @("DNS Server 1", "DNS Server 2 (optional)")'
-        Write-Host 'searchdomains = [array] @("Domain 1", "Domain 2 (optional)")'
-        Write-Host 'esxsyslog     = [array] @("tcp://ip_address:port")'
-        Write-Host 'esxsyslogfirewallexception = [bool] $true or $false'
-        Write-Host '  ###' -ForegroundColor Green
-    }
+                        Write-Host "$($_.Leaf) : $Title"
+                        Write-Host $Description
+                        Write-Host "[$Type]$($CfgLine.Name) = $($CfgLine.Value)"
 
-    # Set the section's config, and then display it for review
-    $config.host = [ordered]@{
-        sshenable                  = ($esxi | Get-VMHostService | Where Key -eq 'TSM-SSH').Running
-        sshwarn                    = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.SuppressShellWarning').Value
-        esxntp                     = Get-VMHostNtpServer -VMHost $esxi
-        esxdns                     = (Get-VMHostNetwork -VMHost $esxi).DnsAddress
-        searchdomains              = (Get-VMHostNetwork -VMHost $esxi).SearchDomain
-        esxsyslog                  = Get-VMHostSysLogServer -VMHost $esxi
-        esxsyslogfirewallexception = ($esxi | Get-VMHostFirewallException -Name syslog).Enabled
-        sshtimeout                 = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellTimeout').Value
-        sshinteractivetimeout      = (Get-AdvancedSetting -Entity $esxi | Where Name -eq 'UserVars.ESXIShellInteractiveTimeout').Value
-    }
+                        If ((Read-HostColor 'Would you like to change this value? Y/N [N]') -like 'y*') {
+                            $UserEnteredValue = Read-HostColor "Enter the new value of type '$Type'"
+                            If ($UserEnteredValue -eq $null) {
+                                $NewValue = $null
+                            } Else {
+                                $NewValue = $UserEnteredValue -as $Type
+                            }
+                            Write-Verbose "Setting $($Scope.ToLower()).$($CfgLine.Name) = $UserEnteredValue"
+                            $config.$Scope.($CfgLine.Name) = $UserEnteredValue
+                        } #if change single value
+                    } #foreach $TestHistory
+                } #foreach $CfgLine
+            } #if change any value
+            #>
 
-    If (-not $Quiet) {
-        Write-Host ''
-        $config.host
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
-    }
-#endregion
-
-#region vm
-    $vmList = $clusterList | Get-VM -Name $config.scope.vm | Sort Name
-
-    If ($vmList.Count -gt 1) {
-        If ($Quiet) {
-            # Automatically select the first VM (sorted alphabetically)
-            $vm = $vmList[0]
-            Write-Verbose "Generating VM settings from VM: $vm"
-        } Else {
-            Write-Host ''
-
-            # List VMs to choose from
-            for ($i = 1; $i -le $vmList.Count; $i++) {
-                Write-Host "$i. " -ForegroundColor Green -NoNewline
-                Write-Host "$($vmList.Name[$i-1])"
-            }
-
-            # Pick a VM (repeat until valid input)
-            while (1..$vmList.Count -notcontains $vmSelection) {
-                $vmSelection = [int](Read-HostColor "`n-- Select the number of the VM to pull values from")
-            }
-            $vm = $vmList[$vmSelection - 1]
-        }
-    } ElseIf ($vmList.Count -eq 1) {
-        # If only one VM, skip the manual prompt
-        $vm = $vmList
-    } Else {
-        # TODO: Got lazy here
-        Write-Warning 'No VMs found'
-    }
-
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### VM Settings" -ForegroundColor Green
-        Write-Host 'snapretention       = [int]  Allowed number of days for a VM snapshot to exist'
-        Write-Host 'allowconnectedcdrom = [bool] $true or $false'
-        Write-Host 'allowcpulimit       = [bool] $true or $false'
-        Write-Host 'allowmemorylimit    = [bool] $true or $false'
-        Write-Host 'bootdelay           = [int]  Time in milliseconds'
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
-    # Set the section's config, and then display it for review
-    $config.vm = [ordered]@{
-        snapretention       = &{If (($vmsnap = $vm | Get-Snapshot) -eq $null) {1} Else {(New-TimeSpan -Start $vmsnap.Created).Days + 1}}
-        allowconnectedcdrom = &{If (($vm | Get-CDDrive).IsoPath -eq $null) {$false} Else {$true}}
-        allowcpulimit       = &{If (($vm | Get-VMResourceConfiguration).CpuLimitMhz -eq -1) {$false} Else {$true}}
-        allowmemorylimit    = &{If (($vm | Get-VMResourceConfiguration).MemLimitMB -eq -1) {$false} Else {$true}}
-        syncTimeWithHost    = ($vm | Get-View).Config.Tools.SyncTimeWithHost
-        bootDelay           = ($vm | Get-View).Config.BootOptions.BootDelay
-    }
-
-    If (-not $Quiet) {
-        Write-Host ''
-        $config.vm
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
-    }
-#endregion
-
-#region storage
-    $nfsValues = Get-AdvancedSetting -Entity $esxi -Name 'nfs*'
-
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### NFS Settings" -ForegroundColor Green
-        Write-Host "Plug in your vendor's recommended NFS configuration values."
-        Write-Host "Example: Tegile's Zebi array -- 32, 30, 20, 256, 32, 1536"
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
-    # Set the section's config, and then display it for review
-    $config.nfsadvconfig = [ordered]@{
-        'NFS.MaxQueueDepth'      = ($nfsValues | Where Name -eq 'NFS.MaxQueueDepth').Value
-        'NFS.DeleteRPCTimeout'   = ($nfsValues | Where Name -eq 'NFS.DeleteRPCTimeout').Value
-        'NFS.HeartbeatFrequency' = ($nfsValues | Where Name -eq 'NFS.HeartbeatFrequency').Value
-        'NFS.MaxVolumes'         = ($nfsValues | Where Name -eq 'NFS.MaxVolumes').Value
-        'Net.TcpipHeapSize'      = ($nfsValues | Where Name -eq 'NFS.TcpipHeapSize').Value
-        'Net.TcpipHeapMax'       = ($nfsValues | Where Name -eq 'NFS.TcpipHeapMax').Value
-    }
-
-    If (-not $Quiet) {
-        Write-Host ''
-        $config.nfsadvconfig
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
-    }
-#endregion
-
-#region network
-    $vdsList = Get-Datacenter -Name $config.scope.datacenter | Get-VDSwitch -Name $config.scope.vds | Sort Name
-
-    If ($vdsList.Count -gt 1) {
-        If ($Quiet) {
-            # Automatically select the first VDS (sorted alphabetically)
-            $vds = $vdsList[0]
-            Write-Verbose "Generating VDS settings from VDS: $vds"
-        } Else {
-            Write-Host ''
-
-            # List VDS options to choose from
-            for ($i = 1; $i -le $vdsList.Count; $i++) {
-                Write-Host "$i. " -ForegroundColor Green -NoNewline
-                Write-Host "$($vdsList.Name[$i-1])"
-            }
-
-            # Pick a VDS (repeat until valid input)
-            while (1..$vdsList.Count -notcontains $vdsSelection) {
-                $vdsSelection = [int](Read-HostColor "`n-- Select the number of the VDS to pull values from")
-            }
-            $vds = $vdsList[$vdsSelection - 1]
-        }
-    } ElseIf ($vdsList.Count -eq 1) {
-        # If only one VDS, skip the manual prompt
-        $vds = $vdsList
-    } Else {
-        # No VDS found; $null the values to skip VDS tests
-        $vds = @{
-            LinkDiscoveryProtocol = $null
-            LinkDiscoveryProtocolOperation = $null
-            Mtu = $null
-        }
-    }
-
-    If (-not $Quiet) {
-        # Explain each setting
-        Write-Host "`n  ### VDS (vSphere Distributed Switch) Settings" -ForegroundColor Green
-        Write-Host 'linkproto     = [string] LLDP or CDP'
-        Write-Host 'linkoperation = [string] Listen, Advertise, Both, Disabled'
-        Write-Host 'mtu           = [int]    Maximum Transmission Unit. Max is 9000'
-        Write-Host '  ###' -ForegroundColor Green
-    }
-
-    # Set the section's config, and then display it for review
-    $config.vds = [ordered]@{
-            linkproto     = "$($vds.LinkDiscoveryProtocol)"
-            linkoperation = "$($vds.LinkDiscoveryProtocolOperation)"
-            mtu           = $vds.Mtu
-    }
-
-    If (-not $Quiet) {
-        Write-Host ''
-        $config.vds
-
-        If ((Read-HostColor "`nWould you like to change any of those values? Y/N [N]") -like 'y*') {
-            # TODO: Implement line-item review/override
-            Write-Warning 'Line item override not yet implemented. Edit the Config.json file after completion.'
-        }
-    }
-#endregion
+        } #if $config.$Scope
+    } #foreach $Scope
 
     Write-Verbose "Creating config file at $OutputFolder\Config.json"
-    $config | ConvertTo-Json | Out-File $OutputFolder\Config.json
-
-    If (Test-Path $OutputFolder\Config.json) {
-        Write-Host "Config file created at " -ForegroundColor Green -NoNewline
+    Try {
+        $config | ConvertTo-Json | Out-File $OutputFolder\Config.json -ErrorAction Stop
+        Write-Host "`nConfig file created at " -ForegroundColor Green -NoNewline
         Write-Host "$OutputFolder\Config.json"
-    } Else {
-        Write-Warning "Failed to create config file at $OutputFolder\Config.json"
+        Write-Host 'Edit the file manually to change any displayed values.'
+    } Catch {
+        Write-Warning "`nFailed to create config file at $OutputFolder\Config.json"
+        Write-Warning 'Have you tried running PowerShell as an administrator?'
     }
 }
