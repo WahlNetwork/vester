@@ -26,8 +26,6 @@ Param(
 ForEach ($Test in $TestFiles) {
     Write-Verbose "Processing test file $Test"
     $TestName = Split-Path $Test -Leaf
-
-    # Grab the parent folder's name
     $Scope = Split-Path (Split-Path $Test -Parent) -Leaf
 
     # The parent folder must be one of these names, to help with $Object scoping below
@@ -78,7 +76,7 @@ ForEach ($Test in $TestFiles) {
             }
         } #If Desired
 
-        If ($InventoryList = $null) {
+        If ($InventoryList -eq $null) {
             Write-Verbose "No objects found in scope $Scope, skipping test $TestName"
             # Use continue to skip this test and go to the next loop iteration
             continue
