@@ -1,5 +1,16 @@
-﻿[CmdletBinding(SupportsShouldProcess = $true,
-                ConfirmImpact = 'Medium')]
+﻿<#
+This file exists to combine simple user input (Invoke-Vester), simple
+user test authoring (*.Vester.ps1), and properly scoped inventory objects
+into a single test session that loops through all necessary combinations.
+
+It is called by Invoke-Vester via the Invoke-Pester command.
+
+http://vester.readthedocs.io/en/latest/
+#>
+
+# Accept -WhatIf input from Invoke-Vester
+[CmdletBinding(SupportsShouldProcess = $true,
+               ConfirmImpact = 'Medium')]
 Param(
     # The $cfg hashtable from a single config file
     [object]$Cfg,
@@ -11,14 +22,18 @@ Param(
     [switch]$Remediate
 )
 
+# Process .Vester.ps1 files one at a time
 ForEach ($Test in $TestFiles) {
     Write-Verbose "Processing test file $Test"
+    $TestName = Split-Path $Test -Leaf
 
-    # Use RegEx to strip everything but the parent folder's name
-    $Scope = (Split-Path $Test -Parent) -replace '^.*\\',''
+    # Grab the parent folder's name
+    $Scope = Split-Path (Split-Path $Test -Parent) -Leaf
 
+    # The parent folder must be one of these names, to help with $Object scoping below
+    # If adding here, also needs to be added to the switch below
     If ($Scope -notmatch 'vCenter|Datacenter|Cluster|Host|VM|Network') {
-        Write-Warning "Skipping test $(Split-Path $Test -Leaf). Use -Verbose for more details"
+        Write-Warning "Skipping test $TestName. Use -Verbose for more details"
         Write-Verbose 'Test files should be in a folder with one of the following names:'
         Write-Verbose 'vCenter / Datacenter / Cluster / Host / VM / Network'
         Write-Verbose 'This helps Vester determine which inventory object(s) to use during the test.'
@@ -26,29 +41,33 @@ ForEach ($Test in $TestFiles) {
         continue
     }
 
+    # Check for non-core modules only as tests require them
+    # Will need to be revisited as more tests added & more modules required...
+    # ...maybe don't care about this at all and let it fail naturally?
     If ($Scope -eq 'Network' -and (Get-Module VMware.VimAutomation.Vds) -eq $null) {
         Try {
             Import-Module VMware.VimAutomation.Vds -ErrorAction Stop
         } Catch {
             Write-Warning 'Failed to import PowerCLI module "VMware.VimAutomation.Vds"'
-            Write-Warning "Skipping network test $(Split-Path $Test -Leaf)"
+            Write-Warning "Skipping network test $TestName"
             # Use continue to skip this test and go to the next loop iteration
             continue
         }
     }
 
-    Describe -Name "$Scope Configuration: $(Split-Path $Test -Leaf)" -Fixture {
+    Describe -Name "$Scope Configuration: $TestName" -Fixture {
         # Pull in $Title/$Desired/$Actual/$Fix from the test file
         . $Test
 
         # Pump the brakes if the config value is $null
         If ($Desired -eq $null) {
-            Write-Verbose "Due to null config value, skipping test $(Split-Path $Test -Leaf)"
+            Write-Verbose "Due to null config value, skipping test $TestName"
             # Use continue to skip this test and go to the next loop iteration
             continue
         } Else {
-            $Datacenter = Get-Datacenter -name $cfg.scope.datacenter -Server $cfg.vcenter.vc
+            $Datacenter = Get-Datacenter -Name $cfg.scope.datacenter -Server $cfg.vcenter.vc
             # Use $Scope (parent folder) to get the correct objects to test against
+            # If changing values here, update the "$Scope -notmatch" test above as well
             $InventoryList = switch ($Scope) {
                 'vCenter'    {$cfg.vcenter.vc}
                 'Datacenter' {$Datacenter}
@@ -56,23 +75,31 @@ ForEach ($Test in $TestFiles) {
                 'Host'       {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
                 'VM'         {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VM -Name $cfg.scope.vm}
                 'Network'    {$Datacenter | Get-VDSwitch -Name $cfg.scope.vds}
-                }
+            }
         } #If Desired
 
         ForEach ($Object in $InventoryList) {
-            Write-Verbose "Processing $($Object.Name) within test $(Split-Path $Test -Leaf)"
+            Write-Verbose "Processing $($Object.Name) within test $TestName"
 
             It -Name "$Scope $($Object.Name) - $Title" -Test {
                 Try {
+                    # "& $Actual" is running the first script block to compare to $Desired
+                    # The comparison should be empty
+                    # (meaning everything is the same, as expected)
                     Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual) | Should BeNullOrEmpty
                 } Catch {
+                    # If the comparison found something different,
+                    # Then check if we're going to fix it
                     If ($Remediate) {
                         Write-Warning -Message $_
+                        # -WhatIf support wraps the command that would change values
                         If ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'")) {
                             Write-Warning -Message "Remediating $Object"
+                            # Execute the $Fix script block
                             & $Fix
                         }
                     } Else {
+                        # -Remediate is not active, so just report the error
                         throw $_
                     }
                 } #Try/Catch

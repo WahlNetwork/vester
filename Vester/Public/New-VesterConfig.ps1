@@ -46,12 +46,15 @@ function New-VesterConfig {
     "Get-Help about_Vester" for more information.
 
     .LINK
+    http://vester.readthedocs.io/en/latest/
+
+    .LINK
     https://github.com/WahlNetwork/Vester
     #>
     [CmdletBinding()]
     param (
         # Select a folder to create a new Config.json file inside
-        [ValidateScript({Test-Path $_})]
+        [ValidateScript({Test-Path $_ -PathType Container})]
         [object]$OutputFolder = "$(Split-Path -Parent $PSScriptRoot)\Configs",
 
         # Suppress all prompts and Write-Host. Create the config file
