@@ -5,8 +5,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'Password Policy'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'pam_passwdqc Password Policy. Default = retry=3 min=disabled,disabled,disabled,7,7'
+
 # The config entry stating the desired values
 $Desired = $cfg.host.passwordpolicy
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'string'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
