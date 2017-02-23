@@ -149,7 +149,7 @@ function New-VesterConfig {
     $vCenter    = $DefaultVIServers.Name
     $Datacenter = Get-Datacenter -Name $config.scope.datacenter -Server $vCenter
     $Cluster    = $Datacenter | Get-Cluster -Name $config.scope.cluster
-    $Host       = $Cluster | Get-VMHost -Name $config.scope.host
+    $ESXiHost       = $Cluster | Get-VMHost -Name $config.scope.host
     $VM         = $Cluster | Get-VM -Name $config.scope.vm
     # Secondary modules...PowerCLI doesn't do implicit module loading as of PCLI 6.5
     # This is all the effort I'm willing to put into working around that right now
@@ -162,13 +162,11 @@ function New-VesterConfig {
     If ($Quiet) {
         $Datacenter = If ($Datacenter) {$Datacenter[0]}
         $Cluster    = If ($Cluster)    {$Cluster[0]}
-        $Host       = If ($Host)       {$Host[0]}
         $VM         = If ($VM)         {$VM[0]}
         $Network    = If ($Network)    {$Network[0]}
     } Else {
         $Datacenter = If ($Datacenter) {Select-InventoryObject $Datacenter 'Datacenter'}
         $Cluster    = If ($Cluster)    {Select-InventoryObject $Cluster 'Cluster'}
-        $Host       = If ($Host)       {Select-InventoryObject $Host 'Host'}
         $VM         = If ($VM)         {Select-InventoryObject $VM 'VM'}
         $Network    = If ($Network)    {Select-InventoryObject $Network 'Network'}
     }
@@ -197,7 +195,6 @@ function New-VesterConfig {
                 'vCenter'    {$vCenter}
                 'Datacenter' {$Datacenter}
                 'Cluster'    {$Cluster}
-                'Host'       {$Host}
                 'VM'         {$VM}
                 'Network'    {$Network}
                 # If not scoped properly, don't know what object to check
