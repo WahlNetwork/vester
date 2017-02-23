@@ -5,17 +5,21 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'Tools GUI Options'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'On/Off switch to explicitly enable Copy/Paste operations through the GUI - Recommended setting of False'
+
 # The config entry stating the desired values
 
 $Desired = $cfg.vm.toolsguioptions
 
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'string'
+
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-    if (((Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'isolation.tools.setguioptions.enable'
-    }).Value) -eq $false) {$false} 
-    else {$true}
+    (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
+        $_.Name -eq 'isolation.tools.setguioptions.enable'}).Value
 }
 
 # The command(s) to match the environment to the config

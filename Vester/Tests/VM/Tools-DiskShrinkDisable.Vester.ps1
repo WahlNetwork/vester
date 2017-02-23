@@ -5,16 +5,20 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'Tools Disk Shrink Disable'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'On/Off switch to disable Disk Shrinking for a Virtual Machine - Recommended setting of True'
+
 # The config entry stating the desired values
 $Desired = $cfg.vm.toolsdiskshrinkdisable
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'string'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-    If (((Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'isolation.tools.diskShrink.disable'
-    }).Value) -eq $true) {$true}
-    Else {$false}
+    (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
+        $_.Name -eq 'isolation.tools.diskShrink.disable'}).Value
 }
 
 # The command(s) to match the environment to the config
