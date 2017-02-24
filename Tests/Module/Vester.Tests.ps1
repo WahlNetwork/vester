@@ -5,7 +5,7 @@ Import-Module "$PSScriptRoot\..\..\Vester" -Force
 
 Describe 'Check module files for breaking changes' {
     $ModuleRoot = "$PSScriptRoot\..\..\Vester"
-    $PublicFiles = (Get-ChildItem "$ModuleRoot\Public").BaseName
+    $PublicFiles = Get-ChildItem "$ModuleRoot\Public"
 
     It 'Contains expected helper files and directories' {
         "$ModuleRoot\Configs\readme.txt" | Should Exist
@@ -34,18 +34,25 @@ Describe 'Check module files for breaking changes' {
             $manifest.Copyright | Should BeExactly 'Apache License'
             $manifest.Description | Should BeOfType String
             $manifest.PowerShellVersion | Should Be '3.0'
-            # TODO: Need to rewrite this? Issue #74
-            $manifest.RequiredModules | Should BeExactly 'Pester'
-            $manifest.ExportedFunctions.Values.Name | Should BeExactly $PublicFiles
+            $manifest.RequiredModules.Name | Should BeExactly @('Pester')
+            $manifest.ExportedFunctions.Values.Name | Should BeExactly $PublicFiles.BaseName
 
             $manifest.PrivateData.PSData.Tags | Should BeExactly @('vester','vmware','vcenter','vsphere','esxi','powercli')
             $manifest.PrivateData.PSData.LicenseUri | Should BeExactly 'https://github.com/WahlNetwork/Vester/blob/master/LICENSE'
             $manifest.PrivateData.PSData.ProjectUri | Should BeExactly 'https://github.com/WahlNetwork/Vester'
-            # TODO: .ExternalModuleDependencies ?
+            $manifest.PrivateData.PSData.ExternalModuleDependencies | Should BeExactly @('VMware.VimAutomation.Core')
         }
 
-        It 'Exports all functions within the Public folder' {
-            (Get-Command -Module Vester).Name | Should BeExactly $PublicFiles
+        $VesterCommands = (Get-Command -Module Vester).Name
+
+        It 'Exports expected functions' {
+            $PublicFiles.BaseName | Should BeExactly $VesterCommands
+        }
+
+        It 'Contains tests for each public function' {
+            # Get all files in the .\Tests\Function folder, then drop the ".Tests" and compare to exported commands
+            $FunctionTests = (Get-ChildItem "$PSScriptRoot\..\Function").BaseName -replace '\..*',''
+            $FunctionTests | Should BeExactly $VesterCommands
         }
     }
 
@@ -55,14 +62,13 @@ Describe 'Check module files for breaking changes' {
         # Instead of breaking out into individual files like the public functions
         Context 'Contains expected private functions' {
             It 'Read-HostColor behaves normally' {
-                Mock Write-Host {} -Verifiable
-                Mock Read-Host {return 'rh-Test'} -Verifiable
+                Mock Write-Host -Verifiable
+                Mock Read-Host  -Verifiable -MockWith {return 'rh-Test'}
 
                 Read-HostColor | Should BeExactly 'rh-Test'
 
                 # Ensure that Write-Host & Read-Host were actually called within Read-HostColor
-                Assert-MockCalled Write-Host
-                Assert-MockCalled Read-Host
+                Assert-VerifiableMocks
             }
 
             # (Any additional private functions as It tests here)
