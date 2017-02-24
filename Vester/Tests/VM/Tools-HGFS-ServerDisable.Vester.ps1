@@ -1,33 +1,36 @@
 ﻿# Test file for the Vester module - https://github.com/WahlNetwork/Vester
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
-# vSphere 6.0 Hardening Guide Guideline ID - vCenter.verify-nfc-ssl
+# vSphere 6.0 Hardening Guide Guideline ID - VM.disable-hgfs
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'Network File Copy - Use SSL'
+$Title = 'Tools HGFS Server Disable'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'On/Off switch for enabling SSL for Network File Copy. Default is True, however the key does not exist'
+$Description = 'On/Off switch to disable the Host Guest File System - Recommended setting of True'
 
 # The config entry stating the desired values
-$Desired = $cfg.vcenter.nfcusessl
+$Desired = $cfg.vm.toolshgfsServerdisable
 
 # The test value's data type, to help with conversion: bool/string/int
-$Type = 'bool'
+$Type = 'string'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-    (Get-AdvancedSetting -Entity $Object -Name config.nfc.useSSL).Value
+    If (((Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
+        $_.Name -eq 'isolation.tools.hgfsServerSet.disable'
+    }).Value) -eq $true) {$true}
+    Else {$false}
 }
 
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
-    if ((Get-AdvancedSetting -Entity $Object -Name config.nfc.useSSL) -eq $null) {
-        New-AdvancedSetting -Entity $Object -Name config.nfc.useSSL -Value $Desired -Confirm:$false -ErrorAction Stop
+    if ((Get-AdvancedSetting -Entity $Object -Name 'isolation.tools.hgfsServerSet.disable') -eq $null) {
+        New-AdvancedSetting -Entity $Object -Name 'isolation.tools.hgfsServerSet.disable' -Value $Desired -Confirm:$false -ErrorAction Stop
     } else {
         Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-            $_.Name -eq 'config.nfc.useSSL'
+            $_.Name -eq 'isolation.tools.hgfsServerSet.disable'
             } | Set-AdvancedSetting -value $Desired -Confirm:$false -ErrorAction Stop
     }
 }

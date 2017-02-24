@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'Account Lock Failures'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = '0 (off) or maximum number of failed logon attempts before the account is locked out'
+
 # The config entry stating the desired values
-[int]$Desired = $cfg.host.accountlockfailures
+$Desired = $cfg.host.accountlockfailures
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'int'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
