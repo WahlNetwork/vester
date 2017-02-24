@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'CD-ROM ISO File'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'Optionally disallow VMs from mounting an ISO file via CD-ROM drive'
+
 # The config entry stating the desired values
-[bool]$Desired = $cfg.vm.allowconnectedcdrom
+$Desired = $cfg.vm.allowconnectedcdrom
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'bool'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
