@@ -117,43 +117,8 @@ function Invoke-Vester {
     )
 
     BEGIN {
-        # Construct empty array to throw file paths of tests into
-        $TestFiles = New-Object 'System.Collections.Generic.List[String]'
-
-        # Need to ForEach if multiple -Test locations
-        ForEach ($TestPath in $Test) {
-            # Gracefully handle Get-Item/Get-ChildItem
-            If ($TestPath.FullName) {
-                $TestPath = $TestPath.FullName
-            }
-
-            If (Test-Path $TestPath -PathType Container) {
-                # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it
-                Write-Verbose "Discovering *.Vester.ps1 files below directory '$TestPath'."
-                $GCI = (Get-ChildItem $TestPath -Recurse -Filter '*.Vester.ps1').FullName
-
-                If ($GCI) {
-                    # Add each *.Vester.ps1 file found to the array
-                    $GCI | ForEach-Object {
-                        $TestFiles.Add($_)
-                    }
-                } Else {
-                    throw "No *.Vester.ps1 files found at location '$TestPath'."
-                }
-
-                $GCI = $null
-            } Else {
-                # Add the single file to the array if it matches *.Vester.ps1
-                If ($TestPath -like '*.Vester.ps1') {
-                    $TestFiles.Add($TestPath)
-                } Else {
-                    # Because Vester tests have a very specific format,
-                    # and for future discoverability of that test if parent folder is specified,
-                    # prefer that tests are consciously named *.Vester.ps1
-                    throw "'$TestPath' does not match the *.Vester.ps1 naming convention for test files."
-                }
-            } #If Test-Path
-        } #ForEach -Test param entry
+        # Convert $Test input(s) into a whole bunch of *.Vester.ps1 file paths
+        $VesterTests = $Test | Get-VesterTest
     } #Begin
 
     PROCESS {
@@ -194,7 +159,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $TestFiles
+                        TestFiles = $VesterTests
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
@@ -212,7 +177,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $TestFiles
+                        TestFiles = $VesterTests
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester

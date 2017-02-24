@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'SSH Timeout'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'After being enabled, SSH access disables again after this long'
+
 # The config entry stating the desired values
-[int]$Desired = $cfg.host.sshtimeout
+$Desired = $cfg.host.sshtimeout
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'int'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'SMTP Port'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'The port vCenter should use when sending emails'
+
 # The config entry stating the desired values
-[int]$Desired = $cfg.vcenter.smtpport
+$Desired = $cfg.vcenter.smtpport
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'int'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

@@ -26,8 +26,6 @@ Param(
 ForEach ($Test in $TestFiles) {
     Write-Verbose "Processing test file $Test"
     $TestName = Split-Path $Test -Leaf
-
-    # Grab the parent folder's name
     $Scope = Split-Path (Split-Path $Test -Parent) -Leaf
 
     # The parent folder must be one of these names, to help with $Object scoping below
@@ -56,7 +54,7 @@ ForEach ($Test in $TestFiles) {
     }
 
     Describe -Name "$Scope Configuration: $TestName" -Fixture {
-        # Pull in $Title/$Desired/$Actual/$Fix from the test file
+        # Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
         . $Test
 
         # Pump the brakes if the config value is $null
@@ -78,6 +76,12 @@ ForEach ($Test in $TestFiles) {
             }
         } #If Desired
 
+        If ($InventoryList -eq $null) {
+            Write-Verbose "No objects found in scope $Scope, skipping test $TestName"
+            # Use continue to skip this test and go to the next loop iteration
+            continue
+        }
+
         ForEach ($Object in $InventoryList) {
             Write-Verbose "Processing $($Object.Name) within test $TestName"
 
@@ -86,7 +90,8 @@ ForEach ($Test in $TestFiles) {
                     # "& $Actual" is running the first script block to compare to $Desired
                     # The comparison should be empty
                     # (meaning everything is the same, as expected)
-                    Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual) | Should BeNullOrEmpty
+                    Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual -as $Type) |
+                        Should BeNullOrEmpty
                 } Catch {
                     # If the comparison found something different,
                     # Then check if we're going to fix it

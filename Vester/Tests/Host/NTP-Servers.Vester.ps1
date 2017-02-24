@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'NTP Servers'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = "Server(s) to use for synchronizing the host's clock"
+
 # The config entry stating the desired values
 $Desired = $cfg.host.esxntp
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'string[]'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
