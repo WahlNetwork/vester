@@ -209,8 +209,15 @@ function New-VesterConfig {
             $CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
 
             If ($Object) {
+                # Gather the current value of this $Vest's script block
+                $Result = & $Actual
+
                 # Call module private function Set-VesterConfigValue to add the entry
-                Set-VesterConfigValue -Value ((& $Actual) -as $Type)
+                If ($Result -eq $null) {
+                    Set-VesterConfigValue -Value $null
+                } Else {
+                    Set-VesterConfigValue -Value ($Result -as $Type)
+                }
             } Else {
                 # Inventory object doesn't exist; populate with null value
                 Set-VesterConfigValue -Value $null
