@@ -104,16 +104,12 @@ function Invoke-Vester {
 
         # Optionally save Pester output in NUnitXML format to a specified path
         # Specifying a path automatically triggers Pester in NUnitXML mode
-<<<<<<< HEAD
         [ValidateScript({Test-Path (Split-Path $_ -Parent)})]
-        [object]$XMLOutputFile
-=======
         [object]$XMLOutputFile,
 
         # Optionally returns the Pester result as an object containing the information about the whole test run, and each test
         # Defaults to false (disabled)
         [switch]$PassThru = $false
->>>>>>> refs/remotes/origin/master
     )
 
     BEGIN {
