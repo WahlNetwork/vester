@@ -208,13 +208,15 @@ function New-VesterConfig {
             $CfgLine = (Select-String -Path $Vest.Full -Pattern '\$cfg') -replace '.*\:[0-9]+\:',''
             $CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
 
-            If ($Object) {
+            # Run the $Actual script block, storing the result in $Result
+            If ($Object -and ($Result = & $Actual) -ne $null) {
                 # Call module private function Set-VesterConfigValue to add the entry
-                Set-VesterConfigValue -Value ((& $Actual) -as $Type)
+                Set-VesterConfigValue -Value ($Result -as $Type)
             } Else {
-                # Inventory object doesn't exist; populate with null value
+                # Inventory $Object doesn't exist, or $Actual returned nothing
+                # Populate with null value; Invoke-Vester will skip this test
                 Set-VesterConfigValue -Value $null
-            } #if $Object
+            } #if $Object and $Result
 
             <# ### This works, but not currently used (see commented block below)
             If ($config.$($Matches[1]).Keys -contains $($Matches[2]) -and -not $Quiet) {
