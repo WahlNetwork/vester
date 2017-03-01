@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'SSH Service State'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'On/off switch for allowing SSH connections to the host'
+
 # The config entry stating the desired values
-[bool]$Desired = $cfg.host.sshenable
+$Desired = $cfg.host.sshenable
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'bool'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)

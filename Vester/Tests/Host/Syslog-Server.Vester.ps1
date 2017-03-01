@@ -4,8 +4,14 @@
 # Test title, e.g. 'DNS Servers'
 $Title = 'Syslog Server'
 
+# Test description: How New-VesterConfig explains this value to the user
+$Description = 'Syslog server(s) to send log data to'
+
 # The config entry stating the desired values
 $Desired = $cfg.host.esxsyslog
+
+# The test value's data type, to help with conversion: bool/string/int
+$Type = 'string[]'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
