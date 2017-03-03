@@ -22,9 +22,28 @@ switch ($result)
         If (Test-Path -Path $InstallPath)
         {
             # Upgrade
-            Write-Host -Object 'Found previous installation of Vester module. Updating ...'
-            $null = Remove-Item -Path $InstallPath -Recurse -Force
-            $null = New-Item -ItemType Directory -Path $InstallPath
+			Write-Host -Object 'Found previous installation of Vester module. Updating ...'
+            
+			# Option to preserve user's .json config files
+			$existingConfigs = gci -Path ($InstallPath + "\Configs\") -Filter "*.json"
+			if( $existingConfigs ) {
+				Write-Host "Found configuration file(s) in your install directory:`n"
+				Write-Host $existingConfigs -ForegroundColor Green
+				Write-Host "`nDo you want to keep your existing configuration(s)? Y/N [Y]"  -ForegroundColor Yellow -NoNewline
+				if ( (Read-Host ' ') -like 'n*' ) {
+					$existingConfigs = ""
+				}
+			}
+			
+			if( $existingConfigs ) {
+				#Delete everything except Configs folder
+				$null = gci -Path $InstallPath -Exclude "Configs" | Remove-Item -Recurse -Force
+			}
+			else {
+				#Delete Everything
+				$null = Remove-Item -Path $InstallPath -Recurse -Force
+				$null = New-Item -ItemType Directory -Path $InstallPath
+			}
         }
         Else 
         {
