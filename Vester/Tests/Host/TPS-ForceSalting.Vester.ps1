@@ -1,14 +1,15 @@
-﻿# Test file for the Vester module - https://github.com/WahlNetwork/Vester
+# Test file for the Vester module - https://github.com/WahlNetwork/Vester
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
+# vSphere 6.0 Hardening Guide Guideline ID - ESXi.TransparentPageSharing-intra-enabled
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'SSH Warning'
+$Title = 'Transparent Page Share Force Salting'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'On/off switch for the vSphere warning when a host has SSH enabled'
+$Description = '0 (TPS enabled) 1 (TPS enabled for VMs with same salt) 2 (No inter-VM TPS)'
 
 # The config entry stating the desired values
-$Desired = $cfg.host.sshwarn
+$Desired = $cfg.host.tpsforcesalting
 
 # The test value's data type, to help with conversion: bool/string/int
 $Type = 'int'
@@ -17,7 +18,7 @@ $Type = 'int'
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
     (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'UserVars.SuppressShellWarning'
+        $_.Name -eq 'Mem.ShareForceSalting'
     }).Value
 }
 
@@ -25,6 +26,6 @@ $Type = 'int'
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-            $_.Name -eq 'UserVars.SuppressShellWarning'
+            $_.Name -eq 'Mem.ShareForceSalting'
         } | Set-AdvancedSetting -Value $Desired -Confirm:$false -ErrorAction Stop
 }
