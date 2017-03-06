@@ -23,8 +23,5 @@ $Type = 'string'
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
-	#Get-EsxCli doesn't support -WhatIf, so this hack ensures we don't accidentally change the environment
-	if(! $WhatIfPreference.isPresent) {
-		(Get-EsxCli -VMHost $Object -v2).system.settings.kernel.set.Invoke(@{"setting" = "iovDisableIR"; "value" = $Desired})
-	}
+	(Get-EsxCli -VMHost $Object -v2).system.settings.kernel.set.Invoke(@{"setting" = "iovDisableIR"; "value" = $Desired})
 }
