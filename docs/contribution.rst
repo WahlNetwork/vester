@@ -19,9 +19,13 @@ Vester tests are organized into subfolders below Vester\\Tests, with one folder 
 2. Try and find a similar test for the same object type, for example: `Cluster/DRS-Level.Vester.ps1`_
 3. Copy the existing test to a new file in the appropriate folder, ``<object type>\\<your new testname>.Vester.ps1``
 4. Keeping the existing structure, edit each variable (``$Title $Description $Desired $Type $Actual`` and ``$Fix``) to perform your test.
-5. Verify everything works as expected - ``New-VestorConfig``, and ``Invoke-Vester`` alone, ``Invoke-Vester -Remediate``, and ``Invoke-Vester -Remediate -WhatIf``
+5. Verify everything works as expected.  The commands to test are:
+  * ``New-VestorConfig``
+  * ``Invoke-Vester``
+  * ``Invoke-Vester -Remediate -WhatIf``
+  * ``Invoke-Vester -Remediate``
 
-Note: You can run ``Invoke-Vester -Test c:\\path\\to\\mytest.Vester.ps1`` to execute only your test script.
+Note: For simplicity, you can limit execution to only your test with ``Invoke-Vester -Test c:\\path\\to\\mytest.Vester.ps1``
 
 If everything works as expected, create your pull request and enjoy a sense of accomplishment! :D
 
