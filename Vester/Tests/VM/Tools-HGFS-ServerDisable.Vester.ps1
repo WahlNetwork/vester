@@ -17,10 +17,8 @@ $Type = 'string'
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-    If (((Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'isolation.tools.hgfsServerSet.disable'
-    }).Value) -eq $true) {$true}
-    Else {$false}
+    (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
+        $_.Name -eq 'isolation.tools.hgfsServerSet.disable'}).Value
 }
 
 # The command(s) to match the environment to the config
