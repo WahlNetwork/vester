@@ -24,7 +24,6 @@ $Type = 'string'
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
-    
    Set-VMHostService -HostService ($Object |
             Get-VMHostService |
             Where-Object -FilterScript {
