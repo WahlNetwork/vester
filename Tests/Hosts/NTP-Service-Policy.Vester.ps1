@@ -25,12 +25,9 @@ $Type = 'string'
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     
-    if ($Desired -ne $Actual) 
-    {
-        Set-VMHostService -HostService ($Object |
+   Set-VMHostService -HostService ($Object |
             Get-VMHostService |
             Where-Object -FilterScript {
                 $_.Key -eq 'ntpd'
         }) -Policy $Desired -ErrorAction Stop
-    }
 }
