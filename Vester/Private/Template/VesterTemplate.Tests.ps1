@@ -70,6 +70,7 @@ ForEach ($Test in $TestFiles) {
                 'vCenter'    {$cfg.vcenter.vc}
                 'Datacenter' {$Datacenter}
                 'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
+                'DSCluster'  {Get-DatastoreCluster -Name $cfg.scope.dscluster}
                 'Host'       {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
                 'VM'         {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VM -Name $cfg.scope.vm}
                 'Network'    {$Datacenter | Get-VDSwitch -Name $cfg.scope.vds}
