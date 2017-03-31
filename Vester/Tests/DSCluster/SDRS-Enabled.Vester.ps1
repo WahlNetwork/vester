@@ -5,7 +5,7 @@
 $Title = 'SDRS State'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'On/off switch for Storage Distributed Resource Scheduler (SDRS) on the datastorecluster'
+$Description = 'On/off switch for Storage Distributed Resource Scheduler (SDRS) on a datastorecluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.sdrsautomationlevel
