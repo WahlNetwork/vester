@@ -2,10 +2,10 @@
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'DatastoreCluster - IOLoadBalanceEnabled'
+$Title = 'IO Load Balance Enabled'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Enable/Disable IOLoadBalanceEnabled on a datastorecluster'
+$Description = 'Specifies whether I/O load balancing is enabled for the datastore cluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.ioloadbalanceenabled
