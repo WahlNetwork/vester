@@ -2,10 +2,10 @@
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'DatastoreCluster - SpaceUtilizationThresholdPercent'
+$Title = 'Space Utilization Threshold Percent'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Get the SpaceUtilizationThresholdPercent setting of a datastorecluster'
+$Description = 'Specifies the maximum percentage of consumed space allowed before Storage DRS is triggered for the datastore cluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.spaceutilizationthresholdpercent
