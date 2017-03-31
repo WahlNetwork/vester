@@ -2,10 +2,10 @@
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'DatastoreCluster - IOLatencyThresholdMillisecond'
+$Title = 'IO Latency Threshold Millisecond'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Get the IOLatencyThresholdMillisecond setting of a datastorecluster'
+$Description = 'Specifies the maximum I/O latency in milliseconds allowed before Storage DRS is triggered for the datastore cluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.iolatencythresholdmillisecond
