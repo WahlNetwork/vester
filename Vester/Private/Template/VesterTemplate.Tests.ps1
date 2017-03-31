@@ -30,10 +30,10 @@ ForEach ($Test in $TestFiles) {
 
     # The parent folder must be one of these names, to help with $Object scoping below
     # If adding here, also needs to be added to the switch below
-    If ($Scope -notmatch 'vCenter|Datacenter|Cluster|Host|VM|Network') {
+    If ($Scope -notmatch 'vCenter|Datacenter|Cluster|DSCluster|Host|VM|Network') {
         Write-Warning "Skipping test $TestName. Use -Verbose for more details"
         Write-Verbose 'Test files should be in a folder with one of the following names:'
-        Write-Verbose 'vCenter / Datacenter / Cluster / Host / VM / Network'
+        Write-Verbose 'vCenter / Datacenter / Cluster / DSCluster / Host / VM / Network'
         Write-Verbose 'This helps Vester determine which inventory object(s) to use during the test.'
         # Use continue to skip this test and go to the next loop iteration
         continue
@@ -70,6 +70,7 @@ ForEach ($Test in $TestFiles) {
                 'vCenter'    {$cfg.vcenter.vc}
                 'Datacenter' {$Datacenter}
                 'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
+                'DSCluster'  {$Datacenter | Get-DatastoreCluster -Name $cfg.scope.dscluster}
                 'Host'       {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
                 'VM'         {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VM -Name $cfg.scope.vm}
                 'Network'    {$Datacenter | Get-VDSwitch -Name $cfg.scope.vds}
