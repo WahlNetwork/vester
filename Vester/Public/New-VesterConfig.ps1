@@ -135,7 +135,7 @@ function New-VesterConfig {
 
             [string]$ManualDatacenter = Read-HostColor 'datacenter = Filter the following command: Get-Datacenter -Name YOURINPUTHERE -Server $vCenter'
             [string]$ManualCluster    = Read-HostColor 'cluster = Filter the following command: $Datacenter | Get-Cluster -Name YOURINPUTHERE'
-            [string]$ManualDSCluster  = Read-HostColor 'dscluster = Filter the following command: Get-DatastoreCluster -Name YOURINPUTHERE'
+            [string]$ManualDSCluster  = Read-HostColor 'dscluster = Filter the following command: $Datacenter | Get-DatastoreCluster -Name YOURINPUTHERE'
             [string]$ManualHost       = Read-HostColor 'host = Filter the following command: $Cluster | Get-VMHost -Name YOURINPUTHERE'
             [string]$ManualVM         = Read-HostColor 'vm = Filter the following command: $Cluster | Get-VM -Name YOURINPUTHERE'
             [string]$ManualVDS        = Read-HostColor 'vds = Filter the following command: $Datacenter | Get-VDSwitch -Name YOURINPUTHERE'
@@ -153,7 +153,7 @@ function New-VesterConfig {
     $vCenter    = $DefaultVIServers.Name
     $Datacenter = Get-Datacenter -Name $config.scope.datacenter -Server $vCenter
     $Cluster    = $Datacenter | Get-Cluster -Name $config.scope.cluster
-    $DSCluster  = Get-DatastoreCluster -Name $config.scope.dscluster
+    $DSCluster  = $Datacenter | Get-DatastoreCluster -Name $config.scope.dscluster
     $VMHost     = $Cluster | Get-VMHost -Name $config.scope.host
     $VM         = $Cluster | Get-VM -Name $config.scope.vm
     # Secondary modules...PowerCLI doesn't do implicit module loading as of PCLI 6.5
