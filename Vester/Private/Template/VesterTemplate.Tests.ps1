@@ -83,13 +83,7 @@ foreach($Scope in $Final.Scope)
             # Use continue to skip this test and go to the next loop iteration
             continue
         }
-    }
-
-    If (($Final | Where-Object { $_.Scope -eq $Scope }).InventoryList -eq $null) {
-        Write-Verbose "No objects found in scope $Scope, skipping tests"
-        # Use continue to skip this test and go to the next loop iteration
-        continue
-    }    
+    }  
 
     # Loops through each object in the inventory list for the specific scope
     foreach($Object in $Inventory)
