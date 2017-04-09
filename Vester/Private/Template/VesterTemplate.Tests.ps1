@@ -85,7 +85,7 @@ foreach($Scope in $Final.Scope)
         }
     }  
 
-    # Runs through each test file on the below objects in the currect scope
+    # Runs through each test file on the below objects in the current scope
     foreach($Test in $Tests)
     {
 
