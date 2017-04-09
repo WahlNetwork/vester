@@ -181,7 +181,7 @@ function New-VesterConfig {
     }
 #endregion
         
-    $ScopeList = ($VesterTestSuite | Select -Property Parent -Unique).Parent
+    $ScopeList = ($VesterTestSuite | Select-Object -Property Parent -Unique).Parent
     Write-Verbose "Scopes supplied by test files: $($ScopeList -join ' | ')"
     
     # Not used; called below to help with manual user overrides of values
@@ -194,7 +194,7 @@ function New-VesterConfig {
 
         # Loop through each test file applicable in the current scope
         # Couldn't resist calling each file a Vest. Sorry, everyone
-        ForEach ($Vest in $VesterTestSuite | Where Parent -eq $Scope) {
+        ForEach ($Vest in $VesterTestSuite | Where-Object Parent -eq $Scope) {
             Write-Verbose "Processing test file $($Vest.Leaf)"
             
             # Import all variables from the current .Vester.ps1 file
@@ -246,7 +246,10 @@ function New-VesterConfig {
             Write-Host ''
             Write-Host '  # Config values for scope ' -NoNewline
             Write-Host "$Scope" -ForegroundColor Green
-            $config.$Scope.GetEnumerator() | Sort Name
+            $Sorted = $config.$Scope.GetEnumerator() | Sort-Object Name
+            $Sorted
+            $config.$Scope = [ordered]@{}
+            $Sorted | Foreach-Object { $config.$Scope.Add($_.Name, $_.Value) }            
 
             <# ###
             # Users still need to manually edit the .json file if changes are desired
