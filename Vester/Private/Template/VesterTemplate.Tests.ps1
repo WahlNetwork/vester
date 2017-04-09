@@ -65,7 +65,7 @@ foreach($Scope in $Final.Scope)
     If ('vCenter|Datacenter|Cluster|DSCluster|Host|VM|Network' -notmatch $Scope) {
         Write-Warning "Skipping test $TestName. Use -Verbose for more details"
         Write-Verbose 'Test files should be in a folder with one of the following names:'
-        Write-Verbose 'vCenter / Datacenter / Cluster / Host / VM / Network'
+        Write-Verbose 'vCenter / Datacenter / Cluster / DSCluster / Host / VM / Network'
         Write-Verbose 'This helps Vester determine which inventory object(s) to use during the test.'
         # Use continue to skip this test and go to the next loop iteration
         continue
