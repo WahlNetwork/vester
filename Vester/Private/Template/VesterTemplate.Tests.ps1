@@ -85,11 +85,13 @@ foreach($Scope in $Final.Scope)
         }
     }  
 
-    # Loops through each object in the inventory list for the specific scope
-    foreach($Object in $Inventory)
+    # Runs through each test file on the below objects in the currect scope
+    foreach($Test in $Tests)
     {
-        # Runs through each test file on the above objects in the currect scope
-        foreach($Test in $Tests)
+
+        # Loops through each object in the inventory list for the specific scope.
+        # It runs one test at a time against each $Object and moves onto the next test.
+        foreach($Object in $Inventory)
         {
             Write-Verbose "Processing test file $Test"
             $TestName = Split-Path $Test -Leaf
