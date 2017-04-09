@@ -11,7 +11,7 @@ $Description = 'Network dumps allow the ESXi host to send its core dumps to a re
 $Desired = $cfg.host.netdumpenabled
 
 # The test value's data type, to help with conversion: bool/string/int
-$Type = 'boolean'
+$Type = 'string'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
