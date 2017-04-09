@@ -132,6 +132,6 @@ foreach($Scope in $Final.Scope)
                     } #Try/Catch
                 } #It
             } #Describe                    
-        }#Foreach Testfiles
-    }#Foreach $Final.InventoryList
-}#Foreach Scopes
+        }#Foreach Inventory
+    }#Foreach Tests
+}#Foreach Final.Scope
