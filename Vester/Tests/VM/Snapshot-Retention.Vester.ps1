@@ -16,15 +16,27 @@ $Type = 'int'
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-	$Snapshots = $Object | Get-Snapshot | Where-Object { $_.Created -lt (Get-Date).AddDays(-$Desired) }
-	if($Snapshots)
+	# If a desired retention period has not been set
+	if(!$Desired)
 	{
-		Write-Warning "Snapshot(s) older than $Desired have been found."
 		Write-Output 999
 	}
 	else
 	{
-		$Desired
+		$Snapshots = $Object | Get-Snapshot | Where-Object { $_.Created -lt (Get-Date).AddDays(-$Desired) }
+		# If a snapshot older than the retention period is found
+		# output a random number so it will trigger a test failure
+		if($Snapshots)
+		{
+			Write-Warning "Snapshot(s) older than $Desired have been found."
+			Write-Output (999 - $Desired)
+		}
+		# If a snapshot retention violation is not found
+		# output $Desired so the test will succeed
+		else
+		{
+			$Desired
+		}
 	}
 }
 
