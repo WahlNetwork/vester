@@ -23,9 +23,8 @@ $Type = 'bool'
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     $StorMgr = Get-View StorageResourceManager
-    $DSC = Get-DatastoreCluster $Object
     $Spec = New-Object VMware.Vim.StorageDrsConfigSpec
     $Spec.PodConfigSpec = New-Object VMware.Vim.StorageDrsPodConfigSpec
     $Spec.PodConfigSpec.DefaultIntraVmAffinity = $Desired
-    $StorMgr.ConfigureStorageDrsForPod($DSC.ExtensionData.MoRef, $Spec, $TRUE)
+    $StorMgr.ConfigureStorageDrsForPod($Object.ExtensionData.MoRef, $Spec, $TRUE)
 }
