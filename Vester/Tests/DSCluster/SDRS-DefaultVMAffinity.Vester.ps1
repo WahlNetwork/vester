@@ -16,7 +16,7 @@ $Type = 'bool'
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
-    (Get-DatastoreCluster $Object).ExtensionData.PodStorageDrsEntry.StorageDrsConfig.PodConfig.DefaultIntraVMAffinity
+    $Object.ExtensionData.PodStorageDrsEntry.StorageDrsConfig.PodConfig.DefaultIntraVMAffinity
 }
 
 # The command(s) to match the environment to the config
