@@ -5,7 +5,7 @@
 $Title = 'SDRS Automation Override: IO Load Balance'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Specifies the behavior of SDRS when it generated recommendations for correcting I/O load imbalance in a datastore cluster'
+$Description = 'Specifies the behavior of SDRS when it generates recommendations for correcting I/O load imbalance in a datastore cluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.autooverrideioloadbalance
