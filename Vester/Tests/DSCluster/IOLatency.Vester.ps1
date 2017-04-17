@@ -2,10 +2,10 @@
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'IO Latency Threshold Millisecond'
+$Title = 'SDRS - IOLatencyThresholdMillisecond'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Specifies the maximum I/O latency in milliseconds allowed before Storage DRS is triggered for the datastore cluster'
+$Description = 'Specify the IOLatencyThresholdMillisecond setting of a datastore cluster'
 
 # The config entry stating the desired values
 $Desired = $cfg.dscluster.iolatencythresholdmillisecond
@@ -22,5 +22,19 @@ $Type = 'int'
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
+    $Save = Get-ChildItem Variable: | Where-Object {$_.Value -Match "dscluster"}
+    $ReservableIopsThreshold = $Save.Value.DSCluster.ioresiopsthreshold
+    $ReservablePercentThreshold = $Save.Value.DSCluster.iorespercentthreshold
+    $ReservableThresholdMode = $Save.Value.DSCluster.ioresthresholdmode
     Set-DatastoreCluster -DatastoreCluster $Object -IOLatencyThresholdMillisecond $Desired -Confirm:$FALSE -ErrorAction Stop
+
+    # Sets ReservablePercentThreshold and ReservableThresholdMode as the above setting will reset it
+    $StorMgr = Get-View StorageResourceManager
+    $Spec = New-Object VMware.Vim.StorageDrsConfigSpec
+    $Spec.PodConfigSpec = New-Object VMware.Vim.StorageDrsPodConfigSpec
+    $Spec.PodConfigSpec.IoLoadBalanceConfig = New-Object VMware.Vim.StorageDrsIoLoadBalanceConfig
+    $Spec.PodConfigSpec.IoLoadBalanceConfig.ReservablePercentThreshold = $ReservablePercentThreshold
+    $Spec.PodConfigSpec.IoLoadBalanceConfig.ReservableIopsThreshold = $ReservableIopsThreshold
+    $Spec.PodConfigSpec.IoLoadBalanceConfig.ReservableThresholdMode = $ReservableThresholdMode
+    $StorMgr.ConfigureStorageDrsForPod($Object.ExtensionData.MoRef,$Spec,$TRUE)
 }
