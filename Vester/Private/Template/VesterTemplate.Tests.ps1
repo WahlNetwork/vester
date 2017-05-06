@@ -1,4 +1,4 @@
-﻿<#
+<#
 This file exists to combine simple user input (Invoke-Vester), simple
 user test authoring (*.Vester.ps1), and properly scoped inventory objects
 into a single test session that loops through all necessary combinations.
@@ -88,13 +88,13 @@ foreach($Scope in $Final.Scope)
     # Runs through each test file on the below objects in the current scope
     foreach($Test in $Tests)
     {
+        Write-Verbose "Processing test file $Test"
+        $TestName = Split-Path $Test -Leaf
 
         # Loops through each object in the inventory list for the specific scope.
         # It runs one test at a time against each $Object and moves onto the next test.
         foreach($Object in $Inventory)
         {
-            Write-Verbose "Processing test file $Test"
-            $TestName = Split-Path $Test -Leaf
 
             Describe -Name "$Scope Configuration: $TestName" -Fixture {
                 # Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
