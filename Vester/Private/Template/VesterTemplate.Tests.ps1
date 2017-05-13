@@ -67,7 +67,7 @@ ForEach ($Test in $TestFiles) {
             # Use $Scope (parent folder) to get the correct objects to test against
             # If changing values here, update the "$Scope -notmatch" test above as well
             $InventoryList = switch ($Scope) {
-                'vCenter'    {$global:DefaultVIServer}
+                'vCenter'    {$global:DefaultVIServer | where-object {$_.name -like "$($cfg.vcenter.vc)"}}
                 'Datacenter' {$Datacenter}
                 'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
                 'DSCluster'  {$Datacenter | Get-DatastoreCluster -Name $cfg.scope.dscluster}
