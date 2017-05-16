@@ -106,7 +106,6 @@ foreach($Scope in $Final.Scope)
 			# It runs one test at a time against each $Object and moves onto the next test.
 			foreach($Object in $Inventory)
 			{
-
 				It -Name "$Scope $($Object.Name) - $Title" -Test {
 					Try {
 						# "& $Actual" is running the first script block to compare to $Desired
