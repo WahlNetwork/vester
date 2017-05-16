@@ -91,47 +91,47 @@ foreach($Scope in $Final.Scope)
         Write-Verbose "Processing test file $Test"
         $TestName = Split-Path $Test -Leaf
 
-        # Loops through each object in the inventory list for the specific scope.
-        # It runs one test at a time against each $Object and moves onto the next test.
-        foreach($Object in $Inventory)
-        {
+        Describe -Name "$Scope Configuration: $TestName" -Fixture {
+			# Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
+			. $Test
 
-            Describe -Name "$Scope Configuration: $TestName" -Fixture {
-                # Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
-                . $Test
+			# Pump the brakes if the config value is $null
+			If ($Desired -eq $null) {
+				Write-Verbose "Due to null config value, skipping test $TestName"
+				# Use continue to skip this test and go to the next loop iteration
+				continue
+			}
 
-                # Pump the brakes if the config value is $null
-                If ($Desired -eq $null) {
-                    Write-Verbose "Due to null config value, skipping test $TestName"
-                    # Use continue to skip this test and go to the next loop iteration
-                    continue
-                }
+			# Loops through each object in the inventory list for the specific scope.
+			# It runs one test at a time against each $Object and moves onto the next test.
+			foreach($Object in $Inventory)
+			{
 
-                It -Name "$Scope $($Object.Name) - $Title" -Test {
-                    Try {
-                        # "& $Actual" is running the first script block to compare to $Desired
-                        # The comparison should be empty
-                        # (meaning everything is the same, as expected)
-                        Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual -as $Type) |
-                            Should BeNullOrEmpty
-                    } Catch {
-                        # If the comparison found something different,
-                        # Then check if we're going to fix it
-                        If ($Remediate) {
-                            Write-Warning -Message $_
-                            # -WhatIf support wraps the command that would change values
-                            If ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'")) {
-                                Write-Warning -Message "Remediating $Object"
-                                # Execute the $Fix script block
-                                & $Fix
-                            }
-                        } Else {
-                            # -Remediate is not active, so just report the error
-                            throw $_
-                        }
-                    } #Try/Catch
-                } #It
-            } #Describe                    
-        }#Foreach Inventory
+				It -Name "$Scope $($Object.Name) - $Title" -Test {
+					Try {
+						# "& $Actual" is running the first script block to compare to $Desired
+						# The comparison should be empty
+						# (meaning everything is the same, as expected)
+						Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual -as $Type) |
+							Should BeNullOrEmpty
+					} Catch {
+						# If the comparison found something different,
+						# Then check if we're going to fix it
+						If ($Remediate) {
+							Write-Warning -Message $_
+							# -WhatIf support wraps the command that would change values
+							If ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'")) {
+								Write-Warning -Message "Remediating $Object"
+								# Execute the $Fix script block
+								& $Fix
+							}
+						} Else {
+							# -Remediate is not active, so just report the error
+							throw $_
+						}
+					} #Try/Catch
+				} #It
+            } #Foreach Inventory                    
+        }#Describe
     }#Foreach Tests
 }#Foreach Final.Scope
