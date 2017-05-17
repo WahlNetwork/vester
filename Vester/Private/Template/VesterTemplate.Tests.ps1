@@ -34,7 +34,7 @@ foreach($Scope in $Scopes)
     # Use $Scope (parent folder) to get the correct objects to test against
     # If changing values here, update the "$Scope -notmatch" test below as well
     $InventoryList = switch ($Scope) {
-        'vCenter'    {$cfg.vcenter.vc}
+        'vCenter'    {$global:DefaultVIServer | where-object {$_.name -like "$($cfg.vcenter.vc)"}}
         'Datacenter' {$Datacenter}
         'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
         'DSCluster'  {$Datacenter | Get-DatastoreCluster -Name $cfg.scope.dscluster}
