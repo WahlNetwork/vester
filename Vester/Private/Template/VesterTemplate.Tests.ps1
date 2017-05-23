@@ -71,20 +71,6 @@ foreach($Scope in $Final.Scope)
         continue
     }
 
-    # Check for non-core modules only as tests require them
-    # Will need to be revisited as more tests added & more modules required...
-    # ...maybe don't care about this at all and let it fail naturally?
-    If ($Scope -eq 'Network' -and (Get-Module VMware.VimAutomation.Vds) -eq $null) {
-        Try {
-            Import-Module VMware.VimAutomation.Vds -ErrorAction Stop
-        } Catch {
-            Write-Warning 'Failed to import PowerCLI module "VMware.VimAutomation.Vds"'
-            Write-Warning "Skipping network test $TestName"
-            # Use continue to skip this test and go to the next loop iteration
-            continue
-        }
-    }  
-
     # Runs through each test file on the below objects in the current scope
     foreach($Test in $Tests)
     {
