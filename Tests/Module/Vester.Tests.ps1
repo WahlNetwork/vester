@@ -34,13 +34,13 @@ Describe 'Check module files for breaking changes' {
             $manifest.Copyright | Should BeExactly 'Apache License'
             $manifest.Description | Should BeOfType String
             $manifest.PowerShellVersion | Should Be '3.0'
-            $manifest.RequiredModules.Name | Should BeExactly @('Pester')
+            $manifest.RequiredModules.Name | Should BeExactly @('Pester','VMware.VimAutomation.Core')
+            $manifest.RequiredModules.Version | Should BeExactly @('3.4.3','6.5.1')
             $manifest.ExportedFunctions.Values.Name | Should BeExactly $PublicFiles.BaseName
 
             $manifest.PrivateData.PSData.Tags | Should BeExactly @('vester','vmware','vcenter','vsphere','esxi','powercli')
             $manifest.PrivateData.PSData.LicenseUri | Should BeExactly 'https://github.com/WahlNetwork/Vester/blob/master/LICENSE'
             $manifest.PrivateData.PSData.ProjectUri | Should BeExactly 'https://github.com/WahlNetwork/Vester'
-            $manifest.PrivateData.PSData.ExternalModuleDependencies | Should BeExactly @('VMware.VimAutomation.Core')
         }
 
         $VesterCommands = (Get-Command -Module Vester).Name
