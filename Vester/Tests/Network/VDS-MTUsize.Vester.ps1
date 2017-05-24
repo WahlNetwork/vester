@@ -22,5 +22,5 @@ $Type = 'int'
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
-    Set-VDSwitch $Object -LinkDiscoveryProtocol $Desired -Confirm:$FALSE -ErrorAction Stop
+    Set-VDSwitch $Object -Mtu $Desired -Confirm:$FALSE -ErrorAction Stop
 }
