@@ -43,6 +43,7 @@ I learned that we need to publish releases far more often. :)
   - Advanced-Kernel-iovDisableIR
   - BPDU-Filter
   - Disk-MaxLUN
+  - ESXAdmins
   - NetDump-Settings
   - NetDump-SettingsEnable
   - NTP-Service
