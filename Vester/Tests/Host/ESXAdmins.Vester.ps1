@@ -11,7 +11,7 @@ $Description = 'Security Group allowed root access to ESXi host'
 $Desired = $cfg.host.esxadminsgroup
 
 # The test value's data type, to help with conversion: bool/string/int
-$Type = 'int'
+$Type = 'string'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
