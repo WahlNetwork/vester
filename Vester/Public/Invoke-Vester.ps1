@@ -1,6 +1,4 @@
-﻿#Requires -Version 3 -Modules Pester, VMware.VimAutomation.Core
-
-function Invoke-Vester {
+﻿function Invoke-Vester {
     <#
     .SYNOPSIS
     Test and fix configuration drift in your VMware vSphere environment.

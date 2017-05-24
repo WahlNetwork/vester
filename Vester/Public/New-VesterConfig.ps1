@@ -1,5 +1,3 @@
-#Requires -Modules VMware.VimAutomation.Core
-
 function New-VesterConfig {
     <#
     .SYNOPSIS
