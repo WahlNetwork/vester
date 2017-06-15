@@ -27,7 +27,7 @@ Describe 'Check module files for breaking changes' {
         It 'Static .psd1 values have not changed' {
             $manifest.RootModule | Should BeExactly 'Vester.psm1'
             $manifest.Name | Should BeExactly 'Vester'
-            $manifest.Version -as [Version] | Should BeGreaterThan '1.0.0'
+            $manifest.Version -as [Version] | Should BeGreaterThan '1.0.1'
             $manifest.Guid | Should BeExactly 'cd038486-b669-4edb-a66d-bfe94c61b011'
             $manifest.Author | Should BeExactly 'Chris Wahl'
             $manifest.CompanyName | Should BeExactly 'Community'
@@ -41,6 +41,7 @@ Describe 'Check module files for breaking changes' {
             $manifest.PrivateData.PSData.Tags | Should BeExactly @('vester','vmware','vcenter','vsphere','esxi','powercli')
             $manifest.PrivateData.PSData.LicenseUri | Should BeExactly 'https://github.com/WahlNetwork/Vester/blob/master/LICENSE'
             $manifest.PrivateData.PSData.ProjectUri | Should BeExactly 'https://github.com/WahlNetwork/Vester'
+            $manifest.PrivateData.PSData.ReleaseNotes | Should Match "^## \[$($manifest.Version)\] -"
         }
 
         $VesterCommands = (Get-Command -Module Vester).Name
