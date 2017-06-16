@@ -67,19 +67,19 @@ I learned that we need to publish releases far more often. :)
   - VDS-VlanMTU-HealthCheck
 
 ### Changed
-- #114/#115: `Invoke-Vester` is **more than twice as fast** now! We removed repeated `Get` calls within private file `VesterTemplate.Tests.ps1`. Big thanks to @Midacts/@jpsider/@jonneedham for collaborating on this.
-- #118/#119: `Config.json` files now sort their settings within each scope.
+- [#114][issue-114] / [#115][issue-115]: `Invoke-Vester` is **more than twice as fast** now! We removed repeated `Get` calls within private file `VesterTemplate.Tests.ps1`. Big thanks to @Midacts/@jpsider/@jonneedham for collaborating on this.
+- [#118][issue-118] / [#119][issue-119]: `Config.json` files now sort their settings within each scope.
 
 ### Fixed
-- #90: `Invoke-Vester -Test $TestList` should execute all tests in the array, instead of just the final one after ignoring the rest. Now they do again.
-- #99: Re-implemented `-PassThru` on `Invoke-Vester`.
-- #116/#129: The name of the active vCenter connection was not being reported properly.
-- #154: Network test VDS-MTUsize had an incorrect parameter.
+- [#90][issue-90]: `Invoke-Vester -Test $TestList` should execute all tests in the array, instead of just the final one after ignoring the rest. Now they do again.
+- [#99][issue-99]: Re-implemented `-PassThru` on `Invoke-Vester`.
+- [#116][issue-116] / [#129][issue-129]: The name of the active vCenter connection was not being reported properly.
+- [#154][issue-154]: Network test VDS-MTUsize had an incorrect parameter.
 - Cleaned up VM test files:
   - Tools-DiskWiperDisable
   - Tools-HGFS-ServerDisable
 
-### Much :heart:
+### Much ❤
 [@jeffgreenca](https://github.com/jeffgreenca) [@haberstrohr](https://github.com/haberstrohr) [@jonneedham](https://github.com/jonneedham) [@Midacts](https://github.com/Midacts) [@jpsider](https://github.com/jpsider) [@Factorization](https://github.com/Factorization)
 
 
@@ -89,3 +89,13 @@ Initial availability as a PowerShell module
 
 ## [1.0.0] - 2016-11-10 [YANKED]
 Published just to reserve the name on the PowerShell Gallery. If you have this version, please update!
+
+[issue-90]:  https://github.com/WahlNetwork/Vester/issues/90
+[issue-99]:  https://github.com/WahlNetwork/Vester/issues/99
+[issue-114]: https://github.com/WahlNetwork/Vester/issues/114
+[issue-115]: https://github.com/WahlNetwork/Vester/issues/115
+[issue-116]: https://github.com/WahlNetwork/Vester/issues/116
+[issue-118]: https://github.com/WahlNetwork/Vester/issues/118
+[issue-119]: https://github.com/WahlNetwork/Vester/issues/119
+[issue-129]: https://github.com/WahlNetwork/Vester/issues/129
+[issue-154]: https://github.com/WahlNetwork/Vester/issues/154
