@@ -44,3 +44,9 @@ Thumbs.db
 +# Custom Test Config #
 +######################
 +Vester/Configs/config.json
+
+# Documentation Folders/Files #
+###############################
+compiled_docs
+public
+*.pdf
