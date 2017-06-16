@@ -99,18 +99,17 @@ Task Compile -depends Clean {
     Write-Host -ForegroundColor DarkMagenta "Generating test reference documents..."
     ForEach ($Test in (Get-ChildItem -Path $ProjectRoot/Vester/Tests -Recurse -File)) {
         [string]$Category = $(Split-Path -Path (Split-Path -Path $Test.FullName -Parent) -Leaf)
-        $DocumentPath = "$CompilingFolder/reference/tests/$Category/$($Test.BaseName.split('.')[0]).md"
+        . $Test.FullName
+        $DocumentPath = "$CompilingFolder/reference/tests/$Category/$($Title.replace(' ','-').replace(':','')).md"
         If (!(Test-Path -Path (Split-Path $DocumentPath -Parent))) {
             $null = New-Item -Path "$(Split-Path $DocumentPath -Parent)/readme.md" -Value "# $Category Tests`r`nSee the following chapters for more information." -Force
         }
         If (!(Test-Path -Path $DocumentPath)) {
-            $null = New-Item -Path $DocumentPath -Value "# $((Split-Path $DocumentPath -Leaf).split('.')[0]) Tests`r`n" -Force
+            $null = New-Item -Path $DocumentPath -Value "# $Title`r`n$Description" -Force
         }
-        . $Test.FullName
         @(
-            "`r`n## $Title`r`n$Description"
-            "`r`n### Discovery Code`r`n" + '```powershell' + "$Actual" + '```' 
-            "`r`n### Remediation Code`r`n" + '```powershell' + "$Fix" + '```'
+            "`r`n## Discovery Code`r`n" + '```powershell' + "$Actual" + '```'
+            "`r`n## Remediation Code`r`n" + '```powershell' + "$Fix" + '```'
         )  | Add-Content -Path $DocumentPath
     }
     Push-Location -Path $CompilingFolder
