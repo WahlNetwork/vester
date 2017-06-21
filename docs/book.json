@@ -1,0 +1,7 @@
+{
+    "title": "Vester",
+    "description": "Easily validate and remediate your vSphere configuration",
+    "author": "Chris Wahl",
+    "language": "en",
+    "plugins": ["expandable-chapters-small"]
+}
