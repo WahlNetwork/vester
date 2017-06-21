@@ -112,7 +112,14 @@ foreach($Scope in $Final.Scope)
 							}
 						} Else {
 							# -Remediate is not active, so just report the error
-							throw $_
+							$Message = @(
+                                "Desired:   [$($Desired.gettype())]$Desired"
+                                "Actual:    [$($(& $Actual).gettype())]$(& $Actual)"
+                                "Synopsis:  $Description"
+                                "Link:      https://wahlnetwork.github.io/Vester/reference/tests/$Scope/$($Title.replace(' ','-').replace(':','')).html"
+                                "Test File: $Test"
+                            ) -join "`n"
+                            Throw $Message
 						}
 					} #Try/Catch
 				} #It
