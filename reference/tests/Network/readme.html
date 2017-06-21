@@ -1,0 +1,1788 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Network · Vester</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="author" content="Chris Wahl">
+        
+        
+    
+    <link rel="stylesheet" href="../../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="VDS-Link-Discovery-Operation-Protocol.html" />
+    
+    
+    <link rel="prev" href="../Host/Transparent-Page-Share-Force-Salting.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../../">
+            
+                <a href="../../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../../concept/readme.html">
+            
+                <a href="../../../concept/readme.html">
+            
+                    
+                    Concept
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../../narrative/readme.html">
+            
+                <a href="../../../narrative/readme.html">
+            
+                    
+                    Narrative
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../readme.html">
+            
+                <a href="../../readme.html">
+            
+                    
+                    Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../functions/readme.html">
+            
+                <a href="../../functions/readme.html">
+            
+                    
+                    Functions
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="../../functions/Invoke-Vester.html">
+            
+                <a href="../../functions/Invoke-Vester.html">
+            
+                    
+                    Invoke Vester
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="../../functions/New-VesterConfig.html">
+            
+                <a href="../../functions/New-VesterConfig.html">
+            
+                    
+                    New Vester Config
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../readme.html">
+            
+                <a href="../readme.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../Cluster/readme.html">
+            
+                <a href="../Cluster/readme.html">
+            
+                    
+                    Cluster
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1.1" data-path="../Cluster/DRS-Automation-Level.html">
+            
+                <a href="../Cluster/DRS-Automation-Level.html">
+            
+                    
+                    DRS Automation Level
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.1.2" data-path="../Cluster/DRS-Migration-Threshold.html">
+            
+                <a href="../Cluster/DRS-Migration-Threshold.html">
+            
+                    
+                    DRS Migration Threshold
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.1.3" data-path="../Cluster/DRS-State.html">
+            
+                <a href="../Cluster/DRS-State.html">
+            
+                    
+                    DRS State
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.1.4" data-path="../Cluster/HA-State.html">
+            
+                <a href="../Cluster/HA-State.html">
+            
+                    
+                    HA State
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../DSCluster/readme.html">
+            
+                <a href="../DSCluster/readme.html">
+            
+                    
+                    DS Cluster
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.2.1" data-path="../DSCluster/IO-Load-Balance-Enabled.html">
+            
+                <a href="../DSCluster/IO-Load-Balance-Enabled.html">
+            
+                    
+                    IO Load Balance Enabled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.2" data-path="../DSCluster/SDRS---FreeSpace-Threshold-GB.html">
+            
+                <a href="../DSCluster/SDRS---FreeSpace-Threshold-GB.html">
+            
+                    
+                    SDRS Free Space Threshold GB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.3" data-path="../DSCluster/SDRS---IO-Load-Balanced-Reservable-Iops-Threshold.html">
+            
+                <a href="../DSCluster/SDRS---IO-Load-Balanced-Reservable-Iops-Threshold.html">
+            
+                    
+                    SDRS IO Load Balanced Reservable Iops Threshold
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.4" data-path="../DSCluster/SDRS---IO-Load-Balanced-Reservable-Percent-Threshold.html">
+            
+                <a href="../DSCluster/SDRS---IO-Load-Balanced-Reservable-Percent-Threshold.html">
+            
+                    
+                    SDRS IO Load Balanced Reservable Percent Threshold
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.5" data-path="../DSCluster/SDRS---IO-Load-Balanced-Threshold-Mode.html">
+            
+                <a href="../DSCluster/SDRS---IO-Load-Balanced-Threshold-Mode.html">
+            
+                    
+                    SDRS IO Load Balanced Threshold Mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.6" data-path="../DSCluster/SDRS---IO-Load-ImBalanced-Threshold.html">
+            
+                <a href="../DSCluster/SDRS---IO-Load-ImBalanced-Threshold.html">
+            
+                    
+                    SDRS IO Load Im Balanced Threshold
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.7" data-path="../DSCluster/SDRS---IOLatencyThresholdMillisecond.html">
+            
+                <a href="../DSCluster/SDRS---IOLatencyThresholdMillisecond.html">
+            
+                    
+                    SDRS IO Latency Threshold Millisecond
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.8" data-path="../DSCluster/SDRS---Load-Balance-Interval.html">
+            
+                <a href="../DSCluster/SDRS---Load-Balance-Interval.html">
+            
+                    
+                    SDRS Load Balance Interval
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.9" data-path="../DSCluster/SDRS---Space-Threshold-Mode.html">
+            
+                <a href="../DSCluster/SDRS---Space-Threshold-Mode.html">
+            
+                    
+                    SDRS Space Threshold Mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.10" data-path="../DSCluster/SDRS---Space-Utilization-Difference-Minimum.html">
+            
+                <a href="../DSCluster/SDRS---Space-Utilization-Difference-Minimum.html">
+            
+                    
+                    SDRS Space Utilization Difference Minimum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.11" data-path="../DSCluster/SDRS-Automation-Override-IO-Load-Balance.html">
+            
+                <a href="../DSCluster/SDRS-Automation-Override-IO-Load-Balance.html">
+            
+                    
+                    SDRS Automation Override IO Load Balance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.12" data-path="../DSCluster/SDRS-Automation-Override-Policy-Enforcement.html">
+            
+                <a href="../DSCluster/SDRS-Automation-Override-Policy-Enforcement.html">
+            
+                    
+                    SDRS Automation Override Policy Enforcement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.13" data-path="../DSCluster/SDRS-Automation-Override-Rule-Enforcement.html">
+            
+                <a href="../DSCluster/SDRS-Automation-Override-Rule-Enforcement.html">
+            
+                    
+                    SDRS Automation Override Rule Enforcement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.14" data-path="../DSCluster/SDRS-Automation-Override-Space-Load-Balance.html">
+            
+                <a href="../DSCluster/SDRS-Automation-Override-Space-Load-Balance.html">
+            
+                    
+                    SDRS Automation Override Space Load Balance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.15" data-path="../DSCluster/SDRS-Automation-Override-VM-Evacuation.html">
+            
+                <a href="../DSCluster/SDRS-Automation-Override-VM-Evacuation.html">
+            
+                    
+                    SDRS Automation Override VM Evacuation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.16" data-path="../DSCluster/SDRS-Default-VM-Affinity.html">
+            
+                <a href="../DSCluster/SDRS-Default-VM-Affinity.html">
+            
+                    
+                    SDRS Default VM Affinity
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.17" data-path="../DSCluster/SDRS-State.html">
+            
+                <a href="../DSCluster/SDRS-State.html">
+            
+                    
+                    SDRS State
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2.18" data-path="../DSCluster/Space-Utilization-Threshold-Percent.html">
+            
+                <a href="../DSCluster/Space-Utilization-Threshold-Percent.html">
+            
+                    
+                    Space Utilization Threshold Percent
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../Host/readme.html">
+            
+                <a href="../Host/readme.html">
+            
+                    
+                    Host
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.3.1" data-path="../Host/Account-Lock-Failures.html">
+            
+                <a href="../Host/Account-Lock-Failures.html">
+            
+                    
+                    Account Lock Failures
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.2" data-path="../Host/Account-Unlock-Time.html">
+            
+                <a href="../Host/Account-Unlock-Time.html">
+            
+                    
+                    Account Unlock Time
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.3" data-path="../Host/DCUI-Access.html">
+            
+                <a href="../Host/DCUI-Access.html">
+            
+                    
+                    DCUI Access
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.4" data-path="../Host/DCUI-Timeout.html">
+            
+                <a href="../Host/DCUI-Timeout.html">
+            
+                    
+                    DCUI Timeout
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.5" data-path="../Host/Disk-MaxLUN.html">
+            
+                <a href="../Host/Disk-MaxLUN.html">
+            
+                    
+                    Disk Max LUN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.6" data-path="../Host/DNS-Search-Domains.html">
+            
+                <a href="../Host/DNS-Search-Domains.html">
+            
+                    
+                    DNS Search Domains
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.7" data-path="../Host/DNS-Servers.html">
+            
+                <a href="../Host/DNS-Servers.html">
+            
+                    
+                    DNS Servers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.8" data-path="../Host/ESX-Admins-Group.html">
+            
+                <a href="../Host/ESX-Admins-Group.html">
+            
+                    
+                    ESX Admins Group
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.9" data-path="../Host/Image-Profile-and-VIB-Acceptance-Level.html">
+            
+                <a href="../Host/Image-Profile-and-VIB-Acceptance-Level.html">
+            
+                    
+                    Image Profile And VIB Acceptance Level
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.10" data-path="../Host/Kernel-Setting-iovDisableIR.html">
+            
+                <a href="../Host/Kernel-Setting-iovDisableIR.html">
+            
+                    
+                    Kernel Setting Iov Disable IR
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.11" data-path="../Host/Network-BDPU-Filter.html">
+            
+                <a href="../Host/Network-BDPU-Filter.html">
+            
+                    
+                    Network BDPU Filter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.12" data-path="../Host/Network-Dump-Enable.html">
+            
+                <a href="../Host/Network-Dump-Enable.html">
+            
+                    
+                    Network Dump Enable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.13" data-path="../Host/Network-Dump-Settings.html">
+            
+                <a href="../Host/Network-Dump-Settings.html">
+            
+                    
+                    Network Dump Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.14" data-path="../Host/NTP-Servers.html">
+            
+                <a href="../Host/NTP-Servers.html">
+            
+                    
+                    NTP Servers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.15" data-path="../Host/NTP-Service-Policy.html">
+            
+                <a href="../Host/NTP-Service-Policy.html">
+            
+                    
+                    NTP Service Policy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.16" data-path="../Host/NTP-Service-State.html">
+            
+                <a href="../Host/NTP-Service-State.html">
+            
+                    
+                    NTP Service State
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.17" data-path="../Host/Password-Policy.html">
+            
+                <a href="../Host/Password-Policy.html">
+            
+                    
+                    Password Policy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.18" data-path="../Host/SSH-Interactive-Timeout.html">
+            
+                <a href="../Host/SSH-Interactive-Timeout.html">
+            
+                    
+                    SSH Interactive Timeout
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.19" data-path="../Host/SSH-Service-Policy.html">
+            
+                <a href="../Host/SSH-Service-Policy.html">
+            
+                    
+                    SSH Service Policy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.20" data-path="../Host/SSH-Service-State.html">
+            
+                <a href="../Host/SSH-Service-State.html">
+            
+                    
+                    SSH Service State
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.21" data-path="../Host/SSH-Timeout.html">
+            
+                <a href="../Host/SSH-Timeout.html">
+            
+                    
+                    SSH Timeout
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.22" data-path="../Host/SSH-Warning.html">
+            
+                <a href="../Host/SSH-Warning.html">
+            
+                    
+                    SSH Warning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.23" data-path="../Host/Syslog-Firewall.html">
+            
+                <a href="../Host/Syslog-Firewall.html">
+            
+                    
+                    Syslog Firewall
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.24" data-path="../Host/Syslog-Server.html">
+            
+                <a href="../Host/Syslog-Server.html">
+            
+                    
+                    Syslog Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3.25" data-path="../Host/Transparent-Page-Share-Force-Salting.html">
+            
+                <a href="../Host/Transparent-Page-Share-Force-Salting.html">
+            
+                    
+                    Transparent Page Share Force Salting
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2.4" data-path="readme.html">
+            
+                <a href="readme.html">
+            
+                    
+                    Network
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.4.1" data-path="VDS-Link-Discovery-Operation-Protocol.html">
+            
+                <a href="VDS-Link-Discovery-Operation-Protocol.html">
+            
+                    
+                    VDS Link Discovery Operation Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4.2" data-path="VDS-Link-Protocol.html">
+            
+                <a href="VDS-Link-Protocol.html">
+            
+                    
+                    VDS Link Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4.3" data-path="VDS-MTU-Size.html">
+            
+                <a href="VDS-MTU-Size.html">
+            
+                    
+                    VDS MTU Size
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4.4" data-path="VDS-Teaming-and-Failover-HealthCheck-State.html">
+            
+                <a href="VDS-Teaming-and-Failover-HealthCheck-State.html">
+            
+                    
+                    VDS Teaming And Failover Health Check State
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4.5" data-path="VDS-Vlan-and-MTU-HealthCheck-State.html">
+            
+                <a href="VDS-Vlan-and-MTU-HealthCheck-State.html">
+            
+                    
+                    VDS Vlan And MTU Health Check State
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../vCenter/readme.html">
+            
+                <a href="../vCenter/readme.html">
+            
+                    
+                    V Center
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.5.1" data-path="../vCenter/EventMaxAge.html">
+            
+                <a href="../vCenter/EventMaxAge.html">
+            
+                    
+                    Event Max Age
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.2" data-path="../vCenter/EventMaxAgeEnabled.html">
+            
+                <a href="../vCenter/EventMaxAgeEnabled.html">
+            
+                    
+                    Event Max Age Enabled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.3" data-path="../vCenter/Network-File-Copy---Use-SSL.html">
+            
+                <a href="../vCenter/Network-File-Copy---Use-SSL.html">
+            
+                    
+                    Network File Copy Use SSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.4" data-path="../vCenter/SMTP-Port.html">
+            
+                <a href="../vCenter/SMTP-Port.html">
+            
+                    
+                    SMTP Port
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.5" data-path="../vCenter/SMTP-Sender.html">
+            
+                <a href="../vCenter/SMTP-Sender.html">
+            
+                    
+                    SMTP Sender
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.6" data-path="../vCenter/SMTP-Server.html">
+            
+                <a href="../vCenter/SMTP-Server.html">
+            
+                    
+                    SMTP Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.7" data-path="../vCenter/TaskMaxAge.html">
+            
+                <a href="../vCenter/TaskMaxAge.html">
+            
+                    
+                    Task Max Age
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5.8" data-path="../vCenter/TaskMaxAgeEnabled.html">
+            
+                <a href="../vCenter/TaskMaxAgeEnabled.html">
+            
+                    
+                    Task Max Age Enabled
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../VM/readme.html">
+            
+                <a href="../VM/readme.html">
+            
+                    
+                    VM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.6.1" data-path="../VM/Boot-delay.html">
+            
+                <a href="../VM/Boot-delay.html">
+            
+                    
+                    Boot Delay
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.2" data-path="../VM/CD-ROM-Host-Device.html">
+            
+                <a href="../VM/CD-ROM-Host-Device.html">
+            
+                    
+                    CD ROM Host Device
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.3" data-path="../VM/CD-ROM-ISO-File.html">
+            
+                <a href="../VM/CD-ROM-ISO-File.html">
+            
+                    
+                    CD ROM ISO File
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.4" data-path="../VM/CPU-Limits-Test.html">
+            
+                <a href="../VM/CPU-Limits-Test.html">
+            
+                    
+                    CPU Limits Test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.5" data-path="../VM/CPU-Reservation.html">
+            
+                <a href="../VM/CPU-Reservation.html">
+            
+                    
+                    CPU Reservation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.6" data-path="../VM/Isolation---Device-Interaction-Connect.html">
+            
+                <a href="../VM/Isolation---Device-Interaction-Connect.html">
+            
+                    
+                    Isolation Device Interaction Connect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.7" data-path="../VM/Isolation---Device-Interaction-Edit.html">
+            
+                <a href="../VM/Isolation---Device-Interaction-Edit.html">
+            
+                    
+                    Isolation Device Interaction Edit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.8" data-path="../VM/Memory-Limits-Test.html">
+            
+                <a href="../VM/Memory-Limits-Test.html">
+            
+                    
+                    Memory Limits Test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.9" data-path="../VM/Memory-Reservation.html">
+            
+                <a href="../VM/Memory-Reservation.html">
+            
+                    
+                    Memory Reservation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.10" data-path="../VM/Remote-Display-VNC-setting.html">
+            
+                <a href="../VM/Remote-Display-VNC-setting.html">
+            
+                    
+                    Remote Display VNC Setting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.11" data-path="../VM/Sync-Time-Settings.html">
+            
+                <a href="../VM/Sync-Time-Settings.html">
+            
+                    
+                    Sync Time Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.12" data-path="../VM/Tools---VM-Host-Info-Access.html">
+            
+                <a href="../VM/Tools---VM-Host-Info-Access.html">
+            
+                    
+                    Tools VM Host Info Access
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.13" data-path="../VM/Tools-Copy-Disable.html">
+            
+                <a href="../VM/Tools-Copy-Disable.html">
+            
+                    
+                    Tools Copy Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.14" data-path="../VM/Tools-Disk-Shrink-Disable.html">
+            
+                <a href="../VM/Tools-Disk-Shrink-Disable.html">
+            
+                    
+                    Tools Disk Shrink Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.15" data-path="../VM/Tools-Disk-Wiper-Disable.html">
+            
+                <a href="../VM/Tools-Disk-Wiper-Disable.html">
+            
+                    
+                    Tools Disk Wiper Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.16" data-path="../VM/Tools-Drag-and-Drop-Disable.html">
+            
+                <a href="../VM/Tools-Drag-and-Drop-Disable.html">
+            
+                    
+                    Tools Drag And Drop Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.17" data-path="../VM/Tools-GUI-Options.html">
+            
+                <a href="../VM/Tools-GUI-Options.html">
+            
+                    
+                    Tools GUI Options
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.18" data-path="../VM/Tools-HGFS-Server-Disable.html">
+            
+                <a href="../VM/Tools-HGFS-Server-Disable.html">
+            
+                    
+                    Tools HGFS Server Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.19" data-path="../VM/Tools-Paste-Disable.html">
+            
+                <a href="../VM/Tools-Paste-Disable.html">
+            
+                    
+                    Tools Paste Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.20" data-path="../VM/Tools-Set-Info-Size-Limit.html">
+            
+                <a href="../VM/Tools-Set-Info-Size-Limit.html">
+            
+                    
+                    Tools Set Info Size Limit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.21" data-path="../VM/VM-Snapshot-Retention.html">
+            
+                <a href="../VM/VM-Snapshot-Retention.html">
+            
+                    
+                    VM Snapshot Retention
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.22" data-path="../VM/VMX-AutoLogon-Disable.html">
+            
+                <a href="../VM/VMX-AutoLogon-Disable.html">
+            
+                    
+                    VMX Auto Logon Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.23" data-path="../VM/VMX-BIOS-BBS-Disable.html">
+            
+                <a href="../VM/VMX-BIOS-BBS-Disable.html">
+            
+                    
+                    VMX BIOS BBS Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.24" data-path="../VM/VMX-GetCreds-Disable.html">
+            
+                <a href="../VM/VMX-GetCreds-Disable.html">
+            
+                    
+                    VMX Get Creds Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.25" data-path="../VM/VMX-LaunchMenu-Disable.html">
+            
+                <a href="../VM/VMX-LaunchMenu-Disable.html">
+            
+                    
+                    VMX Launch Menu Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.26" data-path="../VM/VMX-MemSFSS-Disable.html">
+            
+                <a href="../VM/VMX-MemSFSS-Disable.html">
+            
+                    
+                    VMX Mem SFSS Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.27" data-path="../VM/VMX-Protocol-Handler-Disable.html">
+            
+                <a href="../VM/VMX-Protocol-Handler-Disable.html">
+            
+                    
+                    VMX Protocol Handler Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.28" data-path="../VM/VMX-Shell-Action-Disable.html">
+            
+                <a href="../VM/VMX-Shell-Action-Disable.html">
+            
+                    
+                    VMX Shell Action Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.29" data-path="../VM/VMX-TopoRequest-Disable.html">
+            
+                <a href="../VM/VMX-TopoRequest-Disable.html">
+            
+                    
+                    VMX Topo Request Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.30" data-path="../VM/VMX-Trash-Folder-State-Disable.html">
+            
+                <a href="../VM/VMX-Trash-Folder-State-Disable.html">
+            
+                    
+                    VMX Trash Folder State Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.31" data-path="../VM/VMX-Tray-Icon-Disable.html">
+            
+                <a href="../VM/VMX-Tray-Icon-Disable.html">
+            
+                    
+                    VMX Tray Icon Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.32" data-path="../VM/VMX-Unity-Active-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Active-Disable.html">
+            
+                    
+                    VMX Unity Active Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.33" data-path="../VM/VMX-Unity-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Disable.html">
+            
+                    
+                    VMX Unity Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.34" data-path="../VM/VMX-Unity-Interlock-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Interlock-Disable.html">
+            
+                    
+                    VMX Unity Interlock Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.35" data-path="../VM/VMX-Unity-Push-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Push-Disable.html">
+            
+                    
+                    VMX Unity Push Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.36" data-path="../VM/VMX-Unity-Taskbar-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Taskbar-Disable.html">
+            
+                    
+                    VMX Unity Taskbar Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.37" data-path="../VM/VMX-Unity-Window-Contents-Disable.html">
+            
+                <a href="../VM/VMX-Unity-Window-Contents-Disable.html">
+            
+                    
+                    VMX Unity Window Contents Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.38" data-path="../VM/VMX-Version-Get-Disable.html">
+            
+                <a href="../VM/VMX-Version-Get-Disable.html">
+            
+                    
+                    VMX Version Get Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6.39" data-path="../VM/VMX-Version-Set-Disable.html">
+            
+                <a href="../VM/VMX-Version-Set-Disable.html">
+            
+                    
+                    VMX Version Set Disable
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../../CHANGELOG.html">
+            
+                <a href="../../../CHANGELOG.html">
+            
+                    
+                    CHANGELOG
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../../../FAQ.html">
+            
+                <a href="../../../FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../../support.html">
+            
+                <a href="../../../support.html">
+            
+                    
+                    Support
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../.." >Network</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="network-tests">Network Tests</h1>
+<p>See the following chapters for more information.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../Host/Transparent-Page-Share-Force-Salting.html" class="navigation navigation-prev " aria-label="Previous page: Transparent Page Share Force Salting">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="VDS-Link-Discovery-Operation-Protocol.html" class="navigation navigation-next " aria-label="Next page: VDS Link Discovery Operation Protocol">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Network","level":"1.4.2.4","depth":3,"next":{"title":"VDS Link Discovery Operation Protocol","level":"1.4.2.4.1","depth":4,"path":"reference/tests/Network/VDS-Link-Discovery-Operation-Protocol.md","ref":"reference/tests/Network/VDS-Link-Discovery-Operation-Protocol.md","articles":[]},"previous":{"title":"Transparent Page Share Force Salting","level":"1.4.2.3.25","depth":4,"path":"reference/tests/Host/Transparent-Page-Share-Force-Salting.md","ref":"reference/tests/Host/Transparent-Page-Share-Force-Salting.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"reference/tests/Network/readme.md","mtime":"2017-06-16T19:16:32.477Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-16T19:16:38.899Z"},"basePath":"../../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../../gitbook/gitbook.js"></script>
+    <script src="../../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
