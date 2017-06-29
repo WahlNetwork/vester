@@ -5,7 +5,7 @@ into a single test session that loops through all necessary combinations.
 
 It is called by Invoke-Vester via the Invoke-Pester command.
 
-http://vester.readthedocs.io/en/latest/
+https://wahlnetwork.github.io/Vester
 #>
 
 # Accept -WhatIf input from Invoke-Vester
