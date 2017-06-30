@@ -41,7 +41,7 @@ Describe 'Check module files for breaking changes' {
             $manifest.PrivateData.PSData.Tags | Should BeExactly @('vester','vmware','vcenter','vsphere','esxi','powercli')
             $manifest.PrivateData.PSData.LicenseUri | Should BeExactly 'https://github.com/WahlNetwork/Vester/blob/master/LICENSE'
             $manifest.PrivateData.PSData.ProjectUri | Should BeExactly 'https://github.com/WahlNetwork/Vester'
-            $manifest.PrivateData.PSData.ReleaseNotes | Should Match "^## \[$($manifest.Version)\] -"
+            $manifest.PrivateData.PSData.ReleaseNotes | Should Match "## \[$($manifest.Version)\] -"
         }
 
         $VesterCommands = (Get-Command -Module Vester).Name

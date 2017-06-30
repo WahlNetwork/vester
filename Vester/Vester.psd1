@@ -111,6 +111,25 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## [Unreleased]
+Dropped some long overdue documentation updates. New URL: https://wahlnetwork.github.io/Vester
+
+### Added
+- Online documentation at https://wahlnetwork.github.io/Vester
+  - #158:
+    - Docs migrated from .rst to .md
+    - Use PlatyPS to include current cmdlet-based help
+    - Enable automated updates w/ new project build script
+  - Docs output to branch "gh-pages", which powers GitHub Pages at the new URL (#160)
+  - Renders the old readthedocs URL obsolete
+
+### Changed
+- Changed the readme (and all references to the old docs site) to the new URL (#164)
+
+### Much :heart:
+[@michaeltlombardi](https://github.com/michaeltlombardi)
+
+
 ## [1.1.0] - 2017-06-15
 I learned that we need to publish releases far more often. :)
 
