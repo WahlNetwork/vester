@@ -97,7 +97,8 @@ foreach($Scope in $Final.Scope)
 						# "& $Actual" is running the first script block to compare to $Desired
 						# The comparison should be empty
 						# (meaning everything is the same, as expected)
-						Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual -as $Type) |
+						$Result = (& $Actual -as $Type)
+						Compare-Object -ReferenceObject $Desired -DifferenceObject $Result |
 							Should BeNullOrEmpty
 					} Catch {
 						# If the comparison found something different,
@@ -113,8 +114,8 @@ foreach($Scope in $Final.Scope)
 						} Else {
 							# -Remediate is not active, so just report the error
 							$Message = @(
-                                "Desired:   [$($Desired.gettype())]$Desired"
-                                "Actual:    [$($(& $Actual).gettype())]$(& $Actual)"
+                                "Desired:   [$($Desired.gettype())] $Desired"
+                                "Actual:    [$($Result.gettype())] $Result"
                                 "Synopsis:  $Description"
                                 "Link:      https://wahlnetwork.github.io/Vester/reference/tests/$Scope/$($Title.replace(' ','-').replace(':','')).html"
                                 "Test File: $Test"
