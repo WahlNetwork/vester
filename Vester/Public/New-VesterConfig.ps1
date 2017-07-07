@@ -45,7 +45,7 @@ function New-VesterConfig {
     "Get-Help about_Vester" for more information.
 
     .LINK
-    http://vester.readthedocs.io/en/latest/
+    https://wahlnetwork.github.io/Vester
 
     .LINK
     https://github.com/WahlNetwork/Vester
