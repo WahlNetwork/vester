@@ -69,7 +69,11 @@ RequiredModules = @(
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @('Invoke-Vester','New-VesterConfig')
+FunctionsToExport = @(
+    'Get-VesterTest',
+    'Invoke-Vester',
+    'New-VesterConfig'
+)
 
 # Cmdlets to export from this module
 # CmdletsToExport = '*'
@@ -122,6 +126,9 @@ Dropped some long overdue documentation updates. New URL: https://wahlnetwork.gi
     - Enable automated updates w/ new project build script
   - Docs output to branch "gh-pages", which powers GitHub Pages at the new URL (#160)
   - Renders the old readthedocs URL obsolete
+- New function Get-VesterTest (#157)
+  - Allows for simplified `Get-VesterTest | Invoke-Vester` operations
+  - 
 
 ### Changed
 - Changed the readme (and all references to the old docs site) to the new URL (#164)
