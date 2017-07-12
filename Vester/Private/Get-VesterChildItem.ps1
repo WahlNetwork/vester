@@ -9,6 +9,8 @@ function Get-VesterChildItem {
         $Name
     )
 
+    Write-Verbose "[Get-VesterChildItem] $Path"
+
     If ($Scope -and $Name) {
         Get-ChildItem -Path $Path -Filter "$Name.Vester.ps1" -File -Recurse |
             Select-Object @{n='Name';e={($_.BaseName -split '\.')[0]}},

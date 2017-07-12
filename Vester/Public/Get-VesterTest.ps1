@@ -110,50 +110,35 @@
 
             If (Test-Path $TestPath -PathType Container) {
                 # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it
-                Write-Verbose "Discovering *.Vester.ps1 files below directory '$TestPath'."
+                Write-Verbose "Discovering .Vester.ps1 files below directory '$TestPath'"
                 # Leverage PSBoundParameters and splatting to pass only needed parameters
-                $GCI = Get-VesterChildItem @PSBoundParameters
+                $Get = Get-VesterChildItem @PSBoundParameters
 
-                If ($GCI) {
-                    Write-Verbose "Discovered $($GCI.Count) Vester test files"
+                If ($Get) {
+                    Write-Verbose "Discovered $($Get.Count) Vester test files"
 
-                    $GCI | ForEach-Object {
+                    $Get | ForEach-Object {
                         Write-Verbose "Processing Vester test file $($_.Name)"
-
-			            # Create $Title/$Description/$Type/$Actual/$Fix from the test file
-			            . $_.FullName
-                        
-                        # That doesn't work to find $Desired's value, so do it here
-                        $Desired = ((Select-String -Path $_.FullName -Pattern 'Desired \=').Line -split ' ')[-1]
-
-                        $Vest = [PSCustomObject]@{
-                            # Add a custom type name for this object
-                            # Used with DefaultDisplayPropertySet
-                            PSTypeName  = 'Vester.Test'
-                            Name        = $_.Name
-                            Scope       = $_.Scope
-                            FullName    = $_.FullName
-                            Title       = $Title
-                            Description = $Description
-                            Desired     = $Desired
-                            Type        = $Type
-                            Actual      = $Actual.ToString().Trim()
-                            Fix         = $Fix.ToString().Trim()
-                        }
+                        $Vest = Extract-VestDetails -Object $_
 
                         # Add each *.Vester.ps1 file found to the array
                         $TestFiles.Add($Vest)
-                    } #ForEach GCI
+                    } #ForEach Get
                 } Else {
-                    throw "No *.Vester.ps1 files found at location '$TestPath'."
-                } #If GCI
+                    throw "No *.Vester.ps1 files found at location '$TestPath'"
+                } #If Get
 
-                $GCI = $null
+                $Get = $null
             } ElseIf ($TestPath -like '*.Vester.ps1') {
+                $Get = Get-VesterChildItem -Path $TestPath
+
                 Write-Verbose "Processing Vester test file $TestPath"
+                $Vest = Extract-VestDetails -Object $_
 
                 # Add the single file to the array if it matches *.Vester.ps1
-                $TestFiles.Add($TestPath)
+                $TestFiles.Add($Vest)
+
+                $Get = $null
             } Else {
                 # Because Vester tests have a very specific format,
                 # and for future discoverability of that test if parent folder is specified,
