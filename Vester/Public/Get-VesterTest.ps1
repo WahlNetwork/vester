@@ -66,8 +66,8 @@
     #>
     [CmdletBinding()]
     param (
-        # The file/folder path(s) to retrieve test info from
-        # If a directory, child .Vester.ps1 files are gathered recursively
+        # The file/folder path(s) to retrieve test info from.
+        # If a directory, child .Vester.ps1 files are gathered recursively.
         [Parameter(ValueFromPipeline = $true)]
         [ValidateScript({
             If ($_.FullName) {Test-Path $_.FullName}
@@ -75,18 +75,18 @@
         })]
         [object[]]$Path = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
 
-        # Return only test files belonging to the specified Vester scope(s)
-        # Vester determines test file scope by the name of its parent directory
+        # Return only test files belonging to the specified Vester scope(s).
+        # Vester determines test file scope by the name of its parent directory.
         [ValidateSet('Cluster','DSCluster','Host','Network','vCenter','VM')]
         [string[]]$Scope = @('Cluster','DSCluster','Host','Network','vCenter','VM'),
 
-        # Filter results by test name (e.g. "DRS-Enabled" or "*DRS*")
-        # -Name parameter is not case sensitive
+        # Filter results by test name (e.g. "DRS-Enabled" or "*DRS*").
+        # -Name parameter is not case sensitive.
         [string[]]$Name
     )
 
     BEGIN {
-        # Using $PSBoundParameters to set variable $GCI
+        # Using $PSBoundParameters to set variable $Get
         If (-not $PSBoundParameters.ContainsKey('Path')) {
             Write-Verbose "-Path not specified; searching default module path"
             $PSBoundParameters.Add('Path', $Path)
