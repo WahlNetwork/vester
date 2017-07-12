@@ -1,16 +1,59 @@
 ﻿function Get-VesterTest {
     <#
     .SYNOPSIS
+    Gather Vester test filepaths and details of each test.
 
     .DESCRIPTION
+    Get-VesterTest looks for .Vester.ps1 files, excludes some if the -Scope
+    or -Name parameters were specified, and then inspects each test file.
+    File path and detailed properties about each test are returned.
+
+    By default, all tests included with the module are inspected, and only
+    three properties are displayed: Name, Scope, and Description.
+
+    "Get-Help Get-VesterTest -Examples" for more details.
 
     .EXAMPLE
+    Get-VesterTest -Verbose
+    Displays the Name, Scope, and Description of all Vester test files
+    packaged with the module.
+    Verbose messages are available, if extra info is desired.
 
     .EXAMPLE
+    Get-VesterTest | Select-Object -First 1 | Format-List *
+    Returns the first Vester test found from the module.
+    "Format-List *" displays all properties, instead of the default three.
+
+    .EXAMPLE
+    Get-VesterTest -Scope Cluster,vCenter
+    Returns all Vester tests that apply to the "Cluster" and "vCenter" scopes.
+
+    .EXAMPLE
+    Get-VesterTest -Name 'CPU-Limits','ntp*'
+    Returns tests named "CPU-Limits" and tests starting with "NTP".
+    -Name is case insensitive.
+
+    .EXAMPLE
+    Get-VesterTest -Path C:\Vester\CustomTest.Vester.ps1
+    -Path can be used to retrieve tests outside of the Vester module install.
+    Here, it collects info from CustomTest to return.
+
+    .EXAMPLE
+    Get-VesterTest -Path C:\Vester\
+    -Path can also be pointed at a directory containing custom tests.
+    Get-VesterTest will search here for all .Vester.ps1 files, recursively.
+    
+    (Note that the immediate parent folder of all test files should have a
+    name matching the test's intended scope, like "VM".)
 
     .INPUTS
     [System.Object]
-    Accepts piped input (optional multiple objects) for parameter -Test
+    Accepts piped input(s) for parameter -Path.
+
+    .OUTPUTS
+    [PSCustomObject]
+    [Vester.Test]
+    PSCustomObjects (with custom typename "Vester.Test") are returned.
 
     .NOTES
     "Get-Help about_Vester" for more information.
@@ -26,6 +69,10 @@
         # The file/folder path(s) to retrieve test info from
         # If a directory, child .Vester.ps1 files are gathered recursively
         [Parameter(ValueFromPipeline = $true)]
+        [ValidateScript({
+            If ($_.FullName) {Test-Path $_.FullName}
+            Else {Test-Path $_}
+        })]
         [object[]]$Path = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
 
         # Return only test files belonging to the specified Vester scope(s)
@@ -68,7 +115,11 @@
                 $GCI = Get-VesterChildItem @PSBoundParameters
 
                 If ($GCI) {
+                    Write-Verbose "Discovered $($GCI.Count) Vester test files"
+
                     $GCI | ForEach-Object {
+                        Write-Verbose "Processing Vester test file $($_.Name)"
+
 			            # Create $Title/$Description/$Type/$Actual/$Fix from the test file
 			            . $_.FullName
                         
@@ -99,6 +150,8 @@
 
                 $GCI = $null
             } ElseIf ($TestPath -like '*.Vester.ps1') {
+                Write-Verbose "Processing Vester test file $TestPath"
+
                 # Add the single file to the array if it matches *.Vester.ps1
                 $TestFiles.Add($TestPath)
             } Else {
@@ -111,18 +164,14 @@
     } #process
 
     END {
-        If ($TestFiles.Count -gt 0) {
-            # Reduce default property set for readability
-            $TypeData = @{
-                TypeName = 'Vester.Test'
-                DefaultDisplayPropertySet = 'Name','Scope','Description'
-            }
-            # Include -Force to avoid errors after the first run
-            Update-TypeData @TypeData -Force
-
-            $TestFiles
-        } Else {
-            Write-Verbose "No matching Vester tests found"
+        # Reduce default property set for readability
+        $TypeData = @{
+            TypeName = 'Vester.Test'
+            DefaultDisplayPropertySet = 'Name','Scope','Description'
         }
+        # Include -Force to avoid errors after the first run
+        Update-TypeData @TypeData -Force
+
+        $TestFiles
     } #end
 } #function
