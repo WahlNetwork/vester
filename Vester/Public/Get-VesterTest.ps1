@@ -51,9 +51,11 @@
     Accepts piped input(s) for parameter -Path.
 
     .OUTPUTS
-    [PSCustomObject]
-    [Vester.Test]
+    [PSCustomObject] / [Vester.Test]
     PSCustomObjects (with custom typename "Vester.Test") are returned.
+
+    [System.String]
+    If -Simple is active, only strings with each file's full path are returned.
 
     .NOTES
     "Get-Help about_Vester" for more information.
@@ -82,10 +84,16 @@
 
         # Filter results by test name (e.g. "DRS-Enabled" or "*DRS*").
         # -Name parameter is not case sensitive.
-        [string[]]$Name
+        [string[]]$Name,
+
+        # Simply return the full path of the file, instead of a rich object
+        # Faster, as it does not inspect the contents of each Vester test file
+        [switch]$Simple
     )
 
     BEGIN {
+        Write-Verbose '[Get-VesterTest] Function called'
+
         # Using $PSBoundParameters to set variable $Get
         If (-not $PSBoundParameters.ContainsKey('Path')) {
             Write-Verbose "-Path not specified; searching default module path"
@@ -117,28 +125,40 @@
                 If ($Get) {
                     Write-Verbose "Discovered $($Get.Count) Vester test files"
 
-                    $Get | ForEach-Object {
-                        Write-Verbose "Processing Vester test file $($_.Name)"
-                        $Vest = Extract-VestDetails -Object $_
+                    If ($Simple) {
+                        # Keep only the full file path
+                        $Get.FullName | ForEach-Object {
+                            $TestFiles.Add($_)
+                        }
+                    } Else {
+                        # Extract details of each test file
 
-                        # Add each *.Vester.ps1 file found to the array
-                        $TestFiles.Add($Vest)
-                    } #ForEach Get
+                        $Get | ForEach-Object {
+                            Write-Verbose "Processing Vester test file $($_.Name)"
+                            $Vest = Extract-VestDetails -Object $_
+
+                            # Add each *.Vester.ps1 file found to the array
+                            $TestFiles.Add($Vest)
+                        } #ForEach Get
+                    }
                 } Else {
                     throw "No *.Vester.ps1 files found at location '$TestPath'"
                 } #If Get
 
                 $Get = $null
             } ElseIf ($TestPath -like '*.Vester.ps1') {
-                $Get = Get-VesterChildItem -Path $TestPath
+                If ($Simple) {
+                    # Keep only the full file path
+                    $TestFiles.Add($Vest)
+                } Else {
+                    # Extract details of the file
+                    Write-Verbose "Processing Vester test file $TestPath"
 
-                Write-Verbose "Processing Vester test file $TestPath"
-                $Vest = Extract-VestDetails -Object $_
-
-                # Add the single file to the array if it matches *.Vester.ps1
-                $TestFiles.Add($Vest)
-
-                $Get = $null
+                    $Get = Get-VesterChildItem -Path $TestPath
+                    $Vest = Extract-VestDetails -Object $_
+                    $TestFiles.Add($Vest)
+                    $Get = $null
+                }
             } Else {
                 # Because Vester tests have a very specific format,
                 # and for future discoverability of that test if parent folder is specified,
@@ -149,13 +169,15 @@
     } #process
 
     END {
-        # Reduce default property set for readability
-        $TypeData = @{
-            TypeName = 'Vester.Test'
-            DefaultDisplayPropertySet = 'Name','Scope','Description'
+        If (-not $Simple) {
+            # Reduce default property set for readability
+            $TypeData = @{
+                TypeName = 'Vester.Test'
+                DefaultDisplayPropertySet = 'Name','Scope','Description'
+            }
+            # Include -Force to avoid errors after the first run
+            Update-TypeData @TypeData -Force
         }
-        # Include -Force to avoid errors after the first run
-        Update-TypeData @TypeData -Force
 
         $TestFiles
     } #end
