@@ -22,7 +22,7 @@
     It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
-    Invoke-Vester -Config C:\Tests\Config.json -Test (Get-VesterTest -Path C:\Tests\)
+    Invoke-Vester -Config C:\Tests\Config.json -Test C:\Tests\
     Vester runs all *.Vester.ps1 files found underneath the C:\Tests\ directory,
     and compares values to the config file in the same location.
     It outputs a report to the host of all passed and failed tests.
@@ -111,6 +111,17 @@
     )
 
     PROCESS {
+        # -Test should accept directories and objects
+        If ($Test[0] -notlike '*.Vester.ps1') {
+            If ($Test[0].FullName) {
+                # Strip Get-Item/Get-ChildItem/Get-VesterTest object to path only
+                $Test = $Test.FullName
+            } Else {
+                # This is a directory. Get the Vester tests here
+                $Test = $Test | Get-VesterTest -Simple
+            }
+        }
+
         ForEach ($ConfigFile in $Config) {
             # Gracefully handle Get-Item/Get-ChildItem
             If ($ConfigFile.FullName) {
