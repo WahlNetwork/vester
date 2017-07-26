@@ -94,7 +94,7 @@
             Else {Test-Path $_}
         })]
         [Alias('Path','Script')]
-        [object[]]$Test = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
+        [object[]]$Test = (Get-VesterTest -Simple),
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
@@ -109,11 +109,6 @@
         # Defaults to false (disabled)
         [switch]$PassThru = $false
     )
-
-    BEGIN {
-        # Convert $Test input(s) into a whole bunch of *.Vester.ps1 file paths
-        $VesterTests = $Test | Get-VesterTest
-    } #Begin
 
     PROCESS {
         ForEach ($ConfigFile in $Config) {
@@ -153,7 +148,7 @@
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
@@ -162,7 +157,7 @@
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
@@ -171,7 +166,7 @@
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester

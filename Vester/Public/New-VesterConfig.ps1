@@ -76,7 +76,7 @@ function New-VesterConfig {
 
     # TODO: Make this a param? Or keep hardcoded?
     Write-Verbose "Assembling Vester files within $(Split-Path -Parent $PSScriptRoot)\Tests\"
-    $GetVesterTest = "$(Split-Path -Parent $PSScriptRoot)\Tests\" | Get-VesterTest
+    $GetVesterTest = "$(Split-Path -Parent $PSScriptRoot)\Tests\" | Get-VesterTest -Simple
     # Appending to a list is faster than rebuilding an array
     $VesterTestSuite = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 
