@@ -22,22 +22,22 @@
     It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
-    Invoke-Vester -Config C:\Tests\Config.json -Test C:\Tests\
+    Invoke-Vester -Config C:\Tests\Config.json -Test (Get-VesterTest -Path C:\Tests\)
     Vester runs all *.Vester.ps1 files found underneath the C:\Tests\ directory,
     and compares values to the config file in the same location.
     It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
-    $DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse
+    $DNS = Get-VesterTest -Path Z:\ -Name *dns*
     PS C:\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS
 
-    Get all Vester tests below Z:\ with 'dns' in the name; store in variable $DNS.
+    Get all Vester tests at Z:\ with 'dns' in the name; store in variable $DNS.
     Then, pipe all *.json files at the root of Z: into the -Config parameter.
     Each config file piped in will run through all $DNS tests found.
 
     .EXAMPLE
-    Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf
-    Run *.Vester.ps1 tests in the .\Tests\VM path below the current location.
+    Invoke-Vester -Test (Get-VesterTest -Scope VM) -Remediate -WhatIf
+    Run Vester with all VM tests included with the module.
     For all tests that fail against the values in \Configs\Config.json,
     -Remediate attempts to immediately fix them to match your defined config.
     -WhatIf prevents remediation, and instead reports what would have changed.
@@ -54,7 +54,7 @@
     Runs Vester with the default config and test files.
     Uses Pester to send test results in NUnitXML format to vester.xml
     at your current folder location.
-    Option is primarily used for CI/CD integration solutions.
+    Useful to supply to a report generator for HTML reports.
 
     .INPUTS
     [System.Object]
