@@ -127,8 +127,10 @@ Dropped some long overdue documentation updates. New URL: https://wahlnetwork.gi
   - Docs output to branch "gh-pages", which powers GitHub Pages at the new URL (#160)
   - Renders the old readthedocs URL obsolete
 - New function Get-VesterTest (#157)
-  - Allows for simplified `Get-VesterTest | Invoke-Vester` operations
-  - 
+  - A glorified Get-ChildItem for Vester test files (*.Vester.ps1)
+  - Default path gathers all tests included with the module
+  - Filter by Name or Scope (like "Cluster")
+  - Exposes test details, like "Description", for simple user reference
 
 ### Changed
 - Changed the readme (and all references to the old docs site) to the new URL (#164)
