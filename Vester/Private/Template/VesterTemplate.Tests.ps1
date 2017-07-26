@@ -22,6 +22,12 @@ Param(
     [switch]$Remediate
 )
 
+# Gracefully handle FileSystemInfo/Vester.Test objects
+# Get-Item, Get-ChildItem, Get-VesterTest (without -Simple parameter)
+If ($TestFiles.FullName) {
+    $TestFiles = $TestFiles.FullName
+}
+
 # Gets the scope, the objects for the scope and their requested test files
 $Scopes = Split-Path (Split-Path $TestFiles -Parent) -Leaf | Select -Unique
 $Final = @()
