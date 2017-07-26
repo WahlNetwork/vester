@@ -46,6 +46,12 @@
     (Note that the immediate parent folder of all test files should have a
     name matching the test's intended scope, like "VM".)
 
+    .EXAMPLE
+    Get-VesterTest -Scope VM -Simple
+    Returns only the file path of each test, instead of rich object details.
+    Invoke-Vester currently expects paths only, so this saves a little time
+    when supplying a filtered test suite to Invoke-Vester.
+
     .INPUTS
     [System.Object]
     Accepts piped input(s) for parameter -Path.
