@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Functions · Vester</title>
+        <title>Get Vester Test · Vester</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,10 +61,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="Get-VesterTest.html" />
+    <link rel="next" href="Invoke-Vester.html" />
     
     
-    <link rel="prev" href="../readme.html" />
+    <link rel="prev" href="readme.html" />
     
 
     </head>
@@ -146,7 +146,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.4.1" data-path="readme.html">
+        <li class="chapter " data-level="1.4.1" data-path="readme.html">
             
                 <a href="readme.html">
             
@@ -160,7 +160,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1.1" data-path="Get-VesterTest.html">
+        <li class="chapter active" data-level="1.4.1.1" data-path="Get-VesterTest.html">
             
                 <a href="Get-VesterTest.html">
             
@@ -1698,7 +1698,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Functions</a>
+        <a href="../.." >Get Vester Test</a>
     </h1>
 </div>
 
@@ -1713,14 +1713,117 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="function-reference">Function Reference</h1>
-<p>The following chapters provide the online help for the public functions of the Vester module</p>
-<h1 id="get-vestertest"><a href="Get-VesterTest.html"><code>Get-VesterTest</code></a></h1>
+                                <h1 id="get-vestertest">Get-VesterTest</h1>
+<h2 id="synopsis">SYNOPSIS</h2>
 <p>Gather Vester test filepaths and details of each test.</p>
-<h1 id="invoke-vester"><a href="Invoke-Vester.html"><code>Invoke-Vester</code></a></h1>
-<p>Test and fix configuration drift in your VMware vSphere environment.</p>
-<h1 id="new-vesterconfig"><a href="New-VesterConfig.html"><code>New-VesterConfig</code></a></h1>
-<p>Generates a Vester config file from settings in your existing VMware environment.</p>
+<h2 id="syntax">SYNTAX</h2>
+<pre><code>Get-VesterTest [[-Path] &lt;Object[]&gt;] [[-Scope] &lt;String[]&gt;] [[-Name] &lt;String[]&gt;] [-Simple]
+</code></pre><h2 id="description">DESCRIPTION</h2>
+<p>Get-VesterTest looks for .Vester.ps1 files, excludes some if the -Scope
+or -Name parameters were specified, and then inspects each test file.
+File path and detailed properties about each test are returned.</p>
+<p>By default, all tests included with the module are inspected, and only
+three properties are displayed: Name, Scope, and Description.</p>
+<p>&quot;Get-Help Get-VesterTest -Examples&quot; for more details.</p>
+<h2 id="examples">EXAMPLES</h2>
+<h3 id="--------------------------example-1---------------------------">-------------------------- EXAMPLE 1 --------------------------</h3>
+<pre><code>Get-VesterTest -Verbose
+</code></pre><p>Displays the Name, Scope, and Description of all Vester test files
+packaged with the module.
+Verbose messages are available, if extra info is desired.</p>
+<h3 id="--------------------------example-2---------------------------">-------------------------- EXAMPLE 2 --------------------------</h3>
+<pre><code>Get-VesterTest | Select-Object -First 1 | Format-List *
+</code></pre><p>Returns the first Vester test found from the module.
+&quot;Format-List *&quot; displays all properties, instead of the default three.</p>
+<h3 id="--------------------------example-3---------------------------">-------------------------- EXAMPLE 3 --------------------------</h3>
+<pre><code>Get-VesterTest -Scope Cluster,vCenter
+</code></pre><p>Returns all Vester tests that apply to the &quot;Cluster&quot; and &quot;vCenter&quot; scopes.</p>
+<h3 id="--------------------------example-4---------------------------">-------------------------- EXAMPLE 4 --------------------------</h3>
+<pre><code>Get-VesterTest -Name &apos;CPU-Limits&apos;,&apos;ntp*&apos;
+</code></pre><p>Returns tests named &quot;CPU-Limits&quot; and tests starting with &quot;NTP&quot;.
+-Name is case insensitive.</p>
+<h3 id="--------------------------example-5---------------------------">-------------------------- EXAMPLE 5 --------------------------</h3>
+<pre><code>Get-VesterTest -Path C:\Vester\CustomTest.Vester.ps1
+</code></pre><p>-Path can be used to retrieve tests outside of the Vester module install.
+Here, it collects info from CustomTest to return.</p>
+<h3 id="--------------------------example-6---------------------------">-------------------------- EXAMPLE 6 --------------------------</h3>
+<pre><code>Get-VesterTest -Path C:\Vester\
+</code></pre><p>-Path can also be pointed at a directory containing custom tests.
+Get-VesterTest will search here for all .Vester.ps1 files, recursively.</p>
+<p>(Note that the immediate parent folder of all test files should have a
+name matching the test&apos;s intended scope, like &quot;VM&quot;.)</p>
+<h3 id="--------------------------example-7---------------------------">-------------------------- EXAMPLE 7 --------------------------</h3>
+<pre><code>Get-VesterTest -Scope VM -Simple
+</code></pre><p>Returns only the file path of each test, instead of rich object details.
+Invoke-Vester currently expects paths only, so this saves a little time
+when supplying a filtered test suite to Invoke-Vester.</p>
+<h2 id="parameters">PARAMETERS</h2>
+<h3 id="path">-Path</h3>
+<p>The file/folder path(s) to retrieve test info from.
+If a directory, child .Vester.ps1 files are gathered recursively.</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Type:</span> Object[]
+Parameter Sets: (All)
+<span class="hljs-attr">Aliases:</span> 
+
+<span class="hljs-attr">Required:</span> <span class="hljs-literal">False</span>
+<span class="hljs-attr">Position:</span> <span class="hljs-number">1</span>
+Default value: <span class="hljs-string">&quot;$(Split-Path -Parent $PSScriptRoot)\Tests\&quot;
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+</span></code></pre>
+<h3 id="scope">-Scope</h3>
+<p>Return only test files belonging to the specified Vester scope(s).
+Vester determines test file scope by the name of its parent directory.</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Type:</span> String[]
+Parameter Sets: (All)
+<span class="hljs-attr">Aliases:</span> 
+
+<span class="hljs-attr">Required:</span> <span class="hljs-literal">False</span>
+<span class="hljs-attr">Position:</span> <span class="hljs-number">2</span>
+Default value: @(<span class="hljs-string">&apos;Cluster&apos;</span>,<span class="hljs-string">&apos;DSCluster&apos;</span>,<span class="hljs-string">&apos;Host&apos;</span>,<span class="hljs-string">&apos;Network&apos;</span>,<span class="hljs-string">&apos;vCenter&apos;</span>,<span class="hljs-string">&apos;VM&apos;</span>)
+Accept pipeline input: <span class="hljs-literal">False</span>
+Accept wildcard characters: <span class="hljs-literal">False</span>
+</code></pre>
+<h3 id="name">-Name</h3>
+<p>Filter results by test name (e.g.
+&quot;DRS-Enabled&quot; or &quot;<em>DRS</em>&quot;).
+-Name parameter is not case sensitive.</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Type:</span> String[]
+Parameter Sets: (All)
+<span class="hljs-attr">Aliases:</span> 
+
+<span class="hljs-attr">Required:</span> <span class="hljs-literal">False</span>
+<span class="hljs-attr">Position:</span> <span class="hljs-number">3</span>
+Default value: None
+Accept pipeline input: <span class="hljs-literal">False</span>
+Accept wildcard characters: <span class="hljs-literal">False</span>
+</code></pre>
+<h3 id="simple">-Simple</h3>
+<p>Simply return the full path of the file, instead of a rich object
+Faster, as it does not inspect the contents of each Vester test file</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Type:</span> SwitchParameter
+Parameter Sets: (All)
+<span class="hljs-attr">Aliases:</span> 
+
+<span class="hljs-attr">Required:</span> <span class="hljs-literal">False</span>
+<span class="hljs-attr">Position:</span> Named
+Default value: <span class="hljs-literal">False</span>
+Accept pipeline input: <span class="hljs-literal">False</span>
+Accept wildcard characters: <span class="hljs-literal">False</span>
+</code></pre>
+<h2 id="inputs">INPUTS</h2>
+<h3 id="systemobject">[System.Object]</h3>
+<p>Accepts piped input(s) for parameter -Path.</p>
+<h2 id="outputs">OUTPUTS</h2>
+<h3 id="pscustomobject--vestertest">[PSCustomObject] / [Vester.Test]</h3>
+<p>PSCustomObjects (with custom typename &quot;Vester.Test&quot;) are returned.</p>
+<p>[System.String]
+If -Simple is active, only strings with each file&apos;s full path are returned.</p>
+<h2 id="notes">NOTES</h2>
+<p>&quot;Get-Help about_Vester&quot; for more information.</p>
+<h2 id="related-links">RELATED LINKS</h2>
+<p><a href="https://wahlnetwork.github.io/Vester" target="_blank">https://wahlnetwork.github.io/Vester</a></p>
+<p><a href="https://github.com/WahlNetwork/Vester" target="_blank">https://github.com/WahlNetwork/Vester</a></p>
 
                                 
                                 </section>
@@ -1748,12 +1851,12 @@
 
             
                 
-                <a href="../readme.html" class="navigation navigation-prev " aria-label="Previous page: Reference">
+                <a href="readme.html" class="navigation navigation-prev " aria-label="Previous page: Functions">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="Get-VesterTest.html" class="navigation navigation-next " aria-label="Next page: Get Vester Test">
+                <a href="Invoke-Vester.html" class="navigation navigation-next " aria-label="Next page: Invoke Vester">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1764,7 +1867,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"Module Name":"vester","Module Guid":"cd038486-b669-4edb-a66d-bfe94c61b011","Help Version":"1.2.0","Locale":"en-US","title":"Functions","level":"1.4.1","depth":2,"next":{"title":"Get Vester Test","level":"1.4.1.1","depth":3,"path":"reference/functions/Get-VesterTest.md","ref":"reference/functions/Get-VesterTest.md","articles":[]},"previous":{"title":"Reference","level":"1.4","depth":1,"path":"reference/readme.md","ref":"reference/readme.md","articles":[{"title":"Functions","level":"1.4.1","depth":2,"path":"reference/functions/readme.md","ref":"reference/functions/readme.md","articles":[{"title":"Get Vester Test","level":"1.4.1.1","depth":3,"path":"reference/functions/Get-VesterTest.md","ref":"reference/functions/Get-VesterTest.md","articles":[]},{"title":"Invoke Vester","level":"1.4.1.2","depth":3,"path":"reference/functions/Invoke-Vester.md","ref":"reference/functions/Invoke-Vester.md","articles":[]},{"title":"New Vester Config","level":"1.4.1.3","depth":3,"path":"reference/functions/New-VesterConfig.md","ref":"reference/functions/New-VesterConfig.md","articles":[]}]},{"title":"Tests","level":"1.4.2","depth":2,"path":"reference/tests/readme.md","ref":"reference/tests/readme.md","articles":[{"title":"Cluster","level":"1.4.2.1","depth":3,"path":"reference/tests/Cluster/readme.md","ref":"reference/tests/Cluster/readme.md","articles":[{"title":"DRS Automation Level","level":"1.4.2.1.1","depth":4,"path":"reference/tests/Cluster/DRS-Automation-Level.md","ref":"reference/tests/Cluster/DRS-Automation-Level.md","articles":[]},{"title":"DRS Migration Threshold","level":"1.4.2.1.2","depth":4,"path":"reference/tests/Cluster/DRS-Migration-Threshold.md","ref":"reference/tests/Cluster/DRS-Migration-Threshold.md","articles":[]},{"title":"DRS State","level":"1.4.2.1.3","depth":4,"path":"reference/tests/Cluster/DRS-State.md","ref":"reference/tests/Cluster/DRS-State.md","articles":[]},{"title":"HA State","level":"1.4.2.1.4","depth":4,"path":"reference/tests/Cluster/HA-State.md","ref":"reference/tests/Cluster/HA-State.md","articles":[]}]},{"title":"DS Cluster","level":"1.4.2.2","depth":3,"path":"reference/tests/DSCluster/readme.md","ref":"reference/tests/DSCluster/readme.md","articles":[{"title":"IO Load Balance Enabled","level":"1.4.2.2.1","depth":4,"path":"reference/tests/DSCluster/IO-Load-Balance-Enabled.md","ref":"reference/tests/DSCluster/IO-Load-Balance-Enabled.md","articles":[]},{"title":"SDRS Free Space Threshold GB","level":"1.4.2.2.2","depth":4,"path":"reference/tests/DSCluster/SDRS---FreeSpace-Threshold-GB.md","ref":"reference/tests/DSCluster/SDRS---FreeSpace-Threshold-GB.md","articles":[]},{"title":"SDRS IO Load Balanced Reservable Iops Threshold","level":"1.4.2.2.3","depth":4,"path":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Reservable-Iops-Threshold.md","ref":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Reservable-Iops-Threshold.md","articles":[]},{"title":"SDRS IO Load Balanced Reservable Percent Threshold","level":"1.4.2.2.4","depth":4,"path":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Reservable-Percent-Threshold.md","ref":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Reservable-Percent-Threshold.md","articles":[]},{"title":"SDRS IO Load Balanced Threshold Mode","level":"1.4.2.2.5","depth":4,"path":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Threshold-Mode.md","ref":"reference/tests/DSCluster/SDRS---IO-Load-Balanced-Threshold-Mode.md","articles":[]},{"title":"SDRS IO Load Im Balanced Threshold","level":"1.4.2.2.6","depth":4,"path":"reference/tests/DSCluster/SDRS---IO-Load-ImBalanced-Threshold.md","ref":"reference/tests/DSCluster/SDRS---IO-Load-ImBalanced-Threshold.md","articles":[]},{"title":"SDRS IO Latency Threshold Millisecond","level":"1.4.2.2.7","depth":4,"path":"reference/tests/DSCluster/SDRS---IOLatencyThresholdMillisecond.md","ref":"reference/tests/DSCluster/SDRS---IOLatencyThresholdMillisecond.md","articles":[]},{"title":"SDRS Load Balance Interval","level":"1.4.2.2.8","depth":4,"path":"reference/tests/DSCluster/SDRS---Load-Balance-Interval.md","ref":"reference/tests/DSCluster/SDRS---Load-Balance-Interval.md","articles":[]},{"title":"SDRS Space Threshold Mode","level":"1.4.2.2.9","depth":4,"path":"reference/tests/DSCluster/SDRS---Space-Threshold-Mode.md","ref":"reference/tests/DSCluster/SDRS---Space-Threshold-Mode.md","articles":[]},{"title":"SDRS Space Utilization Difference Minimum","level":"1.4.2.2.10","depth":4,"path":"reference/tests/DSCluster/SDRS---Space-Utilization-Difference-Minimum.md","ref":"reference/tests/DSCluster/SDRS---Space-Utilization-Difference-Minimum.md","articles":[]},{"title":"SDRS Automation Override IO Load Balance","level":"1.4.2.2.11","depth":4,"path":"reference/tests/DSCluster/SDRS-Automation-Override-IO-Load-Balance.md","ref":"reference/tests/DSCluster/SDRS-Automation-Override-IO-Load-Balance.md","articles":[]},{"title":"SDRS Automation Override Policy Enforcement","level":"1.4.2.2.12","depth":4,"path":"reference/tests/DSCluster/SDRS-Automation-Override-Policy-Enforcement.md","ref":"reference/tests/DSCluster/SDRS-Automation-Override-Policy-Enforcement.md","articles":[]},{"title":"SDRS Automation Override Rule Enforcement","level":"1.4.2.2.13","depth":4,"path":"reference/tests/DSCluster/SDRS-Automation-Override-Rule-Enforcement.md","ref":"reference/tests/DSCluster/SDRS-Automation-Override-Rule-Enforcement.md","articles":[]},{"title":"SDRS Automation Override Space Load Balance","level":"1.4.2.2.14","depth":4,"path":"reference/tests/DSCluster/SDRS-Automation-Override-Space-Load-Balance.md","ref":"reference/tests/DSCluster/SDRS-Automation-Override-Space-Load-Balance.md","articles":[]},{"title":"SDRS Automation Override VM Evacuation","level":"1.4.2.2.15","depth":4,"path":"reference/tests/DSCluster/SDRS-Automation-Override-VM-Evacuation.md","ref":"reference/tests/DSCluster/SDRS-Automation-Override-VM-Evacuation.md","articles":[]},{"title":"SDRS Default VM Affinity","level":"1.4.2.2.16","depth":4,"path":"reference/tests/DSCluster/SDRS-Default-VM-Affinity.md","ref":"reference/tests/DSCluster/SDRS-Default-VM-Affinity.md","articles":[]},{"title":"SDRS State","level":"1.4.2.2.17","depth":4,"path":"reference/tests/DSCluster/SDRS-State.md","ref":"reference/tests/DSCluster/SDRS-State.md","articles":[]},{"title":"Space Utilization Threshold Percent","level":"1.4.2.2.18","depth":4,"path":"reference/tests/DSCluster/Space-Utilization-Threshold-Percent.md","ref":"reference/tests/DSCluster/Space-Utilization-Threshold-Percent.md","articles":[]}]},{"title":"Host","level":"1.4.2.3","depth":3,"path":"reference/tests/Host/readme.md","ref":"reference/tests/Host/readme.md","articles":[{"title":"Account Lock Failures","level":"1.4.2.3.1","depth":4,"path":"reference/tests/Host/Account-Lock-Failures.md","ref":"reference/tests/Host/Account-Lock-Failures.md","articles":[]},{"title":"Account Unlock Time","level":"1.4.2.3.2","depth":4,"path":"reference/tests/Host/Account-Unlock-Time.md","ref":"reference/tests/Host/Account-Unlock-Time.md","articles":[]},{"title":"DCUI Access","level":"1.4.2.3.3","depth":4,"path":"reference/tests/Host/DCUI-Access.md","ref":"reference/tests/Host/DCUI-Access.md","articles":[]},{"title":"DCUI Timeout","level":"1.4.2.3.4","depth":4,"path":"reference/tests/Host/DCUI-Timeout.md","ref":"reference/tests/Host/DCUI-Timeout.md","articles":[]},{"title":"Disk Max LUN","level":"1.4.2.3.5","depth":4,"path":"reference/tests/Host/Disk-MaxLUN.md","ref":"reference/tests/Host/Disk-MaxLUN.md","articles":[]},{"title":"DNS Search Domains","level":"1.4.2.3.6","depth":4,"path":"reference/tests/Host/DNS-Search-Domains.md","ref":"reference/tests/Host/DNS-Search-Domains.md","articles":[]},{"title":"DNS Servers","level":"1.4.2.3.7","depth":4,"path":"reference/tests/Host/DNS-Servers.md","ref":"reference/tests/Host/DNS-Servers.md","articles":[]},{"title":"ESX Admins Group","level":"1.4.2.3.8","depth":4,"path":"reference/tests/Host/ESX-Admins-Group.md","ref":"reference/tests/Host/ESX-Admins-Group.md","articles":[]},{"title":"Image Profile And VIB Acceptance Level","level":"1.4.2.3.9","depth":4,"path":"reference/tests/Host/Image-Profile-and-VIB-Acceptance-Level.md","ref":"reference/tests/Host/Image-Profile-and-VIB-Acceptance-Level.md","articles":[]},{"title":"Kernel Setting Iov Disable IR","level":"1.4.2.3.10","depth":4,"path":"reference/tests/Host/Kernel-Setting-iovDisableIR.md","ref":"reference/tests/Host/Kernel-Setting-iovDisableIR.md","articles":[]},{"title":"Network BDPU Filter","level":"1.4.2.3.11","depth":4,"path":"reference/tests/Host/Network-BDPU-Filter.md","ref":"reference/tests/Host/Network-BDPU-Filter.md","articles":[]},{"title":"Network Dump Enable","level":"1.4.2.3.12","depth":4,"path":"reference/tests/Host/Network-Dump-Enable.md","ref":"reference/tests/Host/Network-Dump-Enable.md","articles":[]},{"title":"Network Dump Settings","level":"1.4.2.3.13","depth":4,"path":"reference/tests/Host/Network-Dump-Settings.md","ref":"reference/tests/Host/Network-Dump-Settings.md","articles":[]},{"title":"NTP Servers","level":"1.4.2.3.14","depth":4,"path":"reference/tests/Host/NTP-Servers.md","ref":"reference/tests/Host/NTP-Servers.md","articles":[]},{"title":"NTP Service Policy","level":"1.4.2.3.15","depth":4,"path":"reference/tests/Host/NTP-Service-Policy.md","ref":"reference/tests/Host/NTP-Service-Policy.md","articles":[]},{"title":"NTP Service State","level":"1.4.2.3.16","depth":4,"path":"reference/tests/Host/NTP-Service-State.md","ref":"reference/tests/Host/NTP-Service-State.md","articles":[]},{"title":"Password Policy","level":"1.4.2.3.17","depth":4,"path":"reference/tests/Host/Password-Policy.md","ref":"reference/tests/Host/Password-Policy.md","articles":[]},{"title":"SSH Interactive Timeout","level":"1.4.2.3.18","depth":4,"path":"reference/tests/Host/SSH-Interactive-Timeout.md","ref":"reference/tests/Host/SSH-Interactive-Timeout.md","articles":[]},{"title":"SSH Service Policy","level":"1.4.2.3.19","depth":4,"path":"reference/tests/Host/SSH-Service-Policy.md","ref":"reference/tests/Host/SSH-Service-Policy.md","articles":[]},{"title":"SSH Service State","level":"1.4.2.3.20","depth":4,"path":"reference/tests/Host/SSH-Service-State.md","ref":"reference/tests/Host/SSH-Service-State.md","articles":[]},{"title":"SSH Timeout","level":"1.4.2.3.21","depth":4,"path":"reference/tests/Host/SSH-Timeout.md","ref":"reference/tests/Host/SSH-Timeout.md","articles":[]},{"title":"SSH Warning","level":"1.4.2.3.22","depth":4,"path":"reference/tests/Host/SSH-Warning.md","ref":"reference/tests/Host/SSH-Warning.md","articles":[]},{"title":"Syslog Firewall","level":"1.4.2.3.23","depth":4,"path":"reference/tests/Host/Syslog-Firewall.md","ref":"reference/tests/Host/Syslog-Firewall.md","articles":[]},{"title":"Syslog Server","level":"1.4.2.3.24","depth":4,"path":"reference/tests/Host/Syslog-Server.md","ref":"reference/tests/Host/Syslog-Server.md","articles":[]},{"title":"Transparent Page Share Force Salting","level":"1.4.2.3.25","depth":4,"path":"reference/tests/Host/Transparent-Page-Share-Force-Salting.md","ref":"reference/tests/Host/Transparent-Page-Share-Force-Salting.md","articles":[]}]},{"title":"Network","level":"1.4.2.4","depth":3,"path":"reference/tests/Network/readme.md","ref":"reference/tests/Network/readme.md","articles":[{"title":"VDS Link Discovery Operation Protocol","level":"1.4.2.4.1","depth":4,"path":"reference/tests/Network/VDS-Link-Discovery-Operation-Protocol.md","ref":"reference/tests/Network/VDS-Link-Discovery-Operation-Protocol.md","articles":[]},{"title":"VDS Link Protocol","level":"1.4.2.4.2","depth":4,"path":"reference/tests/Network/VDS-Link-Protocol.md","ref":"reference/tests/Network/VDS-Link-Protocol.md","articles":[]},{"title":"VDS MTU Size","level":"1.4.2.4.3","depth":4,"path":"reference/tests/Network/VDS-MTU-Size.md","ref":"reference/tests/Network/VDS-MTU-Size.md","articles":[]},{"title":"VDS Teaming And Failover Health Check State","level":"1.4.2.4.4","depth":4,"path":"reference/tests/Network/VDS-Teaming-and-Failover-HealthCheck-State.md","ref":"reference/tests/Network/VDS-Teaming-and-Failover-HealthCheck-State.md","articles":[]},{"title":"VDS Vlan And MTU Health Check State","level":"1.4.2.4.5","depth":4,"path":"reference/tests/Network/VDS-Vlan-and-MTU-HealthCheck-State.md","ref":"reference/tests/Network/VDS-Vlan-and-MTU-HealthCheck-State.md","articles":[]}]},{"title":"V Center","level":"1.4.2.5","depth":3,"path":"reference/tests/vCenter/readme.md","ref":"reference/tests/vCenter/readme.md","articles":[{"title":"Event Max Age","level":"1.4.2.5.1","depth":4,"path":"reference/tests/vCenter/EventMaxAge.md","ref":"reference/tests/vCenter/EventMaxAge.md","articles":[]},{"title":"Event Max Age Enabled","level":"1.4.2.5.2","depth":4,"path":"reference/tests/vCenter/EventMaxAgeEnabled.md","ref":"reference/tests/vCenter/EventMaxAgeEnabled.md","articles":[]},{"title":"Network File Copy Use SSL","level":"1.4.2.5.3","depth":4,"path":"reference/tests/vCenter/Network-File-Copy---Use-SSL.md","ref":"reference/tests/vCenter/Network-File-Copy---Use-SSL.md","articles":[]},{"title":"SMTP Port","level":"1.4.2.5.4","depth":4,"path":"reference/tests/vCenter/SMTP-Port.md","ref":"reference/tests/vCenter/SMTP-Port.md","articles":[]},{"title":"SMTP Sender","level":"1.4.2.5.5","depth":4,"path":"reference/tests/vCenter/SMTP-Sender.md","ref":"reference/tests/vCenter/SMTP-Sender.md","articles":[]},{"title":"SMTP Server","level":"1.4.2.5.6","depth":4,"path":"reference/tests/vCenter/SMTP-Server.md","ref":"reference/tests/vCenter/SMTP-Server.md","articles":[]},{"title":"Task Max Age","level":"1.4.2.5.7","depth":4,"path":"reference/tests/vCenter/TaskMaxAge.md","ref":"reference/tests/vCenter/TaskMaxAge.md","articles":[]},{"title":"Task Max Age Enabled","level":"1.4.2.5.8","depth":4,"path":"reference/tests/vCenter/TaskMaxAgeEnabled.md","ref":"reference/tests/vCenter/TaskMaxAgeEnabled.md","articles":[]}]},{"title":"VM","level":"1.4.2.6","depth":3,"path":"reference/tests/VM/readme.md","ref":"reference/tests/VM/readme.md","articles":[{"title":"Boot Delay","level":"1.4.2.6.1","depth":4,"path":"reference/tests/VM/Boot-delay.md","ref":"reference/tests/VM/Boot-delay.md","articles":[]},{"title":"CD ROM Host Device","level":"1.4.2.6.2","depth":4,"path":"reference/tests/VM/CD-ROM-Host-Device.md","ref":"reference/tests/VM/CD-ROM-Host-Device.md","articles":[]},{"title":"CD ROM ISO File","level":"1.4.2.6.3","depth":4,"path":"reference/tests/VM/CD-ROM-ISO-File.md","ref":"reference/tests/VM/CD-ROM-ISO-File.md","articles":[]},{"title":"CPU Limits Test","level":"1.4.2.6.4","depth":4,"path":"reference/tests/VM/CPU-Limits-Test.md","ref":"reference/tests/VM/CPU-Limits-Test.md","articles":[]},{"title":"CPU Reservation","level":"1.4.2.6.5","depth":4,"path":"reference/tests/VM/CPU-Reservation.md","ref":"reference/tests/VM/CPU-Reservation.md","articles":[]},{"title":"Isolation Device Interaction Connect","level":"1.4.2.6.6","depth":4,"path":"reference/tests/VM/Isolation---Device-Interaction-Connect.md","ref":"reference/tests/VM/Isolation---Device-Interaction-Connect.md","articles":[]},{"title":"Isolation Device Interaction Edit","level":"1.4.2.6.7","depth":4,"path":"reference/tests/VM/Isolation---Device-Interaction-Edit.md","ref":"reference/tests/VM/Isolation---Device-Interaction-Edit.md","articles":[]},{"title":"Memory Limits Test","level":"1.4.2.6.8","depth":4,"path":"reference/tests/VM/Memory-Limits-Test.md","ref":"reference/tests/VM/Memory-Limits-Test.md","articles":[]},{"title":"Memory Reservation","level":"1.4.2.6.9","depth":4,"path":"reference/tests/VM/Memory-Reservation.md","ref":"reference/tests/VM/Memory-Reservation.md","articles":[]},{"title":"Remote Display VNC Setting","level":"1.4.2.6.10","depth":4,"path":"reference/tests/VM/Remote-Display-VNC-setting.md","ref":"reference/tests/VM/Remote-Display-VNC-setting.md","articles":[]},{"title":"Sync Time Settings","level":"1.4.2.6.11","depth":4,"path":"reference/tests/VM/Sync-Time-Settings.md","ref":"reference/tests/VM/Sync-Time-Settings.md","articles":[]},{"title":"Tools VM Host Info Access","level":"1.4.2.6.12","depth":4,"path":"reference/tests/VM/Tools---VM-Host-Info-Access.md","ref":"reference/tests/VM/Tools---VM-Host-Info-Access.md","articles":[]},{"title":"Tools Copy Disable","level":"1.4.2.6.13","depth":4,"path":"reference/tests/VM/Tools-Copy-Disable.md","ref":"reference/tests/VM/Tools-Copy-Disable.md","articles":[]},{"title":"Tools Disk Shrink Disable","level":"1.4.2.6.14","depth":4,"path":"reference/tests/VM/Tools-Disk-Shrink-Disable.md","ref":"reference/tests/VM/Tools-Disk-Shrink-Disable.md","articles":[]},{"title":"Tools Disk Wiper Disable","level":"1.4.2.6.15","depth":4,"path":"reference/tests/VM/Tools-Disk-Wiper-Disable.md","ref":"reference/tests/VM/Tools-Disk-Wiper-Disable.md","articles":[]},{"title":"Tools Drag And Drop Disable","level":"1.4.2.6.16","depth":4,"path":"reference/tests/VM/Tools-Drag-and-Drop-Disable.md","ref":"reference/tests/VM/Tools-Drag-and-Drop-Disable.md","articles":[]},{"title":"Tools GUI Options","level":"1.4.2.6.17","depth":4,"path":"reference/tests/VM/Tools-GUI-Options.md","ref":"reference/tests/VM/Tools-GUI-Options.md","articles":[]},{"title":"Tools HGFS Server Disable","level":"1.4.2.6.18","depth":4,"path":"reference/tests/VM/Tools-HGFS-Server-Disable.md","ref":"reference/tests/VM/Tools-HGFS-Server-Disable.md","articles":[]},{"title":"Tools Paste Disable","level":"1.4.2.6.19","depth":4,"path":"reference/tests/VM/Tools-Paste-Disable.md","ref":"reference/tests/VM/Tools-Paste-Disable.md","articles":[]},{"title":"Tools Set Info Size Limit","level":"1.4.2.6.20","depth":4,"path":"reference/tests/VM/Tools-Set-Info-Size-Limit.md","ref":"reference/tests/VM/Tools-Set-Info-Size-Limit.md","articles":[]},{"title":"VM Snapshot Retention","level":"1.4.2.6.21","depth":4,"path":"reference/tests/VM/VM-Snapshot-Retention.md","ref":"reference/tests/VM/VM-Snapshot-Retention.md","articles":[]},{"title":"VMX Auto Logon Disable","level":"1.4.2.6.22","depth":4,"path":"reference/tests/VM/VMX-AutoLogon-Disable.md","ref":"reference/tests/VM/VMX-AutoLogon-Disable.md","articles":[]},{"title":"VMX BIOS BBS Disable","level":"1.4.2.6.23","depth":4,"path":"reference/tests/VM/VMX-BIOS-BBS-Disable.md","ref":"reference/tests/VM/VMX-BIOS-BBS-Disable.md","articles":[]},{"title":"VMX Get Creds Disable","level":"1.4.2.6.24","depth":4,"path":"reference/tests/VM/VMX-GetCreds-Disable.md","ref":"reference/tests/VM/VMX-GetCreds-Disable.md","articles":[]},{"title":"VMX Launch Menu Disable","level":"1.4.2.6.25","depth":4,"path":"reference/tests/VM/VMX-LaunchMenu-Disable.md","ref":"reference/tests/VM/VMX-LaunchMenu-Disable.md","articles":[]},{"title":"VMX Mem SFSS Disable","level":"1.4.2.6.26","depth":4,"path":"reference/tests/VM/VMX-MemSFSS-Disable.md","ref":"reference/tests/VM/VMX-MemSFSS-Disable.md","articles":[]},{"title":"VMX Protocol Handler Disable","level":"1.4.2.6.27","depth":4,"path":"reference/tests/VM/VMX-Protocol-Handler-Disable.md","ref":"reference/tests/VM/VMX-Protocol-Handler-Disable.md","articles":[]},{"title":"VMX Shell Action Disable","level":"1.4.2.6.28","depth":4,"path":"reference/tests/VM/VMX-Shell-Action-Disable.md","ref":"reference/tests/VM/VMX-Shell-Action-Disable.md","articles":[]},{"title":"VMX Topo Request Disable","level":"1.4.2.6.29","depth":4,"path":"reference/tests/VM/VMX-TopoRequest-Disable.md","ref":"reference/tests/VM/VMX-TopoRequest-Disable.md","articles":[]},{"title":"VMX Trash Folder State Disable","level":"1.4.2.6.30","depth":4,"path":"reference/tests/VM/VMX-Trash-Folder-State-Disable.md","ref":"reference/tests/VM/VMX-Trash-Folder-State-Disable.md","articles":[]},{"title":"VMX Tray Icon Disable","level":"1.4.2.6.31","depth":4,"path":"reference/tests/VM/VMX-Tray-Icon-Disable.md","ref":"reference/tests/VM/VMX-Tray-Icon-Disable.md","articles":[]},{"title":"VMX Unity Active Disable","level":"1.4.2.6.32","depth":4,"path":"reference/tests/VM/VMX-Unity-Active-Disable.md","ref":"reference/tests/VM/VMX-Unity-Active-Disable.md","articles":[]},{"title":"VMX Unity Disable","level":"1.4.2.6.33","depth":4,"path":"reference/tests/VM/VMX-Unity-Disable.md","ref":"reference/tests/VM/VMX-Unity-Disable.md","articles":[]},{"title":"VMX Unity Interlock Disable","level":"1.4.2.6.34","depth":4,"path":"reference/tests/VM/VMX-Unity-Interlock-Disable.md","ref":"reference/tests/VM/VMX-Unity-Interlock-Disable.md","articles":[]},{"title":"VMX Unity Push Disable","level":"1.4.2.6.35","depth":4,"path":"reference/tests/VM/VMX-Unity-Push-Disable.md","ref":"reference/tests/VM/VMX-Unity-Push-Disable.md","articles":[]},{"title":"VMX Unity Taskbar Disable","level":"1.4.2.6.36","depth":4,"path":"reference/tests/VM/VMX-Unity-Taskbar-Disable.md","ref":"reference/tests/VM/VMX-Unity-Taskbar-Disable.md","articles":[]},{"title":"VMX Unity Window Contents Disable","level":"1.4.2.6.37","depth":4,"path":"reference/tests/VM/VMX-Unity-Window-Contents-Disable.md","ref":"reference/tests/VM/VMX-Unity-Window-Contents-Disable.md","articles":[]},{"title":"VMX Version Get Disable","level":"1.4.2.6.38","depth":4,"path":"reference/tests/VM/VMX-Version-Get-Disable.md","ref":"reference/tests/VM/VMX-Version-Get-Disable.md","articles":[]},{"title":"VMX Version Set Disable","level":"1.4.2.6.39","depth":4,"path":"reference/tests/VM/VMX-Version-Set-Disable.md","ref":"reference/tests/VM/VMX-Version-Set-Disable.md","articles":[]}]}]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"reference/functions/readme.md","mtime":"2017-08-22T05:16:25.948Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-22T05:16:32.781Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"external help file":"Vester-help.xml","online version":"https://wahlnetwork.github.io/Vester","schema":"2.0.0","title":"Get Vester Test","level":"1.4.1.1","depth":3,"next":{"title":"Invoke Vester","level":"1.4.1.2","depth":3,"path":"reference/functions/Invoke-Vester.md","ref":"reference/functions/Invoke-Vester.md","articles":[]},"previous":{"title":"Functions","level":"1.4.1","depth":2,"path":"reference/functions/readme.md","ref":"reference/functions/readme.md","articles":[{"title":"Get Vester Test","level":"1.4.1.1","depth":3,"path":"reference/functions/Get-VesterTest.md","ref":"reference/functions/Get-VesterTest.md","articles":[]},{"title":"Invoke Vester","level":"1.4.1.2","depth":3,"path":"reference/functions/Invoke-Vester.md","ref":"reference/functions/Invoke-Vester.md","articles":[]},{"title":"New Vester Config","level":"1.4.1.3","depth":3,"path":"reference/functions/New-VesterConfig.md","ref":"reference/functions/New-VesterConfig.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"reference/functions/Get-VesterTest.md","mtime":"2017-08-22T05:16:25.705Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-22T05:16:32.781Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

@@ -7,7 +7,7 @@
         <title>CHANGELOG · Vester</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="generator" content="GitBook 3.2.3">
         <meta name="author" content="Chris Wahl">
         
         
@@ -160,7 +160,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1.1" data-path="reference/functions/Invoke-Vester.html">
+        <li class="chapter " data-level="1.4.1.1" data-path="reference/functions/Get-VesterTest.html">
+            
+                <a href="reference/functions/Get-VesterTest.html">
+            
+                    
+                    Get Vester Test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="reference/functions/Invoke-Vester.html">
             
                 <a href="reference/functions/Invoke-Vester.html">
             
@@ -173,7 +186,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.1.2" data-path="reference/functions/New-VesterConfig.html">
+        <li class="chapter " data-level="1.4.1.3" data-path="reference/functions/New-VesterConfig.html">
             
                 <a href="reference/functions/New-VesterConfig.html">
             
@@ -1704,6 +1717,35 @@
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a href="http://keepachangelog.com/" target="_blank">Keep a Changelog</a>
 and this project adheres to <a href="http://semver.org/" target="_blank">Semantic Versioning</a>.</p>
+<h2 id="120---2017-08-21">[1.2.0] - 2017-08-21</h2>
+<p>Dropped some long overdue documentation updates. New URL: <a href="https://wahlnetwork.github.io/Vester" target="_blank">https://wahlnetwork.github.io/Vester</a></p>
+<h3 id="added">Added</h3>
+<ul>
+<li>Online documentation at <a href="https://wahlnetwork.github.io/Vester" target="_blank">https://wahlnetwork.github.io/Vester</a><ul>
+<li><a href="https://github.com/WahlNetwork/Vester/issues/158" target="_blank">#158</a>:<ul>
+<li>Docs migrated from .rst to .md</li>
+<li>Use PlatyPS to include current cmdlet-based help</li>
+<li>Enable automated updates w/ new project build script</li>
+</ul>
+</li>
+<li>Docs output to branch &quot;gh-pages&quot;, which powers GitHub Pages at the new URL (<a href="https://github.com/WahlNetwork/Vester/issues/160" target="_blank">#160</a>)</li>
+<li>Renders the old readthedocs URL obsolete</li>
+</ul>
+</li>
+<li>New function Get-VesterTest (<a href="https://github.com/WahlNetwork/Vester/issues/157" target="_blank">#157</a>)<ul>
+<li>A glorified Get-ChildItem for Vester test files (<code>*.Vester.ps1</code>)</li>
+<li>Default path gathers all tests included with the module</li>
+<li>Filter by Name or Scope (like &quot;Cluster&quot;)</li>
+<li>Exposes test details, like &quot;Description&quot;, for simple user reference</li>
+</ul>
+</li>
+</ul>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Changed the readme (and all references to the old docs site) to the new URL (<a href="https://github.com/WahlNetwork/Vester/issues/164" target="_blank">#164</a>)</li>
+</ul>
+<h3 id="much-&#x2764;">Much &#x2764;</h3>
+<p><a href="https://github.com/michaeltlombardi" target="_blank">@michaeltlombardi</a></p>
 <h2 id="110---2017-06-15">[1.1.0] - 2017-06-15</h2>
 <p>I learned that we need to publish releases far more often. :)</p>
 <h3 id="added">Added</h3>
@@ -1839,7 +1881,7 @@ and this project adheres to <a href="http://semver.org/" target="_blank">Semanti
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"CHANGELOG","level":"1.5","depth":1,"next":{"title":"FAQ","level":"1.6","depth":1,"path":"FAQ.md","ref":"FAQ.md","articles":[]},"previous":{"title":"VMX Version Set Disable","level":"1.4.2.6.39","depth":4,"path":"reference/tests/VM/VMX-Version-Set-Disable.md","ref":"reference/tests/VM/VMX-Version-Set-Disable.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"CHANGELOG.md","mtime":"2017-06-16T19:16:23.322Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-16T19:16:38.899Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"CHANGELOG","level":"1.5","depth":1,"next":{"title":"FAQ","level":"1.6","depth":1,"path":"FAQ.md","ref":"FAQ.md","articles":[]},"previous":{"title":"VMX Version Set Disable","level":"1.4.2.6.39","depth":4,"path":"reference/tests/VM/VMX-Version-Set-Disable.md","ref":"reference/tests/VM/VMX-Version-Set-Disable.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"CHANGELOG.md","mtime":"2017-08-22T05:15:59.206Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-22T05:16:32.781Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

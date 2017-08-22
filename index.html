@@ -7,7 +7,7 @@
         <title>Introduction · Vester</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="generator" content="GitBook 3.2.3">
         <meta name="author" content="Chris Wahl">
         
         
@@ -158,7 +158,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1.1" data-path="reference/functions/Invoke-Vester.html">
+        <li class="chapter " data-level="1.4.1.1" data-path="reference/functions/Get-VesterTest.html">
+            
+                <a href="reference/functions/Get-VesterTest.html">
+            
+                    
+                    Get Vester Test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="reference/functions/Invoke-Vester.html">
             
                 <a href="reference/functions/Invoke-Vester.html">
             
@@ -171,7 +184,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.1.2" data-path="reference/functions/New-VesterConfig.html">
+        <li class="chapter " data-level="1.4.1.3" data-path="reference/functions/New-VesterConfig.html">
             
                 <a href="reference/functions/New-VesterConfig.html">
             
@@ -1699,18 +1712,10 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="vester">Vester</h1>
-<p><a href="http://vester.readthedocs.io/en/latest/?badge=latest" target="_blank"><img src="https://readthedocs.org/projects/vester/badge/?version=latest" alt="Documentation Status"></a></p>
-<p>Vester is a community project that aims to provide an extremely light-weight approach to vSphere configuration management using Pester and PowerCLI.
-The end-state configuration for each vSphere component, such as clusters and hosts, are abstracted into a simple config file.
-The configuration is tested -- and, optionally, remediated -- when drift is identified.
-The entire project is written in PowerShell.</p>
-<p>March 2017: To learn how to use <a href="https://www.powershellgallery.com/packages/Vester/1.0.1" target="_blank">Vester 1.0</a>, there is a <a href="http://www.brianbunke.com/blog/2017/03/07/introducing-vester/" target="_blank">three-part blog series</a> and accompanying <a href="https://youtu.be/6DYZR-xFt-4" target="_blank">video demo</a>.
-(Which is really long. You&apos;ve been warned.)</p>
-<blockquote>
-<p>The below documentation link is outdated.
-We&apos;ll remove this comment when we&apos;ve finished refreshing that info.</p>
-</blockquote>
-<p>Please visit the <strong><a href="http://vester.readthedocs.io/en/latest/" target="_blank">full documentation</a></strong> for more details.</p>
+<p>Vester is a community project that provides an extremely light-weight approach to configuration management of your VMware environment. Store desired values for vSphere components (like clusters and hosts) in a simple config file. If the values in your config file don&apos;t match the values in your environment, you can report on--and optionally fix--those discrepancies.</p>
+<p>Vester is written entirely in PowerShell, using <a href="https://www.vmware.com/support/developer/PowerCLI/" target="_blank">PowerCLI</a> and <a href="https://github.com/Pester/Pester" target="_blank">Pester</a>. Config files are stored as json documents that can easily live in source control.</p>
+<p>Please visit the <strong><a href="https://wahlnetwork.github.io/Vester" target="_blank">full documentation</a></strong> for more details.</p>
+<p>This <a href="http://www.brianbunke.com/blog/2017/03/07/introducing-vester/" target="_blank">three-part blog series</a> from March 2017 walks you through getting started with <a href="https://www.powershellgallery.com/packages/Vester/1.0.1" target="_blank">Vester 1.0</a>.</p>
 
                                 
                                 </section>
@@ -1750,7 +1755,7 @@ We&apos;ll remove this comment when we&apos;ve finished refreshing that info.</p
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Concept","level":"1.2","depth":1,"path":"concept/readme.md","ref":"concept/readme.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"README.md","mtime":"2017-06-16T19:16:23.324Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-16T19:16:38.899Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Concept","level":"1.2","depth":1,"path":"concept/readme.md","ref":"concept/readme.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"README.md","mtime":"2017-08-22T05:15:59.219Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-22T05:16:32.781Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
