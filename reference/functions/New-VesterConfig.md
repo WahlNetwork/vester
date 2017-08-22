@@ -1,6 +1,6 @@
 ---
 external help file: Vester-help.xml
-online version: http://vester.readthedocs.io/en/latest/
+online version: https://wahlnetwork.github.io/Vester
 schema: 2.0.0
 ---
 
@@ -115,7 +115,7 @@ This command relies on the Pester and PowerCLI modules for testing.
 
 ## RELATED LINKS
 
-[http://vester.readthedocs.io/en/latest/](http://vester.readthedocs.io/en/latest/)
+[https://wahlnetwork.github.io/Vester](https://wahlnetwork.github.io/Vester)
 
 [https://github.com/WahlNetwork/Vester](https://github.com/WahlNetwork/Vester)
 

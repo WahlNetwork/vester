@@ -7,7 +7,7 @@
         <title>Invoke Vester · Vester</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="generator" content="GitBook 3.2.3">
         <meta name="author" content="Chris Wahl">
         
         
@@ -64,7 +64,7 @@
     <link rel="next" href="New-VesterConfig.html" />
     
     
-    <link rel="prev" href="readme.html" />
+    <link rel="prev" href="Get-VesterTest.html" />
     
 
     </head>
@@ -160,7 +160,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.4.1.1" data-path="Invoke-Vester.html">
+        <li class="chapter " data-level="1.4.1.1" data-path="Get-VesterTest.html">
+            
+                <a href="Get-VesterTest.html">
+            
+                    
+                    Get Vester Test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.1.2" data-path="Invoke-Vester.html">
             
                 <a href="Invoke-Vester.html">
             
@@ -173,7 +186,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.1.2" data-path="New-VesterConfig.html">
+        <li class="chapter " data-level="1.4.1.3" data-path="New-VesterConfig.html">
             
                 <a href="New-VesterConfig.html">
             
@@ -1728,14 +1741,14 @@ It outputs a report to the host of all passed and failed tests.</p>
 and compares values to the config file in the same location.
 It outputs a report to the host of all passed and failed tests.</p>
 <h3 id="--------------------------example-3---------------------------">-------------------------- EXAMPLE 3 --------------------------</h3>
-<pre><code>$DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse
+<pre><code>$DNS = Get-VesterTest -Path Z:\ -Name *dns*
 </code></pre><p>PS C:\&gt;(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS</p>
-<p>Get all Vester tests below Z:\ with &apos;dns&apos; in the name; store in variable $DNS.
+<p>Get all Vester tests at Z:\ with &apos;dns&apos; in the name; store in variable $DNS.
 Then, pipe all *.json files at the root of Z: into the -Config parameter.
 Each config file piped in will run through all $DNS tests found.</p>
 <h3 id="--------------------------example-4---------------------------">-------------------------- EXAMPLE 4 --------------------------</h3>
-<pre><code>Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf
-</code></pre><p>Run *.Vester.ps1 tests in the .\Tests\VM path below the current location.
+<pre><code>Invoke-Vester -Test (Get-VesterTest -Scope VM) -Remediate -WhatIf
+</code></pre><p>Run Vester with all VM tests included with the module.
 For all tests that fail against the values in \Configs\Config.json,
 -Remediate attempts to immediately fix them to match your defined config.
 -WhatIf prevents remediation, and instead reports what would have changed.</p>
@@ -1750,7 +1763,7 @@ infrastructure to match the previously defined values in your config file.</p>
 </code></pre><p>Runs Vester with the default config and test files.
 Uses Pester to send test results in NUnitXML format to vester.xml
 at your current folder location.
-Option is primarily used for CI/CD integration solutions.</p>
+Useful to supply to a report generator for HTML reports.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="config">-Config</h3>
 <p>Optionally define a different config file to use
@@ -1775,10 +1788,10 @@ Parameter Sets: (All)
 
 <span class="hljs-attr">Required:</span> <span class="hljs-literal">False</span>
 <span class="hljs-attr">Position:</span> <span class="hljs-number">2</span>
-Default value: <span class="hljs-string">&quot;$(Split-Path -Parent $PSScriptRoot)\Tests\&quot;
-Accept pipeline input: False
-Accept wildcard characters: False
-</span></code></pre>
+Default value: (Get-VesterTest -Simple)
+Accept pipeline input: <span class="hljs-literal">False</span>
+Accept wildcard characters: <span class="hljs-literal">False</span>
+</code></pre>
 <h3 id="remediate">-Remediate</h3>
 <p>Optionally fix all config drift that is discovered
 Defaults to false (disabled)</p>
@@ -1851,7 +1864,7 @@ Accept wildcard characters: <span class="hljs-literal">False</span>
 <p>This command relies on the Pester and PowerCLI modules for testing.</p>
 <p>&quot;Get-Help about_Vester&quot; for more information.</p>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="http://vester.readthedocs.io/en/latest/" target="_blank">http://vester.readthedocs.io/en/latest/</a></p>
+<p><a href="https://wahlnetwork.github.io/Vester" target="_blank">https://wahlnetwork.github.io/Vester</a></p>
 <p><a href="https://github.com/WahlNetwork/Vester" target="_blank">https://github.com/WahlNetwork/Vester</a></p>
 
                                 
@@ -1880,7 +1893,7 @@ Accept wildcard characters: <span class="hljs-literal">False</span>
 
             
                 
-                <a href="readme.html" class="navigation navigation-prev " aria-label="Previous page: Functions">
+                <a href="Get-VesterTest.html" class="navigation navigation-prev " aria-label="Previous page: Get Vester Test">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -1896,7 +1909,7 @@ Accept wildcard characters: <span class="hljs-literal">False</span>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"external help file":"Vester-help.xml","online version":"http://vester.readthedocs.io/en/latest/","schema":"2.0.0","title":"Invoke Vester","level":"1.4.1.1","depth":3,"next":{"title":"New Vester Config","level":"1.4.1.2","depth":3,"path":"reference/functions/New-VesterConfig.md","ref":"reference/functions/New-VesterConfig.md","articles":[]},"previous":{"title":"Functions","level":"1.4.1","depth":2,"path":"reference/functions/readme.md","ref":"reference/functions/readme.md","articles":[{"title":"Invoke Vester","level":"1.4.1.1","depth":3,"path":"reference/functions/Invoke-Vester.md","ref":"reference/functions/Invoke-Vester.md","articles":[]},{"title":"New Vester Config","level":"1.4.1.2","depth":3,"path":"reference/functions/New-VesterConfig.md","ref":"reference/functions/New-VesterConfig.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"reference/functions/Invoke-Vester.md","mtime":"2017-06-16T19:16:31.863Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-16T19:16:38.899Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"external help file":"Vester-help.xml","online version":"https://wahlnetwork.github.io/Vester","schema":"2.0.0","title":"Invoke Vester","level":"1.4.1.2","depth":3,"next":{"title":"New Vester Config","level":"1.4.1.3","depth":3,"path":"reference/functions/New-VesterConfig.md","ref":"reference/functions/New-VesterConfig.md","articles":[]},"previous":{"title":"Get Vester Test","level":"1.4.1.1","depth":3,"path":"reference/functions/Get-VesterTest.md","ref":"reference/functions/Get-VesterTest.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters-small":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Chris Wahl","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Vester","language":"en","gitbook":"*","description":"Easily validate and remediate your vSphere configuration"},"file":{"path":"reference/functions/Invoke-Vester.md","mtime":"2017-08-22T05:16:25.769Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-22T05:16:32.781Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

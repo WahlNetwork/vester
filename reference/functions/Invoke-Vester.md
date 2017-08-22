@@ -1,6 +1,6 @@
 ---
 external help file: Vester-help.xml
-online version: http://vester.readthedocs.io/en/latest/
+online version: https://wahlnetwork.github.io/Vester
 schema: 2.0.0
 ---
 
@@ -51,21 +51,21 @@ It outputs a report to the host of all passed and failed tests.
 
 ### -------------------------- EXAMPLE 3 --------------------------
 ```
-$DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse
+$DNS = Get-VesterTest -Path Z:\ -Name *dns*
 ```
 
 PS C:\\\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS
 
-Get all Vester tests below Z:\ with 'dns' in the name; store in variable $DNS.
+Get all Vester tests at Z:\ with 'dns' in the name; store in variable $DNS.
 Then, pipe all *.json files at the root of Z: into the -Config parameter.
 Each config file piped in will run through all $DNS tests found.
 
 ### -------------------------- EXAMPLE 4 --------------------------
 ```
-Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf
+Invoke-Vester -Test (Get-VesterTest -Scope VM) -Remediate -WhatIf
 ```
 
-Run *.Vester.ps1 tests in the .\Tests\VM path below the current location.
+Run Vester with all VM tests included with the module.
 For all tests that fail against the values in \Configs\Config.json,
 -Remediate attempts to immediately fix them to match your defined config.
 -WhatIf prevents remediation, and instead reports what would have changed.
@@ -88,7 +88,7 @@ Invoke-Vester -XMLOutputFile .\vester.xml
 Runs Vester with the default config and test files.
 Uses Pester to send test results in NUnitXML format to vester.xml
 at your current folder location.
-Option is primarily used for CI/CD integration solutions.
+Useful to supply to a report generator for HTML reports.
 
 ## PARAMETERS
 
@@ -120,7 +120,7 @@ Aliases: Path, Script
 
 Required: False
 Position: 2
-Default value: "$(Split-Path -Parent $PSScriptRoot)\Tests\"
+Default value: (Get-VesterTest -Simple)
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -218,7 +218,7 @@ This command relies on the Pester and PowerCLI modules for testing.
 
 ## RELATED LINKS
 
-[http://vester.readthedocs.io/en/latest/](http://vester.readthedocs.io/en/latest/)
+[https://wahlnetwork.github.io/Vester](https://wahlnetwork.github.io/Vester)
 
 [https://github.com/WahlNetwork/Vester](https://github.com/WahlNetwork/Vester)
 
