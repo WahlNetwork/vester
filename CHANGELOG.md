@@ -7,27 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [Unreleased]
+## [1.2.0] - 2017-08-21
 Dropped some long overdue documentation updates. New URL: https://wahlnetwork.github.io/Vester
 
 ### Added
 - Online documentation at https://wahlnetwork.github.io/Vester
-  - #158:
+  - [#158][issue-158]:
     - Docs migrated from .rst to .md
     - Use PlatyPS to include current cmdlet-based help
     - Enable automated updates w/ new project build script
-  - Docs output to branch "gh-pages", which powers GitHub Pages at the new URL (#160)
+  - Docs output to branch "gh-pages", which powers GitHub Pages at the new URL ([#160][issue-160])
   - Renders the old readthedocs URL obsolete
-- New function Get-VesterTest (#157)
-  - A glorified Get-ChildItem for Vester test files (*.Vester.ps1)
+- New function Get-VesterTest ([#157][issue-157])
+  - A glorified Get-ChildItem for Vester test files (`*.Vester.ps1`)
   - Default path gathers all tests included with the module
   - Filter by Name or Scope (like "Cluster")
   - Exposes test details, like "Description", for simple user reference
 
 ### Changed
-- Changed the readme (and all references to the old docs site) to the new URL (#164)
+- Changed the readme (and all references to the old docs site) to the new URL ([#164][issue-164])
 
-### Much :heart:
+### Much ❤
 [@michaeltlombardi](https://github.com/michaeltlombardi)
 
 
@@ -123,3 +123,7 @@ Published just to reserve the name on the PowerShell Gallery. If you have this v
 [issue-119]: https://github.com/WahlNetwork/Vester/issues/119
 [issue-129]: https://github.com/WahlNetwork/Vester/issues/129
 [issue-154]: https://github.com/WahlNetwork/Vester/issues/154
+[issue-157]: https://github.com/WahlNetwork/Vester/issues/157
+[issue-158]: https://github.com/WahlNetwork/Vester/issues/158
+[issue-160]: https://github.com/WahlNetwork/Vester/issues/160
+[issue-164]: https://github.com/WahlNetwork/Vester/issues/164
