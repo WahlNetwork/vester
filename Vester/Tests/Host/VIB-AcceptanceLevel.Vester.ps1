@@ -8,6 +8,10 @@ $Title = 'Image Profile and VIB Acceptance Level'
 # Test description: How New-VesterConfig explains this value to the user
 $Description = 'VMwareCertified, VMwareAccepted, PartnerSupported (default), CommunitySupported'
 
+# Test recommendation: Follows VMware's Best Practices, Hardening Guides where applicable, or Default Values
+# Called by Get-VesterTest
+$Recommendation = 'VMwareCertified'
+
 # The config entry stating the desired values
 $Desired = $cfg.host.vibacceptancelevel
 

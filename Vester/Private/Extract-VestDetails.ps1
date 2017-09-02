@@ -24,6 +24,7 @@ function Extract-VestDetails {
         FullName    = $Object.FullName
         Title       = $Title
         Description = $Description
+        Recommendation = $Recommendation
         Desired     = $Desired
         Type        = $Type
         Actual      = $Actual.ToString().Trim()
