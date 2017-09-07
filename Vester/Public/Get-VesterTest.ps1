@@ -112,6 +112,7 @@
 
         # Construct empty array to throw file paths of tests into
         $TestFiles = New-Object 'System.Collections.Generic.List[PSCustomObject]'
+        
     }
 
     PROCESS {
@@ -175,16 +176,6 @@
     } #process
 
     END {
-        If (-not $Simple) {
-            # Reduce default property set for readability
-            $TypeData = @{
-                TypeName = 'Vester.Test'
-                DefaultDisplayPropertySet = 'Name','Scope','Description'
-            }
-            # Include -Force to avoid errors after the first run
-            Update-TypeData @TypeData -Force
-        }
-
         $TestFiles
     } #end
 } #function
