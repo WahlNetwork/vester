@@ -17,10 +17,10 @@ $Type = 'string'
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
     $attachedBaselines = $Object | Get-Baseline
-    if($attachedBaselines) {
+    if( $attachedBaselines ) {
         $attachedBaselines.name -join ";"
     } else {
-        $null
+        "" 
     }
 }
 
