@@ -24,13 +24,18 @@ $Type = 'string[]'
 [ScriptBlock]$Fix = {
 	write-warning "VDSwitch Memership remediation is not yet implemented, please resolve manually for host $($object.name)"
 	# # Add missing vdswitches
-	# $currentSwitches = (Get-VDSwitch -VMHost $Object).name | sort
+	# $currentSwitches = Get-VDSwitch -VMHost $Object
 	# foreach ($vdswitchStr in $cfg.host.vdswitch){
-		# if (!($currentSwitches -contains $vdswitchStr)){
+		# if (!($currentSwitches.name -contains $vdswitchStr)){
 			# if ($vdswitch = get-vdswitch $vdswitchStr -erroraction stop){
 				# Add-VDSwitchVMHost -VMHost $Object -VDSwitch $vdswitch -erroraction stop
 			# }
 		# }
 	# }
 	# # Remove excessive vdswitches
+	# foreach ($switch in $currentSwitches){
+		# if (!($cfg.host.vdswitch -contains $switch.name)){
+			# Remove-VDSwitchVMHost -vmhost $Object -VDSwitch $switch -confirm:$false
+		# }
+	# }
 }
