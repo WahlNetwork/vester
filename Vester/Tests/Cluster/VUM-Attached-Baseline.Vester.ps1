@@ -7,6 +7,7 @@ $Title = 'VUM Attached Baselines'
 # Test description: How New-VesterConfig explains this value to the user
 $Description = 'Attach/Remove VMware Update Manager Baselines'
 
+
 # The config entry stating the desired values
 $Desired = $cfg.cluster.vumattachedbaselines
 
