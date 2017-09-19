@@ -5,20 +5,21 @@
 $Title = 'VUM Attached Baselines'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'Manages attached VMware Update Manager baselines.  Baseline names are stored as a semicolon separated list.'
+$Description = 'Attach/Remove VMware Update Manager Baselines'
+
 
 # The config entry stating the desired values
 $Desired = $cfg.cluster.vumattachedbaselines
 
 # The test value's data type, to help with conversion: bool/string/int
-$Type = 'string'
+$Type = 'string[]'
 
 # The command(s) to pull the actual value for comparison
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
     $attachedBaselines = $Object | Get-Baseline
     if( $attachedBaselines ) {
-        $attachedBaselines.name -join ";"
+        $attachedBaselines.name
     } else {
         "" 
     }
@@ -28,22 +29,18 @@ $Type = 'string'
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     if($Desired) {
-        #Add/Remove baselines
-	$desiredBaselines = $Desired -split ";"
-
         # Attach desired baseline(s)
-	$desiredBaselines | % {
-            $Object | Attach-Baseline -Baseline (Get-Baseline -Name $_)
-	}
-
-	# Remove undesired baseline(s)
-	$Object | Get-Baseline | % {
-	    if(! ($desiredBaselines -contains $_.Name) ) {
-	        $_ | Detach-Baseline -Entity $Object
-	    }
-	}
+        $Desired | % {
+                   $Object | Attach-Baseline -Baseline (Get-Baseline -Name $_)
+         }
+         # Remove any attached baseline(s) not in $Desired 
+         $Object | Get-Baseline | % {
+             if(! ($Desired -Contains $_.Name) ) {
+                 $_ | Detach-Baseline -Entity $Object
+             }
+         }
     } else {
-        # Remove all attached baseline(s)
+        # $Desired is empty, so remove ALL attached baseline(s)
         $Object | Get-Baseline | Detach-Baseline -Entity $Object
     }
 }
