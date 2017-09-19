@@ -36,10 +36,10 @@ foreach($Scope in $Scopes)
     $InventoryList = switch ($Scope) {
         'vCenter'    {$global:DefaultVIServer | where-object {$_.name -like "$($cfg.vcenter.vc)"}}
         'Datacenter' {$Datacenter}
-        'Cluster'    {$Datacenter | Get-Cluster -Name $cfg.scope.cluster}
+        'Cluster'    {Get-Cluster -Location $Datacenter -Name $cfg.scope.cluster}
         'DSCluster'  {$Datacenter | Get-DatastoreCluster -Name $cfg.scope.dscluster}
-        'Host'       {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
-        'VM'         {$Datacenter | Get-Cluster -Name $cfg.scope.cluster | Get-VM -Name $cfg.scope.vm}
+        'Host'       {Get-Cluster -Location $Datacenter -Name $cfg.scope.cluster | Get-VMHost -Name $cfg.scope.host}
+        'VM'         {Get-Cluster -Location $Datacenter -Name $cfg.scope.cluster | Get-VM -Name $cfg.scope.vm}
         'Network'    {$Datacenter | Get-VDSwitch -Name $cfg.scope.vds}
     }
 
