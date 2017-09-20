@@ -132,7 +132,7 @@ function New-VesterConfig {
             Write-Host "`nFor all values, entering nothing will keep the default * to check all objects of that category.`n"
 
             [string]$ManualDatacenter = Read-HostColor 'datacenter = Filter the following command: Get-Datacenter -Name YOURINPUTHERE -Server $vCenter'
-            [string]$ManualCluster    = Read-HostColor 'cluster = Filter the following command: $Datacenter | Get-Cluster -Name YOURINPUTHERE'
+            [string]$ManualCluster    = Read-HostColor 'cluster = Filter the following command: Get-Cluster -Location $Datacenter -Name YOURINPUTHERE'
             [string]$ManualDSCluster  = Read-HostColor 'dscluster = Filter the following command: $Datacenter | Get-DatastoreCluster -Name YOURINPUTHERE'
             [string]$ManualHost       = Read-HostColor 'host = Filter the following command: $Cluster | Get-VMHost -Name YOURINPUTHERE'
             [string]$ManualVM         = Read-HostColor 'vm = Filter the following command: $Cluster | Get-VM -Name YOURINPUTHERE'
@@ -150,7 +150,7 @@ function New-VesterConfig {
     Write-Verbose "Gathering inventory objects from $($DefaultVIServers.Name)"
     $vCenter    = $DefaultVIServers.Name
     $Datacenter = Get-Datacenter -Name $config.scope.datacenter -Server $vCenter
-    $Cluster    = $Datacenter | Get-Cluster -Name $config.scope.cluster
+    $Cluster    = Get-Cluster -Location $Datacenter -Name $config.scope.cluster
     $DSCluster  = $Datacenter | Get-DatastoreCluster -Name $config.scope.dscluster
     $VMHost     = $Cluster | Get-VMHost -Name $config.scope.host
     $VM         = $Cluster | Get-VM -Name $config.scope.vm
