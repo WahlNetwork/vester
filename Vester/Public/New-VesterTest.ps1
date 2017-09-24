@@ -70,7 +70,7 @@ function New-VesterTest {
     )
 
     BEGIN {
-        # Create two Empty objects to return later
+        # Create an empty object to hold report data.
         $NewTestFileReport = @()
     } #begin
 
@@ -90,7 +90,7 @@ function New-VesterTest {
                 $TestDescription = $name
             }
             # Replace any NonDesired Characters in the name to correctly name the Output File and Desired Value.
-            # Characters include '. : [ ] /'
+            # Characters Currently include '. : [ ] /'
             if($Name -match ".") {
                 $DesiredValueName = $name -replace ("\.","")
                 Write-Verbose "The Desired value has been updated to $DesiredValueName"               
@@ -99,40 +99,27 @@ function New-VesterTest {
                 Write-Verbose "Using the name as the DesiredValueName."
             }
             if($DesiredValueName -match " ") {
-                $DesiredValueName = $name -replace (" ","")
+                $DesiredValueName = $DesiredValueName -replace ('\s','')
                 Write-Verbose "The Desired value has been updated to $DesiredValueName"  
             }
-            # Skip creating the file if we have a special character
-            if(($Name -match ":") -or ($Name -match [regex]::Escape("[")) -or ($Name -match [regex]::Escape("]")) -or ($Name -match '/')) {
-                Write-Verbose "The TestName has a special Character, not creating test file."
+            if($DesiredValueName -match "-") {
+                $DesiredValueName = $DesiredValueName -replace ("-","")
+                Write-Verbose "The Desired value has been updated to $DesiredValueName"  
+            }            
+            # Skip creating the file if we have a special character or the example value is blank
+            if(($Name -match ":") -or ($Name -match [regex]::Escape("[")) -or ($Name -match [regex]::Escape("]")) -or ($Name -match '/') -or ($value -eq "")) {
+                Write-Verbose "The TestName has a special Character, or example value was empty, not creating test file."
                 $currentTestSetting = New-Object System.Object
                 $currentTestSetting | Add-Member -type NoteProperty -Name TestSetting -Value $Name
                 $currentTestSetting | Add-Member -Type NoteProperty -Name FileCreated -Value $false
                 $currentTestSetting | Add-Member -Type NoteProperty -Name FilePath -Value $null
                 $NewTestFileReport += $currentTestSetting
                 continue 
-            }                           
-            if(($DesiredValueName -match ":") -or ($DesiredValueName -match [regex]::Escape('\[')) -or ($DesiredValueName -match [regex]::Escape('\]')) -or ($DesiredValueName -match [regex]::Escape("/"))) {
-                Write-Verbose "The Desired value has a special Character, not creating test file."  
-                $currentTestSetting = New-Object System.Object
-                $currentTestSetting | Add-Member -type NoteProperty -Name TestSetting -Value $Name
-                $currentTestSetting | Add-Member -Type NoteProperty -Name FileCreated -Value $false
-                $currentTestSetting | Add-Member -Type NoteProperty -Name FilePath -Value $null
-                $NewTestFileReport += $currentTestSetting
-                continue
-            }                                                      
-            if($value -eq "") {
-                Write-Verbose "The value was empty, not creating test file"
-                $currentTestSetting = New-Object System.Object
-                $currentTestSetting | Add-Member -type NoteProperty -Name TestSetting -Value $Name
-                $currentTestSetting | Add-Member -Type NoteProperty -Name FileCreated -Value $false
-                $currentTestSetting | Add-Member -Type NoteProperty -Name FilePath -Value $null
-                $NewTestFileReport += $currentTestSetting
-                continue
-            }
+            }                                                                              
             
             # Build the Output File path for this TestSetting
             $NewTestFile = "$Path\$Prefix-$DesiredValueName.Vester.ps1"
+            # Useful information when verbose option is selected.
             write-Verbose "The TestSetting is $name"
             write-Verbose "Example value is $value"
             write-Verbose "The ValueType is $valueType"
@@ -160,13 +147,13 @@ function New-VesterTest {
             "# The command(s) to pull the actual value for comparison" | out-file -FilePath $NewTestFile -Append
             "# ZZZObject will scope to the folder this test is in (Cluster, Host, etc.)" | out-file -FilePath $NewTestFile -Append
             "[ScriptBlock]ZZZActual = {" | out-file -FilePath $NewTestFile -Append
-            "    (Get-AdvancedSetting -Entity ZZZObject -Name $name).Value" | out-file -FilePath $NewTestFile -Append
+            "    (Get-AdvancedSetting -Entity ZZZObject -Name `"$name`").Value" | out-file -FilePath $NewTestFile -Append
             "}" | out-file -FilePath $NewTestFile -Append
             "" | out-file -FilePath $NewTestFile -Append
             "# The command(s) to match the environment to the config" | out-file -FilePath $NewTestFile -Append
             "# Use ZZZObject to help filter, and $Desired to set the correct value" | out-file -FilePath $NewTestFile -Append
             "[ScriptBlock]ZZZFix = {" | out-file -FilePath $NewTestFile -Append
-            "    Get-AdvancedSetting -Entity ZZZObject -Name $name |" | out-file -FilePath $NewTestFile -Append
+            "    Get-AdvancedSetting -Entity ZZZObject -Name `"$name`" |" | out-file -FilePath $NewTestFile -Append
             "        Set-AdvancedSetting -value ZZZDesired -Confirm:ZZZfalse -ErrorAction Stop" | out-file -FilePath $NewTestFile -Append
             "}" | out-file -FilePath $NewTestFile -Append
         
@@ -188,6 +175,3 @@ function New-VesterTest {
         $NewTestFileReport
     } #end
 }
-
-
-#$TestData = Get-AdvancedSetting -Entity 192.168.2.200 
