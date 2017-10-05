@@ -152,37 +152,30 @@
             }
             Write-Verbose "Processing against vCenter server '$($cfg.vcenter.vc)'"
 
+            $Pester_Params = @{
+                Script = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
+                Parameters = @{
+                     Cfg       = $cfg
+                     TestFiles = $Test
+                     Remediate = $Remediate
+                }#Parameters
+            }#Pester_Params
             # Call Invoke-Pester based on the parameters supplied
             # Runs VesterTemplate.Tests.ps1, which constructs the .Vester.ps1 test files
             If ($XMLOutputFile) {
-                Invoke-Pester -OutputFormat NUnitXml -OutputFile $XMLOutputFile -Script @{
-                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
-                    Parameters = @{
-                        Cfg       = $cfg
-                        TestFiles = $Test
-                        Remediate = $Remediate
-                    }
-                } # Invoke-Pester
-            } ElseIf ($PassThru) {
-                Invoke-Pester -PassThru -Script @{
-                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
-                    Parameters = @{
-                        Cfg       = $cfg
-                        TestFiles = $Test
-                        Remediate = $Remediate
-                    }
-                } # Invoke-Pester
-            } Else {
-                Invoke-Pester -Script @{
-                    Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
-                    Parameters = @{
-                        Cfg       = $cfg
-                        TestFiles = $Test
-                        Remediate = $Remediate
-                    }
-                } # Invoke-Pester
-            } #If XML
+                $Pester_Params += @{
+                   OutputFormat = "NUnitXml"
+                   OutputFile = $XMLOutputFile
+                   
+                }#Pester_Params
+            } 
+            If ($PassThru) {
+                $Pester_Params += @{
+                   PassThru = $True
+                }#Pester_Params
+            }
 
+            Invoke-Pester @Pester_Params
             # In case multiple config files were provided and some aren't valid
             $cfg = $null
         } #ForEach Config
