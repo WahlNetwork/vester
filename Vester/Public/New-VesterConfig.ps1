@@ -211,8 +211,8 @@ function New-VesterConfig {
             }
 
             # TODO: Should probably offload this to a private function
-            $CfgLine = (Select-String -Path $Vest.Full -Pattern '\$cfg') -replace '.*\:[0-9]+\:',''
-            $CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
+			$cfgLine = (get-content $Vest.Full | where {$_.trim() -match '^\$Desired = \$cfg'}) -replace '.*\:[0-9]+\:',''
+			$CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
 
             # Run the $Actual script block, storing the result in $Result
             If ($Object -and ($Result = & $Actual) -ne $null) {
