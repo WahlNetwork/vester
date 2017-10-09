@@ -17,6 +17,9 @@ function Select-InventoryObject {
         Write-Host "One object found; selecting $Scope '$ObjectList'"
         Write-Output $ObjectList
     } ElseIf ($ObjectList.Count -gt 1) {
+        # Every inventory object has a 'Name' property. Sort it to improve readability / predictability of the output.
+        $ObjectList = $ObjectList | Sort-Object -Property Name;
+
         for ($i = 1; $i -le $ObjectList.Count; $i++) {
             Write-Host "$i. " -ForegroundColor Green -NoNewline
             Write-Host "$($ObjectList.Name[$i-1])"
