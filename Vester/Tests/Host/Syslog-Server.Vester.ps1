@@ -1,11 +1,16 @@
 ﻿# Test file for the Vester module - https://github.com/WahlNetwork/Vester
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
+# vSphere 6.0 Hardening Guide Guideline ID - ESXi.enable-remote-syslog
 
 # Test title, e.g. 'DNS Servers'
 $Title = 'Syslog Server'
 
 # Test description: How New-VesterConfig explains this value to the user
 $Description = 'Syslog server(s) to send log data to'
+
+# Test recommendation: Follows VMware's Best Practices, Hardening Guides where applicable, or Default Values
+# Called by Get-VesterTest
+$Recommendation = 'Site Specific'
 
 # The config entry stating the desired values
 $Desired = $cfg.host.esxsyslog
