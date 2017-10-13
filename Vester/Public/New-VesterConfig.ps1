@@ -290,7 +290,7 @@ function New-VesterConfig {
 
     Write-Verbose "Creating config file at $OutputFolder\Config.json"
     Try {
-        $config | ConvertTo-Json | Out-File $OutputFolder\Config.json -ErrorAction Stop
+        $config | ConvertTo-Json -depth 5 | Out-File $OutputFolder\Config.json -ErrorAction Stop
         Write-Host "`nConfig file created at " -ForegroundColor Green -NoNewline
         Write-Host "$OutputFolder\Config.json"
         Write-Host 'Edit the file manually to change any displayed values.'
