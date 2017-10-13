@@ -8,6 +8,10 @@ $Title = 'Network BDPU Filter'
 # Test description: How New-VesterConfig explains this value to the user
 $Description = '0 (disable) or 1 (enable) to control the BDPU filter on the ESXi host'
 
+# Test recommendation: Follows VMware's Best Practices, Hardening Guides where applicable, or Default Values
+# Called by Get-VesterTest
+$Recommendation = 1
+
 # The config entry stating the desired values
 $Desired = $cfg.host.networkbdpufilter
 
@@ -18,14 +22,14 @@ $Type = 'int'
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
     (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'Net.BlockGuestBPDU'
-    }).Value
+            $_.Name -eq 'Net.BlockGuestBPDU'
+        }).Value
 }
 
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-            $_.Name -eq 'Net.BlockGuestBPDU'
-        } | Set-AdvancedSetting -Value $Desired -Confirm:$false -ErrorAction Stop
+        $_.Name -eq 'Net.BlockGuestBPDU'
+    } | Set-AdvancedSetting -Value $Desired -Confirm:$false -ErrorAction Stop
 }
