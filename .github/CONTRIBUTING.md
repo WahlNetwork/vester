@@ -17,4 +17,4 @@ Questions? [Reach out!]
 
 [GitHub 101]: http://www.brianbunke.com/blog/2017/05/08/github-101/
 [Write Your Own Vester Test]: http://www.brianbunke.com/blog/2017/03/09/write-your-own-vester-test/
-[Reach out!]: /blob/master/README.md
+[Reach out!]: https://github.com/WahlNetwork/Vester/blob/master/README.md
