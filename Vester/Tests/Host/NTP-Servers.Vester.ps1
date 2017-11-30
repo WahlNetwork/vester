@@ -22,10 +22,17 @@ $Type = 'string[]'
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
-    Get-VMHostNtpServer -VMHost $Object | ForEach-Object -Process {
-        Remove-VMHostNtpServer -VMHost $Object -NtpServer $_ -Confirm:$false -ErrorAction Stop
-    }
-    Add-VMHostNtpServer -VMHost $Object -NtpServer $Desired -ErrorAction Stop
+    # Create a HostDateTimeConfig to update the NTP servers
+    $ntpConfig = New-Object -TypeName Vmware.Vim.HostNtpConfig
+    $ntpConfig.Server = $Desired
+    $dateTimeConfig = New-Object -TypeName Vmware.Vim.HostDateTimeConfig
+    $dateTimeConfig.NtpConfig = $ntpConfig
+
+    # Get the host's DateTimeSystem and update the config
+    $vmhostView = Get-View -VIObject $Object -Property 'ConfigManager.DateTimeSystem'
+    $dateTimeManager = Get-View -Id $vmhostView.ConfigManager.DateTimeSystem
+    $dateTimeManager.UpdateDateTimeConfig($dateTimeConfig)
+
     $ntpclient = Get-VMHostService -VMHost $Object | Where-Object -FilterScript {
         $_.Key -match 'ntpd'
     }
