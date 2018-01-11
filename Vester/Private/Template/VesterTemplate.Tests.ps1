@@ -98,7 +98,11 @@ foreach($Scope in $Final.Scope)
 						# The comparison should be empty
 						# (meaning everything is the same, as expected)
 						$Result = (& $Actual -as $Type)
-						Compare-Object -ReferenceObject $Desired -DifferenceObject $Result |
+                        #allow for $Desired to be a scriptblock vs simple value
+                        if ($Desired.GetType().name -eq 'scriptblock') {
+                            $Desired = (& $Desired -As $Type)
+                        }
+                        Compare-Object -ReferenceObject $Desired -DifferenceObject $Result |
 							Should BeNullOrEmpty
 					} Catch {
 						# If the comparison found something different,
