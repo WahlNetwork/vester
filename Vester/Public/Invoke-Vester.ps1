@@ -164,7 +164,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $TestFiles
+                        TestFiles = $VesterTests
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
