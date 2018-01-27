@@ -27,20 +27,21 @@ Describe 'Check module files for breaking changes' {
         It 'Static .psd1 values have not changed' {
             $manifest.RootModule | Should BeExactly 'Vester.psm1'
             $manifest.Name | Should BeExactly 'Vester'
-            $manifest.Version -as [Version] | Should BeGreaterThan '1.0.0'
+            $manifest.Version -as [Version] | Should BeGreaterThan '1.1.0'
             $manifest.Guid | Should BeExactly 'cd038486-b669-4edb-a66d-bfe94c61b011'
             $manifest.Author | Should BeExactly 'Chris Wahl'
             $manifest.CompanyName | Should BeExactly 'Community'
             $manifest.Copyright | Should BeExactly 'Apache License'
             $manifest.Description | Should BeOfType String
             $manifest.PowerShellVersion | Should Be '3.0'
-            $manifest.RequiredModules.Name | Should BeExactly @('Pester')
+            $manifest.RequiredModules.Name | Should BeExactly @('Pester','VMware.VimAutomation.Core')
+            $manifest.RequiredModules.Version | Should BeExactly @('3.4.3','6.5.1')
             $manifest.ExportedFunctions.Values.Name | Should BeExactly $PublicFiles.BaseName
 
             $manifest.PrivateData.PSData.Tags | Should BeExactly @('vester','vmware','vcenter','vsphere','esxi','powercli')
             $manifest.PrivateData.PSData.LicenseUri | Should BeExactly 'https://github.com/WahlNetwork/Vester/blob/master/LICENSE'
             $manifest.PrivateData.PSData.ProjectUri | Should BeExactly 'https://github.com/WahlNetwork/Vester'
-            $manifest.PrivateData.PSData.ExternalModuleDependencies | Should BeExactly @('VMware.VimAutomation.Core')
+            $manifest.PrivateData.PSData.ReleaseNotes | Should Match "## \[$($manifest.Version)\] -"
         }
 
         $VesterCommands = (Get-Command -Module Vester).Name

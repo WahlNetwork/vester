@@ -1,11 +1,16 @@
 # Test file for the Vester module - https://github.com/WahlNetwork/Vester
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
+# vSphere 6.0 Hardening Guide Guideline ID - ESXi.set-dcui-access
 
 # Test title, e.g. 'DNS Servers'
 $Title = 'DCUI Access'
 
 # Test description: How New-VesterConfig explains this value to the user
 $Description = 'Comma separated list of users with DCUI access'
+
+# Test recommendation: Follows VMware's Best Practices, Hardening Guides where applicable, or Default Values
+# Called by Get-VesterTest
+$Recommendation = 'List of authorized users'
 
 # The config entry stating the desired values
 $Desired = $cfg.host.dcuiaccess
@@ -17,14 +22,14 @@ $Type = 'string[]'
 # $Object will scope to the folder this test is in (Cluster, Host, etc.)
 [ScriptBlock]$Actual = {
     (Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-        $_.Name -eq 'DCUI.Access'
-    }).Value
+            $_.Name -eq 'DCUI.Access'
+        }).Value
 }
 
 # The command(s) to match the environment to the config
 # Use $Object to help filter, and $Desired to set the correct value
 [ScriptBlock]$Fix = {
     Get-AdvancedSetting -Entity $Object | Where-Object -FilterScript {
-            $_.Name -eq 'DCUI.Access'
-        } | Set-AdvancedSetting -Value $Desired -Confirm:$false -ErrorAction Stop
+        $_.Name -eq 'DCUI.Access'
+    } | Set-AdvancedSetting -Value $Desired -Confirm:$false -ErrorAction Stop
 }

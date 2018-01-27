@@ -1,5 +1,3 @@
-#Requires -Modules VMware.VimAutomation.Core
-
 function New-VesterConfig {
     <#
     .SYNOPSIS
@@ -47,7 +45,7 @@ function New-VesterConfig {
     "Get-Help about_Vester" for more information.
 
     .LINK
-    http://vester.readthedocs.io/en/latest/
+    https://wahlnetwork.github.io/Vester
 
     .LINK
     https://github.com/WahlNetwork/Vester
@@ -78,7 +76,7 @@ function New-VesterConfig {
 
     # TODO: Make this a param? Or keep hardcoded?
     Write-Verbose "Assembling Vester files within $(Split-Path -Parent $PSScriptRoot)\Tests\"
-    $GetVesterTest = "$(Split-Path -Parent $PSScriptRoot)\Tests\" | Get-VesterTest
+    $GetVesterTest = "$(Split-Path -Parent $PSScriptRoot)\Tests\" | Get-VesterTest -Simple
     # Appending to a list is faster than rebuilding an array
     $VesterTestSuite = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 
@@ -108,6 +106,7 @@ function New-VesterConfig {
     $config.scope = [ordered]@{
         datacenter = '*'
         cluster    = '*'
+        dscluster  = '*'
         host       = '*'
         vm         = '*'
         vds        = '*'
@@ -120,6 +119,7 @@ function New-VesterConfig {
         Write-Host "Use string values. Wildcards are accepted."
         Write-Host "datacenter = [string] vSphere datacenter name(s)"
         Write-Host "cluster    = [string] vSphere cluster name(s)"
+        Write-Host "dscluster  = [string] vSphere datastore cluster name(s)"
         Write-Host "host       = [string] ESXi host name(s)"
         Write-Host "vm         = [string] Virtual machine name(s)"
         Write-Host "vds        = [string] vSphere Distributed Switch (VDS) name(s)"
@@ -133,12 +133,14 @@ function New-VesterConfig {
 
             [string]$ManualDatacenter = Read-HostColor 'datacenter = Filter the following command: Get-Datacenter -Name YOURINPUTHERE -Server $vCenter'
             [string]$ManualCluster    = Read-HostColor 'cluster = Filter the following command: $Datacenter | Get-Cluster -Name YOURINPUTHERE'
+            [string]$ManualDSCluster  = Read-HostColor 'dscluster = Filter the following command: $Datacenter | Get-DatastoreCluster -Name YOURINPUTHERE'
             [string]$ManualHost       = Read-HostColor 'host = Filter the following command: $Cluster | Get-VMHost -Name YOURINPUTHERE'
             [string]$ManualVM         = Read-HostColor 'vm = Filter the following command: $Cluster | Get-VM -Name YOURINPUTHERE'
             [string]$ManualVDS        = Read-HostColor 'vds = Filter the following command: $Datacenter | Get-VDSwitch -Name YOURINPUTHERE'
 
             $config.scope.datacenter = If ($ManualDatacenter -eq '') {'*'} Else {$ManualDatacenter}
             $config.scope.cluster    = If ($ManualCluster -eq '')    {'*'} Else {$ManualCluster}
+            $config.scope.dscluster  = If ($ManualDSCluster -eq '')  {'*'} Else {$ManualDSCluster}
             $config.scope.host       = If ($ManualHost -eq '')       {'*'} Else {$ManualHost}
             $config.scope.vm         = If ($ManualVM -eq '')         {'*'} Else {$ManualVM}
             $config.scope.vds        = If ($ManualVDS -eq '')        {'*'} Else {$ManualVDS}
@@ -149,6 +151,7 @@ function New-VesterConfig {
     $vCenter    = $DefaultVIServers.Name
     $Datacenter = Get-Datacenter -Name $config.scope.datacenter -Server $vCenter
     $Cluster    = $Datacenter | Get-Cluster -Name $config.scope.cluster
+    $DSCluster  = $Datacenter | Get-DatastoreCluster -Name $config.scope.dscluster
     $VMHost     = $Cluster | Get-VMHost -Name $config.scope.host
     $VM         = $Cluster | Get-VM -Name $config.scope.vm
     # Secondary modules...PowerCLI doesn't do implicit module loading as of PCLI 6.5
@@ -162,19 +165,21 @@ function New-VesterConfig {
     If ($Quiet) {
         $Datacenter = If ($Datacenter) {$Datacenter[0]}
         $Cluster    = If ($Cluster)    {$Cluster[0]}
+        $DSCluster  = If ($DSCluster)  {$DSCluster[0]}
         $VMHost     = If ($VMHost)     {$VMHost[0]}
         $VM         = If ($VM)         {$VM[0]}
         $Network    = If ($Network)    {$Network[0]}
     } Else {
         $Datacenter = If ($Datacenter) {Select-InventoryObject $Datacenter 'Datacenter'}
         $Cluster    = If ($Cluster)    {Select-InventoryObject $Cluster 'Cluster'}
+        $DSCluster  = If ($DSCluster)  {Select-InventoryObject $DSCluster 'DSCluster'}
         $VMHost     = If ($VMHost)     {Select-InventoryObject $VMHost 'Host'}
         $VM         = If ($VM)         {Select-InventoryObject $VM 'VM'}
         $Network    = If ($Network)    {Select-InventoryObject $Network 'Network'}
     }
 #endregion
         
-    $ScopeList = ($VesterTestSuite | Select -Property Parent -Unique).Parent
+    $ScopeList = ($VesterTestSuite | Select-Object -Property Parent -Unique).Parent
     Write-Verbose "Scopes supplied by test files: $($ScopeList -join ' | ')"
     
     # Not used; called below to help with manual user overrides of values
@@ -187,7 +192,7 @@ function New-VesterConfig {
 
         # Loop through each test file applicable in the current scope
         # Couldn't resist calling each file a Vest. Sorry, everyone
-        ForEach ($Vest in $VesterTestSuite | Where Parent -eq $Scope) {
+        ForEach ($Vest in $VesterTestSuite | Where-Object Parent -eq $Scope) {
             Write-Verbose "Processing test file $($Vest.Leaf)"
             
             # Import all variables from the current .Vester.ps1 file
@@ -197,6 +202,7 @@ function New-VesterConfig {
                 'vCenter'    {$vCenter}
                 'Datacenter' {$Datacenter}
                 'Cluster'    {$Cluster}
+                'DSCluster'  {$DSCluster}
                 'Host'       {$VMHost}
                 'VM'         {$VM}
                 'Network'    {$Network}
@@ -238,7 +244,10 @@ function New-VesterConfig {
             Write-Host ''
             Write-Host '  # Config values for scope ' -NoNewline
             Write-Host "$Scope" -ForegroundColor Green
-            $config.$Scope.GetEnumerator() | Sort Name
+            $Sorted = $config.$Scope.GetEnumerator() | Sort-Object Name
+            $Sorted
+            $config.$Scope = [ordered]@{}
+            $Sorted | Foreach-Object { $config.$Scope.Add($_.Name, $_.Value) }            
 
             <# ###
             # Users still need to manually edit the .json file if changes are desired

@@ -1,6 +1,4 @@
-﻿#Requires -Version 3 -Modules Pester, VMware.VimAutomation.Core
-
-function Invoke-Vester {
+﻿function Invoke-Vester {
     <#
     .SYNOPSIS
     Test and fix configuration drift in your VMware vSphere environment.
@@ -30,16 +28,16 @@ function Invoke-Vester {
     It outputs a report to the host of all passed and failed tests.
 
     .EXAMPLE
-    $DNS = Get-ChildItem -Path Z:\ -Filter *dns*.Vester.ps1 -File -Recurse
+    $DNS = Get-VesterTest -Path Z:\ -Name *dns*
     PS C:\>(Get-ChildItem -Path Z:\ -Filter *.json).FullName | Invoke-Vester -Test $DNS
 
-    Get all Vester tests below Z:\ with 'dns' in the name; store in variable $DNS.
+    Get all Vester tests at Z:\ with 'dns' in the name; store in variable $DNS.
     Then, pipe all *.json files at the root of Z: into the -Config parameter.
     Each config file piped in will run through all $DNS tests found.
 
     .EXAMPLE
-    Invoke-Vester -Test .\Tests\VM -Remediate -WhatIf
-    Run *.Vester.ps1 tests in the .\Tests\VM path below the current location.
+    Invoke-Vester -Test (Get-VesterTest -Scope VM) -Remediate -WhatIf
+    Run Vester with all VM tests included with the module.
     For all tests that fail against the values in \Configs\Config.json,
     -Remediate attempts to immediately fix them to match your defined config.
     -WhatIf prevents remediation, and instead reports what would have changed.
@@ -56,7 +54,7 @@ function Invoke-Vester {
     Runs Vester with the default config and test files.
     Uses Pester to send test results in NUnitXML format to vester.xml
     at your current folder location.
-    Option is primarily used for CI/CD integration solutions.
+    Useful to supply to a report generator for HTML reports.
 
     .INPUTS
     [System.Object]
@@ -68,7 +66,7 @@ function Invoke-Vester {
     "Get-Help about_Vester" for more information.
 
     .LINK
-    http://vester.readthedocs.io/en/latest/
+    https://wahlnetwork.github.io/Vester
 
     .LINK
     https://github.com/WahlNetwork/Vester
@@ -96,7 +94,7 @@ function Invoke-Vester {
             Else {Test-Path $_}
         })]
         [Alias('Path','Script')]
-        [object[]]$Test = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
+        [object[]]$Test = (Get-VesterTest -Simple),
 
         # Optionally fix all config drift that is discovered
         # Defaults to false (disabled)
@@ -112,12 +110,18 @@ function Invoke-Vester {
         [switch]$PassThru = $false
     )
 
-    BEGIN {
-        # Convert $Test input(s) into a whole bunch of *.Vester.ps1 file paths
-        $VesterTests = $Test | Get-VesterTest
-    } #Begin
-
     PROCESS {
+        # -Test should accept directories and objects
+        If ($Test[0] -notlike '*.Vester.ps1') {
+            If ($Test[0].FullName) {
+                # Strip Get-Item/Get-ChildItem/Get-VesterTest object to path only
+                $Test = $Test.FullName
+            } Else {
+                # This is a directory. Get the Vester tests here
+                $Test = $Test | Get-VesterTest -Simple
+            }
+        }
+
         ForEach ($ConfigFile in $Config) {
             # Gracefully handle Get-Item/Get-ChildItem
             If ($ConfigFile.FullName) {
@@ -155,7 +159,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
@@ -164,7 +168,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
@@ -173,7 +177,7 @@ function Invoke-Vester {
                     Path = "$(Split-Path -Parent $PSScriptRoot)\Private\Template\VesterTemplate.Tests.ps1"
                     Parameters = @{
                         Cfg       = $cfg
-                        TestFiles = $VesterTests
+                        TestFiles = $Test
                         Remediate = $Remediate
                     }
                 } # Invoke-Pester
