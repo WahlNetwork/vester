@@ -22,6 +22,75 @@ Param(
     [switch]$Remediate
 )
 
+
+function Compare-Hashtable {
+<#
+.SYNOPSIS
+Compare two Hashtable and returns an array of differences.
+
+.DESCRIPTION
+The Compare-Hashtable function computes differences between two Hashtables. Results are returned as
+an array of objects with the properties: "key" (the name of the key that caused a difference), 
+"side" (one of "<=", "!=" or "=>"), "lvalue" an "rvalue" (resp. the left and right value 
+associated with the key).
+
+.PARAMETER left 
+The left hand side Hashtable to compare.
+
+.PARAMETER right 
+The right hand side Hashtable to compare.
+
+.EXAMPLE
+
+Returns a difference for ("3 <="), c (3 "!=" 4) and e ("=>" 5).
+
+Compare-Hashtable @{ a = 1; b = 2; c = 3 } @{ b = 2; c = 4; e = 5}
+
+.EXAMPLE 
+
+Returns a difference for a ("3 <="), c (3 "!=" 4), e ("=>" 5) and g (6 "<=").
+
+$left = @{ a = 1; b = 2; c = 3; f = $Null; g = 6 }
+$right = @{ b = 2; c = 4; e = 5; f = $Null; g = $Null }
+
+Compare-Hashtable $left $right
+
+#>	
+[CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Hashtable]$Left,
+
+        [Parameter(Mandatory = $true)]
+        [Hashtable]$Right		
+	)
+	
+	function New-Result($Key, $LValue, $Side, $RValue) {
+		New-Object -Type PSObject -Property @{
+					key    = $Key
+					lvalue = $LValue
+					rvalue = $RValue
+					side   = $Side
+			}
+	}
+	[Object[]]$Results = $Left.Keys | % {
+		if ($Left.ContainsKey($_) -and !$Right.ContainsKey($_)) {
+			New-Result $_ $Left[$_] "<=" $Null
+		} else {
+			$LValue, $RValue = $Left[$_], $Right[$_]
+			if ($LValue -ne $RValue) {
+				New-Result $_ $LValue "!=" $RValue
+			}
+		}
+	}
+	$Results += $Right.Keys | % {
+		if (!$Left.ContainsKey($_) -and $Right.ContainsKey($_)) {
+			New-Result $_ $Null "=>" $Right[$_]
+		} 
+	}
+	$Results 
+}
+
 # Gets the scope, the objects for the scope and their requested test files
 $Scopes = Split-Path (Split-Path $TestFiles -Parent) -Leaf | Select -Unique
 $Final = @()
@@ -74,60 +143,97 @@ foreach($Scope in $Final.Scope)
     # Runs through each test file on the below objects in the current scope
     foreach($Test in $Tests)
     {
-        Write-Verbose "Processing test file $Test"
-        $TestName = Split-Path $Test -Leaf
 
-        Describe -Name "$Scope Configuration: $TestName" -Fixture {
-			# Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
-			. $Test
+        # Loops through each object in the inventory list for the specific scope.
+        # It runs one test at a time against each $Object and moves onto the next test.
+        ForEach($Object in $Inventory)
+        {
+            Write-Verbose "Processing test file $Test"
+            $TestName = Split-Path $Test -Leaf
 
-			# Pump the brakes if the config value is $null
-			If ($Desired -eq $null) {
-				Write-Verbose "Due to null config value, skipping test $TestName"
-				# Use continue to skip this test and go to the next loop iteration
-				continue
-			}
+            Describe -Name "$Scope Configuration: $TestName" -Fixture {
+                # Pull in $Title/$Description/$Desired/$Type/$Actual/$Fix from the test file
+                . $Test
 
-			# Loops through each object in the inventory list for the specific scope.
-			# It runs one test at a time against each $Object and moves onto the next test.
-			foreach($Object in $Inventory)
-			{
-				It -Name "$Scope $($Object.Name) - $Title" -Test {
-					Try {
-						# "& $Actual" is running the first script block to compare to $Desired
-						# The comparison should be empty
-						# (meaning everything is the same, as expected)
-						$Result = (& $Actual -as $Type)
-                        #allow for $Desired to be a scriptblock vs simple value
-                        if ($Desired.GetType().name -eq 'scriptblock') {
-                            $Desired = (& $Desired -As $Type)
-                        }
-                        Compare-Object -ReferenceObject $Desired -DifferenceObject $Result |
-							Should BeNullOrEmpty
-					} Catch {
-						# If the comparison found something different,
-						# Then check if we're going to fix it
-						If ($Remediate) {
-							Write-Warning -Message $_
-							# -WhatIf support wraps the command that would change values
-							If ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'")) {
-								Write-Warning -Message "Remediating $Object"
-								# Execute the $Fix script block
-								& $Fix
-							}
-						} Else {
-							# -Remediate is not active, so just report the error
-							$Message = @(
-                                "Desired:   [$($Desired.gettype())] $Desired"
-                                "Actual:    [$($Result.gettype())] $Result"
-                                "Synopsis:  $Description"
-                                "Link:      https://wahlnetwork.github.io/Vester/reference/tests/$Scope/$($Title.replace(' ','-').replace(':','')).html"
-                                "Test File: $Test"
-                            ) -join "`n"
-                            Throw $Message
-						}
-					} #Try/Catch
-				} #It
+                # If multiple tests
+                # Added in a check for $NULL and "" as you can't run a method (gettype()) on a $Null valued expression
+                # This is checking for an object that is a PSCustomobject, which shouldnt be null.
+                If(($Desired -ne $NULL) -and ($Desired -ne "") -and ($Desired.GetType().Name -eq "PSCustomObject")) {
+                    # Gathers the the actual and desired values
+                    # Formats the hashtable as a PSCustomObject
+                    # As a side note: The ActualObjects Type is always the correct object type
+                    # ConvertFrom-Json does not preserve things like 'int64'
+                    # Converts to hashtable
+                    $Results = (& $Actual)
+
+                    # Converts $Desired to a hashtable as it needs to be a hashtable to be compared
+                    $ht2 = @{}
+                    $Desired.psobject.properties | Foreach { $ht2[$_.Name] = $_.Value }
+                    $Desired = $ht2
+                    #$Desired = $Desired | ConvertPSObjectToHashtable
+
+                    It -Name "$Scope $($Object.Name) - $Title" -Test {
+                        Try {
+                            $Mishaps = Compare-HashTable -Left $Desired -Right $Results
+                            $Mishaps | Should BeNullOrEmpty
+                        } Catch {    
+                            # If the comparison found something different,
+                            # Then check if we're going to fix it
+                            If($Remediate) {
+                                Write-Warning -Message $_
+                                # -WhatIf support wraps the command that would change values
+                                If($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'"))
+                                {
+                                    Write-Warning -Message "Remediating $Object"
+                                    # Execute the $Fix script block
+                                    & $Fix
+                                }
+                            } Else {
+                                # -Remediate is not active, so just report the error
+                                ### Changed it to write-error so it didnt terminate the above foreach loop
+                                #Write-Error "$($_.Exception.Message)" -ErrorAction Stop
+                                Write-Error "$($_.Exception.Message)`n$($Mishaps | Convertto-json)" -ErrorAction "Stop"
+                            }
+                        } # Try/Catch
+                    } # It
+                } # If $Desired -eq PSCustomobject
+                # Else it is a normal single value test
+                Else
+                {
+                    It -Name "$Scope $($Object.Name) - $Title" -Test {                     
+                        Try {
+                            # Checks for $NULLs
+                            If($Desired -eq $NULL) {
+                                Write-Verbose "Making sure `$Null is still `$Null"
+                                ($Desired -eq (& $Actual -as $Type)) -or ("" -eq (& $Actual -as $Type)) | Should Be $TRUE
+                            } Else {
+                                Compare-Object -ReferenceObject $Desired -DifferenceObject (& $Actual -as $Type) | Should BeNullOrEmpty
+                            } 
+                        } Catch {
+                            # If the comparison found something different,
+                            # Then check if we're going to fix it
+                            If ($Remediate) {
+                                Write-Warning -Message $_
+                                # -WhatIf support wraps the command that would change values
+                                If ($PSCmdlet.ShouldProcess("vCenter '$($cfg.vcenter.vc)' - $Scope '$Object'", "Set '$Title' value to '$Desired'")) {
+                                    Write-Warning -Message "Remediating $Object"
+                                    # Execute the $Fix script block
+                                    & $Fix
+                                }
+                            } Else {
+                                # -Remediate is not active, so just report the error
+                                $Message = @(
+                                    "Desired:   [$($Desired.gettype())] $Desired"
+                                    "Actual:    [$($Result.gettype())] $Result"
+                                    "Synopsis:  $Description"
+                                    "Link:      https://wahlnetwork.github.io/Vester/reference/tests/$Scope/$($Title.replace(' ','-').replace(':','')).html"
+                                    "Test File: $Test"
+                                ) -join "`n"
+                                Throw $Message
+                            }
+                        } #Try/Catch
+                    } #It
+                } #If/Else $Desired.GetType().Name -eq "PSCustomObject"
             } #Foreach Inventory                    
         }#Describe
     }#Foreach Tests
