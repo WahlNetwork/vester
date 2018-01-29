@@ -22,6 +22,25 @@ Param(
     [switch]$Remediate
 )
 
+function ConvertPSObjectToHashtable { 
+    param (
+        [Parameter(ValueFromPipeline)]
+        $InputObject
+    )
+
+	 process {
+		if ($InputObject -is [psobject]){
+			$hash = @{}
+			foreach ($property in $InputObject.PSObject.Properties){
+				$hash[$property.Name] = ConvertPSObjectToHashtable $property.Value
+			}
+			$hash
+		}
+		else{
+			$InputObject
+		}
+	 } 
+}
 
 function Compare-Hashtable {
 <#
@@ -77,9 +96,14 @@ Compare-Hashtable $left $right
 		if ($Left.ContainsKey($_) -and !$Right.ContainsKey($_)) {
 			New-Result $_ $Left[$_] "<=" $Null
 		} else {
-			$LValue, $RValue = $Left[$_], $Right[$_]
-			if ($LValue -ne $RValue) {
-				New-Result $_ $LValue "!=" $RValue
+			if ($Left[$_] -is [hashtable] -and $Right[$_] -is [hashtable] ) {
+				Compare-Hashtable $Left[$_] $Right[$_]
+			}
+			else {
+				$LValue, $RValue = $Left[$_], $Right[$_]
+				if ($LValue -ne $RValue) {
+					New-Result $_ $LValue "!=" $RValue
+				}
 			}
 		}
 	}
@@ -88,7 +112,7 @@ Compare-Hashtable $left $right
 			New-Result $_ $Null "=>" $Right[$_]
 		} 
 	}
-	$Results 
+	if ($Results -ne $null) { $Results }
 }
 
 # Gets the scope, the objects for the scope and their requested test files
@@ -167,10 +191,10 @@ foreach($Scope in $Final.Scope)
                     $Results = (& $Actual)
 
                     # Converts $Desired to a hashtable as it needs to be a hashtable to be compared
-                    $ht2 = @{}
-                    $Desired.psobject.properties | Foreach { $ht2[$_.Name] = $_.Value }
-                    $Desired = $ht2
-                    #$Desired = $Desired | ConvertPSObjectToHashtable
+                    # $ht2 = @{}
+                    # $Desired.psobject.properties | Foreach { $ht2[$_.Name] = $_.Value }
+                    # $Desired = $ht2
+					$Desired = $Desired | ConvertPSObjectToHashtable
 
                     It -Name "$Scope $($Object.Name) - $Title" -Test {
                         Try {
