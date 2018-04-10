@@ -2,10 +2,10 @@
 # Called via Invoke-Pester VesterTemplate.Tests.ps1
 
 # Test title, e.g. 'DNS Servers'
-$Title = 'SSH Warning'
+$Title = 'Suppress SSH Warning'
 
 # Test description: How New-VesterConfig explains this value to the user
-$Description = 'On/off switch for the vSphere warning when a host has SSH enabled'
+$Description = 'On/off switch for the vSphere warning when a host has SSH enabled (1=suppress, 0=warn)'
 
 # The config entry stating the desired values
 $Desired = $cfg.host.sshwarn
