@@ -56,6 +56,12 @@
     at your current folder location.
     Useful to supply to a report generator for HTML reports.
 
+    .EXAMPLE
+    Invoke-Vester -ShowFailedOnly
+    Run Vester but limit console output to only failed tests.
+    Uses the Pester "-Show Failed,Summary" option.
+    Requires Pester module version 3.4.1 or newer.
+
     .INPUTS
     [System.Object]
     Accepts piped input (optional multiple objects) for parameter -Config
@@ -104,6 +110,10 @@
         # Specifying a path automatically triggers Pester in NUnitXML mode
         [ValidateScript({Test-Path (Split-Path $_ -Parent)})]
         [object]$XMLOutputFile,
+
+        # Pester >= 3.4.1 added a -Show parameter for filtering the console output
+        # Provide a simple switch that adds -Show Failed,Summary to Invoke-Pester
+        [switch]$ShowFailedOnly = $false,
 
         # Optionally returns the Pester result as an object containing the information about the whole test run, and each test
         # Defaults to false (disabled)
@@ -167,9 +177,22 @@
                 $Pester_Params += @{
                    OutputFormat = "NUnitXml"
                    OutputFile = $XMLOutputFile
-                   
+
                 }#Pester_Params
-            } 
+            }
+
+            If ($ShowFailedOnly) {
+              # Check both the user installed and system installed Pester version
+              # Because Windows 10 ships with a fixed version of Pester
+              If ((Get-InstalledModule Pester | ? version -gt "3.4.0") -or
+                 (Get-Module Pester | ? version -gt "3.4.0")) {
+                    $Pester_Params += @{
+                        Show = "Failed,Summary"
+                    }#Pester_Params
+              } else {
+                  throw "-ShowFailedOnly not supported by the installed version of Pester.  Upgrade Pester or remove this flag."
+              }
+            }
             # Call Invoke-Pester based on the parameters supplied
             # Runs VesterTemplate.Tests.ps1, which constructs the .Vester.ps1 test files
             Invoke-Pester @Pester_Params -PassThru:$PassThru
