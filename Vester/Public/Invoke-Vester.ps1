@@ -182,16 +182,9 @@
             }
 
             If ($ShowFailedOnly) {
-              # Check both the user installed and system installed Pester version
-              # Because Windows 10 ships with a fixed version of Pester
-              If ((Get-InstalledModule Pester | ? version -gt "3.4.0") -or
-                 (Get-Module Pester | ? version -gt "3.4.0")) {
-                    $Pester_Params += @{
-                        Show = "Failed,Summary"
-                    }#Pester_Params
-              } else {
-                  throw "-ShowFailedOnly not supported by the installed version of Pester.  Upgrade Pester or remove this flag."
-              }
+                $Pester_Params += @{
+                    Show = "Failed,Summary"
+                }#Pester_Params
             }
             # Call Invoke-Pester based on the parameters supplied
             # Runs VesterTemplate.Tests.ps1, which constructs the .Vester.ps1 test files
