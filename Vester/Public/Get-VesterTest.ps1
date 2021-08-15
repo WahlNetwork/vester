@@ -42,7 +42,7 @@
     Get-VesterTest -Path C:\Vester\
     -Path can also be pointed at a directory containing custom tests.
     Get-VesterTest will search here for all .Vester.ps1 files, recursively.
-    
+
     (Note that the immediate parent folder of all test files should have a
     name matching the test's intended scope, like "VM".)
 
@@ -78,10 +78,9 @@
         # If a directory, child .Vester.ps1 files are gathered recursively.
         [Parameter(ValueFromPipeline = $true)]
         [ValidateScript({
-            If ($_.FullName) {Test-Path $_.FullName}
-            Else {Test-Path $_}
+            Test-Path (Get-Item $_).FullName
         })]
-        [object[]]$Path = "$(Split-Path -Parent $PSScriptRoot)\Tests\",
+        [object[]]$Path = (Get-Item "$(Split-Path -Parent $PSScriptRoot)\Tests\").FullName,
 
         # Return only test files belonging to the specified Vester scope(s).
         # Vester determines test file scope by the name of its parent directory.
@@ -112,16 +111,15 @@
 
         # Construct empty array to throw file paths of tests into
         $TestFiles = New-Object 'System.Collections.Generic.List[PSCustomObject]'
-        
+
     }
 
     PROCESS {
         # Need to ForEach if multiple -Test locations
         ForEach ($TestPath in $Path) {
             # Gracefully handle FileSystemInfo objects (Get-Item / Get-ChildItem)
-            If ($TestPath.FullName) {
-                $TestPath = $TestPath.FullName
-            }
+            # and support cross-platform naming conventions
+            $TestPath = (Get-Item $TestPath).FullName
 
             If (Test-Path $TestPath -PathType Container) {
                 # If Test-Path finds a folder, get all *.Vester.ps1 files beneath it

@@ -50,8 +50,7 @@ PowerShellVersion = '3.0'
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
     @{ModuleName = 'Pester'; ModuleVersion = '3.4.3'},
-    @{ModuleName = 'VMware.VimAutomation.Core'; ModuleVersion = '6.5.1'},
-    @{ModuleName = 'VMware.VumAutomation'; ModuleVersion = '6.5.1'}
+    @{ModuleName = 'VMware.VimAutomation.Core'; ModuleVersion = '6.5.1'}
 )
 
 # Assemblies that must be loaded prior to importing this module
