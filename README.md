@@ -10,6 +10,34 @@ Vester is a community project that provides an extremely light-weight approach t
 
 Vester is written entirely in PowerShell, using [PowerCLI](https://www.vmware.com/support/developer/PowerCLI/) and [Pester](https://github.com/Pester/Pester). Config files are stored as json documents that can easily live in source control.
 
-Please visit the **[full documentation](https://wahlnetwork.github.io/Vester)** for more details.
+## Getting Started
 
-This [three-part blog series](http://www.brianbunke.com/blog/2017/03/07/introducing-vester/) from March 2017 walks you through getting started with [Vester 1.0](https://www.powershellgallery.com/packages/Vester/1.0.1).
+Vester 1.2 in ten minutes at VMworld US 2017: [vBrownBag video](https://youtu.be/9TRZ30XhK10)
+
+Download Vester from the [PowerShell Gallery](https://www.powershellgallery.com/packages/Vester/).
+
+```posh
+Install-Module Vester
+```
+
+This [three-part blog series](http://www.brianbunke.com/blog/2017/03/07/introducing-vester/) from March 2017 walks you through getting started with v1.0. It still holds up; the main difference is the new `Get-VesterTest` function, making tests easier to fetch and explore.
+
+## Documentation
+
+You can find live docs online! https://wahlnetwork.github.io/Vester
+
+Or in your PowerShell console:
+
+```posh
+Get-Command -Module Vester
+Get-Help about_Vester
+Get-Help Get-VesterTest -Full
+```
+
+**[Current changelog](https://github.com/WahlNetwork/Vester/blob/master/CHANGELOG.md)**
+
+## Questions?
+
+If you found a bug, would like to submit a feature request, or just have a question about Vester, feel free to search our [issues](https://github.com/WahlNetwork/Vester/issues) page, and create a new item if nothing fits the bill.
+
+You're also welcome to come hang out in the #vester channel of the VMware {code} Slack workspace. [Sign up for VMware {code}](https://code.vmware.com/join), and you'll receive a Slack invite via email.

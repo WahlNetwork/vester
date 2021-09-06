@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [Unreleased]
+
+### Added
+- New Cluster HA tests ([#170][issue-170])
+  - HA-AdmissionControl-AutoComputePercentages
+  - HA-AdmissionControl-Resource-ReductionToToleratePercent
+  - HA-AdmissionControlEnabled
+  - HA-FailoverLevel
+  - HA-IsolationResponse
+  - HA-RestartPriority
+- New Cluster VUM baseline attach test ([#175][issue-175]/[#179][issue-179])
+  - VUM-Attached-Baseline
+- New vSAN tests, fresh from the VMworld US Hackathon!
+  - VSAN-DefaultHostDecommissionMode ([#173][issue-173])
+- New Host test for vDS membership ([#176][issue-176])
+  - vDS-HostMembership
+
+### Changed
+- [#172][issue-172]
+  - `Get-VesterTest` now supports optional `$Recommendation` variables within Vester tests
+    - A use case for this is providing the "Security Config Guide" value for security tests
+  - `$Recommendation` added to VIB-AcceptanceLevel
+  - A new `Vester.Format.ps1xml` file more gracefully handles the custom `[Vester.Test]` objects that `Get-VesterTest` outputs
+- Vester now requires `VMware.VumAutomation.Core` to support [#175][issue-175]
+- Sort inventory objects when interactively using `New-VesterConfig` ([#186][issue-186])
+
+### Fixed
+- Support multiple datacenters by working around a PowerCLI bug ([#180][issue-180])
+- `Invoke-Vester -XMLOutputFile -PassThru` no longer ignores `-PassThru` ([#189][issue-189])
+
+### Welcome!
+[@BrandonLundt](https://github.com/BrandonLundt) [@aaronwsmith](https://github.com/aaronwsmith) [@krobe](https://github.com/krobe) [@NamedJason](https://github.com/NamedJason) [@kanjibates](https://github.com/kanjibates)
+
+### Much ❤
+[@jeffgreenca](https://github.com/jeffgreenca) [@haberstrohr](https://github.com/haberstrohr)
+
+
 ## [1.2.0] - 2017-08-21
 Dropped some long overdue documentation updates. New URL: https://wahlnetwork.github.io/Vester
 
@@ -127,3 +164,12 @@ Published just to reserve the name on the PowerShell Gallery. If you have this v
 [issue-158]: https://github.com/WahlNetwork/Vester/issues/158
 [issue-160]: https://github.com/WahlNetwork/Vester/issues/160
 [issue-164]: https://github.com/WahlNetwork/Vester/issues/164
+[issue-170]: https://github.com/WahlNetwork/Vester/issues/170
+[issue-172]: https://github.com/WahlNetwork/Vester/issues/172
+[issue-173]: https://github.com/WahlNetwork/Vester/issues/173
+[issue-175]: https://github.com/WahlNetwork/Vester/issues/175
+[issue-176]: https://github.com/WahlNetwork/Vester/issues/176
+[issue-179]: https://github.com/WahlNetwork/Vester/issues/179
+[issue-180]: https://github.com/WahlNetwork/Vester/issues/180
+[issue-186]: https://github.com/WahlNetwork/Vester/issues/186
+[issue-189]: https://github.com/WahlNetwork/Vester/issues/189
