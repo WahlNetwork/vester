@@ -2,22 +2,31 @@
 
 function Set-VesterConfigValue {
     [CmdletBinding()]
-    param ($Value)
+    param (
+        [ValidatePattern('^\$cfg\..*?\.')]
+        $Line,
+        
+        $Value
+    )
 
-    # Using parent scope variables $config, $Matches, $Vest
+    $Split = $Line -split '\.'
+    $1 = $Split[1]
+    $2 = $Split[2]
 
-    If ($config.($Matches[1]).Keys -contains $Matches[2]) {
-        Write-Verbose "config.$($Matches[1]).$($Matches[2]) already exists; skipping $(Split-Path $Vest -Leaf)"
+    # Using parent scope variables $config, $Vest
+
+    If ($config.$1.Keys -contains $2) {
+        Write-Verbose "config.$1.$2 already exists; skipping $(Split-Path $Vest -Leaf)"
     } Else {
         # If config.host was already created in a previous ForEach loop,
-        If ($config.($Matches[1])) {
+        If ($config.$1) {
             # Use the hashtable's Add method to append another value
-            $config.($Matches[1]).Add($Matches[2], $Value)
-            Write-Verbose "config.$($Matches[1]).$($Matches[2]) added"
+            $config.$1.Add($2, $Value)
+            Write-Verbose "config.$1.$2 added"
         } Else {
             # Otherwise, create the first value in the new scope
-            $config.($Matches[1]) = @{$Matches[2] = $Value}
-            Write-Verbose "config.$($Matches[1]).$($Matches[2]) added"
+            $config.$1 = @{$2 = $Value}
+            Write-Verbose "config.$1.$2 added"
         }
     }
 }

@@ -210,31 +210,17 @@ function New-VesterConfig {
                 Default      {$null}
             }
 
-            # TODO: Should probably offload this to a private function
-            $CfgLine = (Select-String -Path $Vest.Full -Pattern '\$cfg') -replace '.*\:[0-9]+\:',''
-            $CfgLine -match '.*\$cfg\.([a-z]+)\.([a-z]+)$' | Out-Null
+            $CfgLine = Get-VestConfigValue -Vest $Vest.Full
 
             # Run the $Actual script block, storing the result in $Result
             If ($Object -and ($Result = & $Actual) -ne $null) {
                 # Call module private function Set-VesterConfigValue to add the entry
-                Set-VesterConfigValue -Value ($Result -as $Type)
+                Set-VesterConfigValue -Line $CfgLine -Value ($Result -as $Type)
             } Else {
                 # Inventory $Object doesn't exist, or $Actual returned nothing
                 # Populate with null value; Invoke-Vester will skip this test
-                Set-VesterConfigValue -Value $null
+                Set-VesterConfigValue -Line $CfgLine -Value $null
             } #if $Object and $Result
-
-            <# ### This works, but not currently used (see commented block below)
-            If ($config.$($Matches[1]).Keys -contains $($Matches[2]) -and -not $Quiet) {
-                # Record test/value correlation, if user wants to manually edit
-                $h = [PSCustomObject]@{
-                    Full = $Vest.Full
-                    Leaf = $Vest.Leaf
-                    CfgValue = "$($Matches[1]).$($Matches[2])"
-                }
-                $TestHistory.Add($h)
-            }
-            #>
         } #foreach $Vest
 
         # If any values were populated in this scope, and the -Quiet flag is not active,
@@ -247,43 +233,7 @@ function New-VesterConfig {
             $Sorted = $config.$Scope.GetEnumerator() | Sort-Object Name
             $Sorted
             $config.$Scope = [ordered]@{}
-            $Sorted | Foreach-Object { $config.$Scope.Add($_.Name, $_.Value) }            
-
-            <# ###
-            # Users still need to manually edit the .json file if changes are desired
-            # The code block below works, but needs much more validation on entry
-            # For example, entering text into a "string[]" type does the following:
-                # The apostrophe, a common string wrapper, ends up in the json file as \u0027
-                # Not sure how to enter multiple string values (like muliple DNS servers)
-
-            If ((Read-HostColor 'Would you like to change any of these values? Y/N [N]') -like 'y*') {
-                Write-Host "`nIf there are any values you never want to test, enter " -NoNewline
-                Write-Host '$null' -ForegroundColor Red -NoNewline
-                Write-Host " to skip those tests.`n"
-                # TODO: ^ Entering $null still good instructions?
-
-                ForEach ($CfgLine in $config.$Scope.GetEnumerator() | Sort Name) {
-                    $TestHistory | Where CfgValue -eq "$Scope.$($CfgLine.Name)" | ForEach-Object {
-                        . $_.Full
-
-                        Write-Host "$($_.Leaf) : $Title"
-                        Write-Host $Description
-                        Write-Host "[$Type]$($CfgLine.Name) = $($CfgLine.Value)"
-
-                        If ((Read-HostColor 'Would you like to change this value? Y/N [N]') -like 'y*') {
-                            $UserEnteredValue = Read-HostColor "Enter the new value of type '$Type'"
-                            If ($UserEnteredValue -eq $null) {
-                                $NewValue = $null
-                            } Else {
-                                $NewValue = $UserEnteredValue -as $Type
-                            }
-                            Write-Verbose "Setting $($Scope.ToLower()).$($CfgLine.Name) = $UserEnteredValue"
-                            $config.$Scope.($CfgLine.Name) = $UserEnteredValue
-                        } #if change single value
-                    } #foreach $TestHistory
-                } #foreach $CfgLine
-            } #if change any value
-            #>
+            $Sorted | ForEach-Object { $config.$Scope.Add($_.Name, $_.Value) }            
 
         } #if $config.$Scope
     } #foreach $Scope
